@@ -12,15 +12,20 @@ namespace CS4100_Lexical_Analyzer
         static void Main(string[] args)
         {
             InitializeStructures();
-            string fileName = GetFileName();
-            InitializeInputFile(fileName);
-            while (!EOF)
+            string fileName = GetFileName();            
+            string fileText = InitializeInputFile(fileName);
+            
+            string nextToken = "";
+            int tokenCode= -1;
+            bool echoOn = true;
+
+            while (tokenCode != 100)
             {
-                GetNextToken(echoOn);
-                PrintToken(nextToken, tokenCode);
+                nextToken = GetNextToken(echoOn,fileText);
+                //PrintToken(nextToken, tokenCode);                
             }
-            SymbolTable.Print();
-            Terminate;
+            //SymbolTable.Print();
+            //Terminate;
             
         }
 
@@ -38,22 +43,69 @@ namespace CS4100_Lexical_Analyzer
             return filename;
         }
         
-        public static void InitializeInputFile(string fileName)
+        public static string InitializeInputFile(string fileName)
         {
             try
             {   // Open the text file using a stream reader.
                 using (StreamReader sr = new StreamReader(fileName))
                 {
                     // Read the stream to a string, and write the string to the console.
-                    String line = sr.ReadToEnd();
-                    Console.WriteLine(line);
+                    String text = sr.ReadToEnd();
+                    // Console.WriteLine(text);
+                    return text;
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
+                return "";
             }
+        }
+
+        public static string GetNextToken(bool echoOn, string fileText)
+        {
+            int textLength = fileText.Length;
+            int caseGroup = -1;
+            
+            while (fileText.Length > 0)
+            {
+                char x = fileText[fileText.Length - textLength];
+                if (Char.IsWhiteSpace(x))
+                {
+                    caseGroup = 0;
+                }
+                else if (Char.IsDigit(x))
+                {
+                    caseGroup = 1;
+                }
+                else if (Char.IsLetter(x))
+                {
+                    caseGroup = 2;
+                }
+                else if (Char.IsSymbol(x))
+                {
+                    caseGroup = 3;
+                }
+
+                switch (caseGroup)
+                {
+                        case 0:
+                            break;
+                        case 1:
+
+
+                        default:
+                            break;
+
+                }
+
+
+                textLength--;
+
+            }
+
+            return "";
         }
 
     }
