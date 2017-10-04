@@ -11,21 +11,28 @@ namespace CS4100_Lexical_Analyzer
         
         public static StringBuilder nextToken = new StringBuilder();
         public static bool tooLong = false;
+        public static int caseGroup = -1;
+        public static bool identifier = false;
+        public static bool numeric = false;
+        public static bool stringConstant = false;
+        public static bool Comments = false;
+        public static bool tokenComplete = false;
 
         // could make getNextChar and call it inside below to match specs of assignment
         public static string GetNextToken(bool echoOn, char nextChar)
         {
             // int textLength = fileText.Length;
-            int caseGroup = -1;
-            bool identifier = false;
-            bool tokenComplete = false;
+           
 
             if (nextChar.Equals('\n'))
             {
                 tokenComplete = true;
             }
 
-            while (tokenComplete)
+            // prime read
+
+
+            while (!tokenComplete)
             {
                 char x = nextChar;
                 if (Char.IsWhiteSpace(x))
