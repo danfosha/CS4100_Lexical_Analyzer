@@ -8,25 +8,37 @@ namespace CS4100_Lexical_Analyzer
 {
     class Tokenizer
     {
+        
+        public static StringBuilder nextToken = new StringBuilder();
+        public static bool tooLong = false;
 
-        public static char GetNextToken(bool echoOn, char nextChar)
+        // could make getNextChar and call it inside below to match specs of assignment
+        public static string GetNextToken(bool echoOn, char nextChar)
         {
-           // int textLength = fileText.Length;
+            // int textLength = fileText.Length;
             int caseGroup = -1;
+            bool identifier = false;
             bool tokenComplete = false;
 
-            while (!tokenComplete)
+            if (nextChar.Equals('\n'))
+            {
+                tokenComplete = true;
+            }
+
+            while (tokenComplete)
             {
                 char x = nextChar;
                 if (Char.IsWhiteSpace(x))
                 {
                     caseGroup = 0;
                 }
-                else if (Char.IsDigit(x))
+                else if (Char.IsLetter(x) || '$'.Equals(x) || '_'.Equals(x))
                 {
                     caseGroup = 1;
+                    identifier = true;
+
                 }
-                else if (Char.IsLetter(x))
+                else if (Char.IsDigit(x))
                 {
                     caseGroup = 2;
                 }
@@ -40,19 +52,34 @@ namespace CS4100_Lexical_Analyzer
                     case 0:
                         break;
                     case 1:
+                        if (Char.IsLetter(Tokenizer.nextToken[0]))
+                        {
+                            Tokenizer.nextToken.Append(x);
+                        }
+                        break;
+                    case 2:
+                        Tokenizer.nextToken.Append(x);
+                        break;
+                    case 3:
+                        //Tokenizer.nextToken.Append(x);
+                        break;
 
 
                     default:
                         break;
 
-                }
-
-
-                
+                }                
 
             }
 
-            return nextChar;
+            // get the token out
+
+            tokenComplete = false;
+            return nextToken.ToString();
+            
+
+
+
         }
     }
 }

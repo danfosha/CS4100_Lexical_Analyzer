@@ -11,26 +11,37 @@ namespace CS4100_Lexical_Analyzer
     {
         static void Main(string[] args)
         {
+            string nextToken = "";
+
             InitializeStructures();
             string fileName = GetFileName();            
             string fileText = InitializeInputFile(fileName);
             int stringLength = fileText.Length;
             
-            char nextToken;
+            
+            string tempToken;
             int tokenCode= -1;
             int charIndex = 0;
             bool echoOn = true;
 
             while (stringLength >0)
             {
-                nextToken = Tokenizer.GetNextToken(echoOn, fileText[charIndex]);
+                tempToken = (Tokenizer.GetNextToken(echoOn, fileText[charIndex]));
+                if (tempToken.Length > 0)
+                {
+                    nextToken = tempToken;
+                    Console.Write(tempToken);
+                    Console.Write(nextToken);
+                    // do all the post processing here
+                }
                 //PrintToken(nextToken, tokenCode);
-                Console.Write(nextToken);
+               
                 charIndex++;
                 stringLength--;
             }
             //SymbolTable.Print();
             //Terminate;
+            Console.ReadLine();
 
         }
 
