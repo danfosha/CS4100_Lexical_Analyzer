@@ -14,19 +14,24 @@ namespace CS4100_Lexical_Analyzer
             InitializeStructures();
             string fileName = GetFileName();            
             string fileText = InitializeInputFile(fileName);
+            int stringLength = fileText.Length;
             
-            string nextToken = "";
+            char nextToken;
             int tokenCode= -1;
+            int charIndex = 0;
             bool echoOn = true;
 
-            while (tokenCode != 100)
+            while (stringLength >0)
             {
-                nextToken = GetNextToken(echoOn,fileText);
-                //PrintToken(nextToken, tokenCode);                
+                nextToken = Tokenizer.GetNextToken(echoOn, fileText[charIndex]);
+                //PrintToken(nextToken, tokenCode);
+                Console.Write(nextToken);
+                charIndex++;
+                stringLength--;
             }
             //SymbolTable.Print();
             //Terminate;
-            
+
         }
 
         public static void InitializeStructures()
@@ -38,8 +43,9 @@ namespace CS4100_Lexical_Analyzer
         public static string GetFileName()
         {
             string filename;
-            Console.Write("Enter a filename: ");
-            filename = Convert.ToString(Console.ReadLine());
+            //Console.Write("Enter a filename: ");
+            // filename = Convert.ToString(Console.ReadLine());
+            filename = "lexical_test.txt";
             return filename;
         }
         
@@ -51,7 +57,8 @@ namespace CS4100_Lexical_Analyzer
                 {
                     // Read the stream to a string, and write the string to the console.
                     String text = sr.ReadToEnd();
-                    // Console.WriteLine(text);
+                    Console.WriteLine(text);
+                    Console.ReadLine();
                     return text;
                 }
             }
@@ -59,54 +66,12 @@ namespace CS4100_Lexical_Analyzer
             {
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
+                Console.ReadLine();
                 return "";
             }
         }
 
-        public static string GetNextToken(bool echoOn, string fileText)
-        {
-            int textLength = fileText.Length;
-            int caseGroup = -1;
-            
-            while (fileText.Length > 0)
-            {
-                char x = fileText[fileText.Length - textLength];
-                if (Char.IsWhiteSpace(x))
-                {
-                    caseGroup = 0;
-                }
-                else if (Char.IsDigit(x))
-                {
-                    caseGroup = 1;
-                }
-                else if (Char.IsLetter(x))
-                {
-                    caseGroup = 2;
-                }
-                else if (Char.IsSymbol(x))
-                {
-                    caseGroup = 3;
-                }
-
-                switch (caseGroup)
-                {
-                        case 0:
-                            break;
-                        case 1:
-
-
-                        default:
-                            break;
-
-                }
-
-
-                textLength--;
-
-            }
-
-            return "";
-        }
+        
 
     }
 
