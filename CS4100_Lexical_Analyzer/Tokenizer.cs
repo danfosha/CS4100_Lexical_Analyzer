@@ -43,6 +43,7 @@ namespace CS4100_Lexical_Analyzer
                 // end token if new line
 
 
+
                 if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     tokenComplete = true;
@@ -179,13 +180,36 @@ namespace CS4100_Lexical_Analyzer
 
                     case 2:
                         // append to numeric
-                        if (Tokenizer.nextToken.Length > 30)
+                        string test = nextToken.ToString();
+                        if (Char.IsNumber(x))
+                        {
+                            Tokenizer.nextToken.Append(x);                            
+                        }
+                        else if (('.'.Equals(x)) && !(test.Contains(".")))
+                        {
+                            Tokenizer.nextToken.Append(x);
+                        }
+                        else if ((('E'.Equals(x)) || 'e'.Equals(x)) && (!(test.Contains("E")) || !(test.Contains("e"))) && (test.Contains(".")))
+                        {
+                            Tokenizer.nextToken.Append(x);
+                        }
+                        else if ((('+'.Equals(x)) || '-'.Equals(x)) && ('E'.Equals(test[test.Length-1])) || ('e'.Equals(test[test.Length - 1])))
+                        {
+                            Tokenizer.nextToken.Append(x);
+                        }
+                        else
+                        {
+                            tempChar = x;
+                            tokenComplete = true;
+                        }
+                        
+                        if (Tokenizer.nextToken.Length > 29)
                         {
                             tokenComplete = true;
                             tokenTooLong = true;
                             break;
                         }
-                        Tokenizer.nextToken.Append(x);
+                        
                         break;
 
                     case 3:
@@ -211,16 +235,26 @@ namespace CS4100_Lexical_Analyzer
                         break;
                     case 6:
                         // other symbol 2             
-                        if (('='.Equals(nextChar)) || ('>'.Equals(nextChar)))
+                        if ((':'.Equals(x)) && ('='.Equals(nextChar)))
                         {
-                            Tokenizer.nextToken.Append(tempChar);
                             Tokenizer.nextToken.Append(x);
+                            Tokenizer.nextToken.Append(nextChar);
+                            tempChar = '\0';
+                            tokenComplete = true;
+
+                        }
+                        else if (('<'.Equals(x)) && ('='.Equals(nextChar)) || ('>'.Equals(nextChar)))
+                        {
+                            Tokenizer.nextToken.Append(x);
+                            Tokenizer.nextToken.Append(nextChar);
                             tempChar = '\0';
                             tokenComplete = true;
                         }
                         else
                         {
-                            tempChar = x;
+                            Tokenizer.nextToken.Append(x);
+                            tokenComplete = true;
+                            tempChar = nextChar;
                         }
                         break;
 
@@ -286,7 +320,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenSecond(char x)
         {
-            if ((':'.Equals(x)) ||  ('<'.Equals(x)))
+            if ((':'.Equals(x)) || ('<'.Equals(x)))
             {
                 return true;
             }
