@@ -35,15 +35,18 @@ namespace CS4100_Lexical_Analyzer
         // could make getNextChar and call it inside below to match specs of assignment
         public static string GetNextToken(bool echoOn, char nextChar)
         {
-            
-            while (tempUsed)
+
+            do
             {
 
                 // end token if new line
-                if (nextChar.Equals('\n'))
+
+
+                if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     tokenComplete = true;
                     caseGroup = 0;
+                    return "";
                 }
 
                 // check to see if already in a state
@@ -83,9 +86,9 @@ namespace CS4100_Lexical_Analyzer
                 //}
                 //else
                 //{
-                   x = nextChar;
+                x = nextChar;
                 //}
-                
+
 
                 if (Tokenizer.nextToken.Length < 1) // first character
                 {
@@ -185,7 +188,7 @@ namespace CS4100_Lexical_Analyzer
                     case 4:
                         // comment handling
                         // append next char
-                        if ((Tokenizer.nextToken.Length>0) && ('#'.Equals(x)) && ('#'.Equals(Tokenizer.nextToken[0])))
+                        if ((Tokenizer.nextToken.Length > 0) && ('#'.Equals(x)) && ('#'.Equals(Tokenizer.nextToken[0])))
                         {
                             commentComplete = true;
                             tokenComplete = true;
@@ -208,8 +211,8 @@ namespace CS4100_Lexical_Analyzer
                         {
                             tempChar = x;
                         }
-                         break;
-                        
+                        break;
+
                     default:
                         break;
                 }
@@ -230,10 +233,13 @@ namespace CS4100_Lexical_Analyzer
                     }
                     Tokenizer.ResetFlags();
                     tempChar = '\0';
-                    return nextToken.ToString();
+                    string returnToken = nextToken.ToString();
+                    nextToken.Clear();
+                    return returnToken;
                 }
-                
+
             }
+            while (tempChar !='\0');
             return "";
         }
 
