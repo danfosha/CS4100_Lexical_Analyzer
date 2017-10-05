@@ -9,82 +9,43 @@ namespace CS4100_Lexical_Analyzer
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            string nextToken = "";
-
-            InitializeStructures();
-            string fileName = GetFileName();            
-            string fileText = InitializeInputFile(fileName);
-            int stringLength = fileText.Length;
-            
-            
-            string tempToken;
-            int tokenCode= -1;
-            int charIndex = 0;
             bool echoOn = true;
+            InitializeStructures();
+            string filename = FileHandler.GetFileName();
+            FileHandler.InitializeInputFile(filename);
+            PrintHeader();
 
-            while (stringLength >0)
+            while (Tokenizer.tokenizerFinished)
             {
-                tempToken = (Tokenizer.GetNextToken(echoOn, fileText[charIndex]));
-                if (tempToken.Length > 0)
-                {
-                    nextToken = tempToken;
-                    Console.Write(tempToken);
-                    Console.Write(nextToken);
-                    // do all the post processing here
-                }
-                //PrintToken(nextToken, tokenCode);
-               
-                charIndex++;
-                stringLength--;
+                Tokenizer.GetNextToken(echoOn);
+                PrintToken(Tokenizer.nextToken, Tokenizer.tokenCode);
             }
-            //SymbolTable.Print();
-            //Terminate;
-            Console.ReadLine();
+            
 
         }
 
         public static void InitializeStructures()
         {
-            int MaxQuad = 100;            
+            int MaxQuad = 100;
             SymbolClass SymbolTable = new SymbolClass(MaxQuad);
+            Tokenizer Tokenizer1 = new Tokenizer();
+            FileHandler FileGetter = new FileHandler();
+            
         }
 
-        public static string GetFileName()
+        public static void PrintToken(string token, int tokenCode)
         {
-            string filename;
-            //Console.Write("Enter a filename: ");
-            // filename = Convert.ToString(Console.ReadLine());
-            filename = "lexical_test.txt";
-            return filename;
+
+            Console.WriteLine();
         }
-        
-        public static string InitializeInputFile(string fileName)
+
+        public static void PrintHeader()
         {
-            try
-            {   // Open the text file using a stream reader.
-                using (StreamReader sr = new StreamReader(fileName))
-                {
-                    // Read the stream to a string, and write the string to the console.
-                    String text = sr.ReadToEnd();
-                    Console.WriteLine(text);
-                    Console.ReadLine();
-                    return text;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
-                Console.ReadLine();
-                return "";
-            }
+            Console.WriteLine("Lexeme \tToken Code \t \tMnemonic \tSymbolTable Index");
+            Console.WriteLine("*********************************************************");
         }
-
-        
-
     }
 
-  
 }
