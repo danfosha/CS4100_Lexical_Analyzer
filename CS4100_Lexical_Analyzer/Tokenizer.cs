@@ -44,6 +44,7 @@ namespace CS4100_Lexical_Analyzer
 
 
 
+
                 if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     tokenComplete = true;
@@ -119,7 +120,6 @@ namespace CS4100_Lexical_Analyzer
                     {
                         comment = true;
                         caseGroup = 4;
-
                     }
 
                     else if ('#'.Equals(x))
@@ -143,7 +143,7 @@ namespace CS4100_Lexical_Analyzer
                         caseGroup = 7;
                     }
                     else
-                    {
+                    { // put undefined here
                         caseGroup = 0;
                     }
 
@@ -175,6 +175,7 @@ namespace CS4100_Lexical_Analyzer
                         {
                             tokenComplete = true;
                             tempChar = x;
+                            tempUsed = true;
                         }
                         break;
 
@@ -200,6 +201,7 @@ namespace CS4100_Lexical_Analyzer
                         else
                         {
                             tempChar = x;
+                            tempUsed = true;
                             tokenComplete = true;
                         }
                         
@@ -224,7 +226,7 @@ namespace CS4100_Lexical_Analyzer
                             tokenComplete = true;
                         }
                         Tokenizer.nextToken.Append(x);
-                        tempChar = '\0';
+                        //tempChar = '\0';
                         break;
                     case 5:
                         // other symbols 1
@@ -240,6 +242,7 @@ namespace CS4100_Lexical_Analyzer
                             Tokenizer.nextToken.Append(x);
                             Tokenizer.nextToken.Append(nextChar);
                             tempChar = '\0';
+                            tempUsed = false;
                             tokenComplete = true;
 
                         }
@@ -248,6 +251,7 @@ namespace CS4100_Lexical_Analyzer
                             Tokenizer.nextToken.Append(x);
                             Tokenizer.nextToken.Append(nextChar);
                             tempChar = '\0';
+                            tempUsed = false;
                             tokenComplete = true;
                         }
                         else
@@ -284,7 +288,7 @@ namespace CS4100_Lexical_Analyzer
                 }
 
             }
-            while ((tempChar != '\0') || (other2 == true));
+            while ((tempUsed) || (other2 == true));
             return "";
         }
 
