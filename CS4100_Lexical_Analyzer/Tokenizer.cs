@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace CS4100_Lexical_Analyzer
     public class Tokenizer
     {
         public static StringBuilder workingToken = new StringBuilder();
+
         public static string nextToken;
         public static char tempChar;
         public static char x;
@@ -40,21 +42,43 @@ namespace CS4100_Lexical_Analyzer
         public static int charIndex = 0;
         public static char GetNextChar()
         {
-            if (charIndex >= fileText.Length - 1)
+            if (charIndex >= textLine.Length - 1)
             {
-
                 return '\a';
             }
             else
             {
-                return fileText[charIndex++];
+                return textLine[charIndex++];
             }
         }
 
 
+        // nextline stuff
+        public static string textLine = null;
+        public static StringReader strReader = new StringReader(fileText);
+        public static string GetNextLine(string text, bool echoOn)
+        {
+            textLine = strReader.ReadLine();
+            if (textLine != null)
+            {
+                if (echoOn == true)
+                {
+                    Console.WriteLine(textLine);
+                }
+                return textLine;
+            }
+            else
+            {
+                return ('\n'.ToString());
+            }
+        }
+
         // could make getNextChar and call it inside below to match specs of assignment
         public static void GetNextToken(bool echoOn)
         {
+
+            string textLine = GetNextLine(fileText, echoOn);
+
             do
             {
                 nextChar = GetNextChar();
@@ -304,7 +328,7 @@ namespace CS4100_Lexical_Analyzer
 
             }
             while ((!tokenComplete));
-            }
+        }
 
 
         // methods

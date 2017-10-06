@@ -15,7 +15,7 @@ namespace CS4100_Lexical_Analyzer
             get; set;
         }
 
-        public static string fileName
+        public static string FileName
         {
             get; set;
         }
