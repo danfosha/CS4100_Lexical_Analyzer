@@ -41,28 +41,40 @@ namespace CS4100_Lexical_Analyzer
         public static bool tokenTooLong = false;
         public static bool stringComplete = false;
         public static bool commentComplete = false;
-        public static string fileText = FileHandler.FileText;
+        //public static String fileText; 
+        public static String textLine;
 
         
         // getNextChar
         public static int charIndex = 0;
         public static char GetNextChar()
         {
-            if (charIndex >= fileText.Length - 1)
+            if (charIndex >= FileHandler.FileText.Length - 1)
             {
                 return '\a';
             }
             else
             {
-                return fileText[charIndex++];
+                return FileHandler.FileText[charIndex++];
             }
         }        
+
+        public static string GetNextLine(bool echoOn)
+        {
+            using (StringReader reader = new StringReader(FileHandler.FileText))
+                textLine = reader.ReadLine();
+            if (echoOn)
+            {
+                Console.WriteLine(textLine);
+            }
+            return textLine;
+        }
 
         // could make getNextChar and call it inside below to match specs of assignment
         public static void GetNextToken(bool echoOn)
         {
 
-            // string textLine = GetNextLine(echoOn);
+           string textLine = GetNextLine(echoOn);
 
             do
             {

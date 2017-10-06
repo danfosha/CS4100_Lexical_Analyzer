@@ -18,7 +18,7 @@ namespace CS4100_Lexical_Analyzer
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
 
-            while (TokenizerClass.tokenizerFinished)
+            while (!TokenizerClass.tokenizerFinished)
             {
                 TokenizerClass.GetNextToken(echoOn);                
                 PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
