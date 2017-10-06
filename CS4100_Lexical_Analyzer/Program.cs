@@ -13,15 +13,15 @@ namespace CS4100_Lexical_Analyzer
         public static void Main(string[] args)
         {
             bool echoOn = true;
+            string fileName = "lexical_test.txt";
             InitializeStructures();
-            string filename = FileHandler.GetFileName();
-            FileHandler.InitializeInputFile(filename);
+            FileHandler.InitializeInputFile(fileName);
             PrintHeader();
 
-            while (Tokenizer.tokenizerFinished)
+            while (TokenizerClass.tokenizerFinished)
             {
-                Tokenizer.GetNextToken(echoOn);
-                PrintToken(Tokenizer.nextToken, Tokenizer.tokenCode);
+                TokenizerClass.GetNextToken(echoOn);                
+                PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
             }
             
 
@@ -30,10 +30,9 @@ namespace CS4100_Lexical_Analyzer
         public static void InitializeStructures()
         {
             int MaxQuad = 100;
-            SymbolClass SymbolTable = new SymbolClass(MaxQuad);
-            Tokenizer Tokenizer1 = new Tokenizer();
             FileHandler FileGetter = new FileHandler();
-            
+            SymbolClass SymbolTable = new SymbolClass(MaxQuad);           
+            TokenizerClass Tokenizer = new TokenizerClass();
         }
 
         public static void PrintToken(string token, int tokenCode)

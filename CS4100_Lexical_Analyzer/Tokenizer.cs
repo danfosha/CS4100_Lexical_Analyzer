@@ -9,8 +9,13 @@ using System.Threading.Tasks;
 // CS4100 Fall 2017 Lexical Analyzer Project - Fosha
 namespace CS4100_Lexical_Analyzer
 {
-    public class Tokenizer
+    class TokenizerClass
     {
+
+        public TokenizerClass()
+        {
+        }
+        
         public static StringBuilder workingToken = new StringBuilder();
 
         public static string nextToken;
@@ -38,46 +43,26 @@ namespace CS4100_Lexical_Analyzer
         public static bool commentComplete = false;
         public static string fileText = FileHandler.FileText;
 
+        
         // getNextChar
         public static int charIndex = 0;
         public static char GetNextChar()
         {
-            if (charIndex >= textLine.Length - 1)
+            if (charIndex >= fileText.Length - 1)
             {
                 return '\a';
             }
             else
             {
-                return textLine[charIndex++];
+                return fileText[charIndex++];
             }
-        }
-
-
-        // nextline stuff
-        public static string textLine = null;
-        public static StringReader strReader = new StringReader(fileText);
-        public static string GetNextLine(string text, bool echoOn)
-        {
-            textLine = strReader.ReadLine();
-            if (textLine != null)
-            {
-                if (echoOn == true)
-                {
-                    Console.WriteLine(textLine);
-                }
-                return textLine;
-            }
-            else
-            {
-                return ('\n'.ToString());
-            }
-        }
+        }        
 
         // could make getNextChar and call it inside below to match specs of assignment
         public static void GetNextToken(bool echoOn)
         {
 
-            string textLine = GetNextLine(fileText, echoOn);
+            // string textLine = GetNextLine(echoOn);
 
             do
             {
@@ -136,7 +121,7 @@ namespace CS4100_Lexical_Analyzer
                 }
 
 
-                if (Tokenizer.workingToken.Length < 1) // first character
+                if (workingToken.Length < 1) // first character
                 {
                     if (Char.IsWhiteSpace(x))
                     {
@@ -169,17 +154,17 @@ namespace CS4100_Lexical_Analyzer
                         comment = true;
                         caseGroup = 4;
                     }
-                    else if (Tokenizer.OtherTokenFirst(x))
+                    else if (OtherTokenFirst(x))
                     {
                         other1 = true;
                         caseGroup = 5;
                     }
-                    else if (Tokenizer.OtherTokenSecond(x))
+                    else if (OtherTokenSecond(x))
                     {
                         other2 = true;
                         caseGroup = 6;
                     }
-                    else if (Tokenizer.OtherTokenThird(x))
+                    else if (OtherTokenThird(x))
                     {
                         other3 = true;
                         caseGroup = 7;
@@ -202,7 +187,7 @@ namespace CS4100_Lexical_Analyzer
                         // append to identifier, first character is a letter
                         if (IdentifierChar(x))
                         {
-                            if (Tokenizer.workingToken.Length > 30)
+                            if (workingToken.Length > 30)
                             {
                                 tokenComplete = true;
                                 tokenTooLong = true;
@@ -210,7 +195,7 @@ namespace CS4100_Lexical_Analyzer
                             }
                             else
                             {
-                                Tokenizer.workingToken.Append(x);
+                                workingToken.Append(x);
                             }
                         }
                         else
@@ -226,19 +211,19 @@ namespace CS4100_Lexical_Analyzer
                         string test = workingToken.ToString();
                         if (Char.IsNumber(x))
                         {
-                            Tokenizer.workingToken.Append(x);
+                            workingToken.Append(x);
                         }
                         else if (('.'.Equals(x)) && !(test.Contains(".")))
                         {
-                            Tokenizer.workingToken.Append(x);
+                            workingToken.Append(x);
                         }
                         else if ((('E'.Equals(x)) || 'e'.Equals(x)) && (!(test.Contains("E")) || !(test.Contains("e"))) && (test.Contains(".")))
                         {
-                            Tokenizer.workingToken.Append(x);
+                            workingToken.Append(x);
                         }
                         else if ((('+'.Equals(x)) || '-'.Equals(x)) && ('E'.Equals(test[test.Length - 1])) || ('e'.Equals(test[test.Length - 1])))
                         {
-                            Tokenizer.workingToken.Append(x);
+                            workingToken.Append(x);
                         }
                         else
                         {
@@ -247,7 +232,7 @@ namespace CS4100_Lexical_Analyzer
                             tokenComplete = true;
                         }
 
-                        if (Tokenizer.workingToken.Length > 29)
+                        if (workingToken.Length > 29)
                         {
                             tokenComplete = true;
                             tokenTooLong = true;
@@ -257,22 +242,22 @@ namespace CS4100_Lexical_Analyzer
                         break;
 
                     case 3:
-                        Tokenizer.workingToken.Append(x);
+                        workingToken.Append(x);
                         break;
                     case 4:
                         // comment handling
                         // append next char
-                        if ((Tokenizer.workingToken.Length > 0) && ('#'.Equals(x)) && ('#'.Equals(Tokenizer.workingToken[0])))
+                        if ((workingToken.Length > 0) && ('#'.Equals(x)) && ('#'.Equals(workingToken[0])))
                         {
                             commentComplete = true;
                             tokenComplete = true;
                         }
-                        Tokenizer.workingToken.Append(x);
+                        workingToken.Append(x);
                         //tempChar = '\0';
                         break;
                     case 5:
                         // other symbols 1
-                        Tokenizer.workingToken.Append(x);
+                        workingToken.Append(x);
                         tempUsed = false;
                         tempChar = '\0';
                         tokenComplete = true;
@@ -281,8 +266,8 @@ namespace CS4100_Lexical_Analyzer
                         // other symbol 2             
                         if ((':'.Equals(x)) && ('='.Equals(nextChar)))
                         {
-                            Tokenizer.workingToken.Append(x);
-                            Tokenizer.workingToken.Append(nextChar);
+                            workingToken.Append(x);
+                            workingToken.Append(nextChar);
                             tempChar = '\0';
                             tempUsed = false;
                             tokenComplete = true;
@@ -290,15 +275,15 @@ namespace CS4100_Lexical_Analyzer
                         }
                         else if (('<'.Equals(x)) && ('='.Equals(nextChar)) || ('>'.Equals(nextChar)))
                         {
-                            Tokenizer.workingToken.Append(x);
-                            Tokenizer.workingToken.Append(nextChar);
+                            workingToken.Append(x);
+                            workingToken.Append(nextChar);
                             tempChar = '\0';
                             tempUsed = false;
                             tokenComplete = true;
                         }
                         else
                         {
-                            Tokenizer.workingToken.Append(x);
+                            workingToken.Append(x);
                             tokenComplete = true;
                             tempChar = nextChar;
                         }
@@ -320,7 +305,8 @@ namespace CS4100_Lexical_Analyzer
                     {
                         // not sure yet
                     }
-                    Tokenizer.ResetFlags();
+                    
+                    ResetFlags();
                     //tempChar = '\0';
                     nextToken = workingToken.ToString();
                     workingToken.Clear();
