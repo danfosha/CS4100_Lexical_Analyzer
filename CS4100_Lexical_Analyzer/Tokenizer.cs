@@ -9,14 +9,15 @@ using System.Threading.Tasks;
 // CS4100 Fall 2017 Lexical Analyzer Project - Fosha
 namespace CS4100_Lexical_Analyzer
 {
-    class TokenizerClass
+    public class TokenizerClass
     {
 
         public TokenizerClass()
         {
         }
-        
+
         public static StringBuilder workingToken = new StringBuilder();
+        public static StringBuilder workingLine = new StringBuilder();
 
         public static string nextToken;
         public static char tempChar;
@@ -41,40 +42,54 @@ namespace CS4100_Lexical_Analyzer
         public static bool tokenTooLong = false;
         public static bool stringComplete = false;
         public static bool commentComplete = false;
+        public static bool lineComplete = false;
         //public static String fileText; 
-        public static String textLine;
+        public static string textLine;
 
-        
+
         // getNextChar
         public static int charIndex = 0;
+        public static int lineIndex = 0;
+
+
         public static char GetNextChar()
         {
-            if (charIndex >= FileHandler.FileText.Length - 1)
+                        
+            if (charIndex >= textLine.Length)
             {
                 return '\a';
             }
             else
             {
-                return FileHandler.FileText[charIndex++];
+                return textLine[charIndex++];
             }
-        }        
 
-        public static string GetNextLine(bool echoOn)
+        }
+
+        public static string GetNextLine()
         {
-            using (StringReader reader = new StringReader(FileHandler.FileText))
-                textLine = reader.ReadLine();
-            if (echoOn)
+            while ((lineIndex <= FileHandler.FileText.Length) && (!FileHandler.FileText[lineIndex].Equals('\n')))
             {
-                Console.WriteLine(textLine);
+                workingLine.Append(FileHandler.FileText[lineIndex++]);
             }
+            lineComplete = true;
+            lineIndex++;
+            textLine = workingLine.ToString();
+            workingLine.Clear();
+            charIndex = 0; // tightly coupled!
             return textLine;
         }
 
         // could make getNextChar and call it inside below to match specs of assignment
         public static void GetNextToken(bool echoOn)
         {
-
-           string textLine = GetNextLine(echoOn);
+            string nextLine = GetNextLine();
+            if (echoOn)
+            {
+                Console.Write(nextLine);
+            }
+            
+            tokenComplete = false;
 
             do
             {
@@ -89,6 +104,7 @@ namespace CS4100_Lexical_Analyzer
                 else if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     caseGroup = 0;
+                    tokenComplete = true;
                     ResetFlags();
                 }
 
@@ -317,15 +333,13 @@ namespace CS4100_Lexical_Analyzer
                     {
                         // not sure yet
                     }
-                    
                     ResetFlags();
-                    //tempChar = '\0';
                     nextToken = workingToken.ToString();
                     workingToken.Clear();
                 }
 
             }
-            while ((!tokenComplete));
+            while (!tokenComplete);
         }
 
 
@@ -393,13 +407,13 @@ namespace CS4100_Lexical_Analyzer
             unidentified = false;
 
             tooLong = false;
-            tokenComplete = false;
             tokenTooLong = false;
             stringComplete = false;
             commentComplete = false;
         }
     }
-
-
-
 }
+
+
+
+

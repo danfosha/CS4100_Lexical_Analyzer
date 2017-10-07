@@ -33,7 +33,7 @@ namespace CS4100_Lexical_Analyzer
 
         }
 
-        public static void InitializeInputFile(string fileName)
+        public static string InitializeInputFile(string fileName)
         {
             try
             {   // Open the text file using a stream reader.
@@ -43,8 +43,9 @@ namespace CS4100_Lexical_Analyzer
                     string text = sr.ReadToEnd();
                     Console.WriteLine(text);
                     Console.ReadLine();
+                    
                     FileText = text;
-                   
+                    return FileText;
                 }
             }
             catch (Exception e)
@@ -52,6 +53,7 @@ namespace CS4100_Lexical_Analyzer
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
                 Console.ReadLine();
+                return "";
 
             }
         }

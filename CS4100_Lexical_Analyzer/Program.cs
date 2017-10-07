@@ -18,27 +18,30 @@ namespace CS4100_Lexical_Analyzer
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
 
+
+
             while (!TokenizerClass.tokenizerFinished)
             {
                 TokenizerClass.GetNextToken(echoOn);                
                 PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
             }
             
-
         }
 
         public static void InitializeStructures()
         {
             int MaxQuad = 100;
             FileHandler FileGetter = new FileHandler();
-            SymbolClass SymbolTable = new SymbolClass(MaxQuad);           
+            SymbolClass SymbolTable = new SymbolClass(MaxQuad);
             TokenizerClass Tokenizer = new TokenizerClass();
+
+
         }
 
         public static void PrintToken(string token, int tokenCode)
         {
 
-            Console.WriteLine();
+            Console.WriteLine(token +"\t"+ tokenCode);
         }
 
         public static void PrintHeader()
