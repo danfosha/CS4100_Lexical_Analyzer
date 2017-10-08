@@ -22,10 +22,12 @@ namespace CS4100_Lexical_Analyzer
 
             while (!TokenizerClass.tokenizerFinished)
             {
-                TokenizerClass.GetNextToken(echoOn);                
-                PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+                TokenizerClass.GetNextToken(echoOn);
+                //PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
             }
-            
+
+            Console.ReadLine();
+
         }
 
         public static void InitializeStructures()
@@ -40,8 +42,10 @@ namespace CS4100_Lexical_Analyzer
 
         public static void PrintToken(string token, int tokenCode)
         {
-
-            Console.WriteLine(token +"\t"+ tokenCode);
+            if (token.Length > 0)
+            {
+                Console.WriteLine(token + "\t" + tokenCode);
+            }
         }
 
         public static void PrintHeader()
