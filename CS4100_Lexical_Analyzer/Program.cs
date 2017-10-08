@@ -23,7 +23,7 @@ namespace CS4100_Lexical_Analyzer
             while (!TokenizerClass.tokenizerFinished)
             {
                 TokenizerClass.GetNextToken(echoOn);
-                //PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+                PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
             }
 
             Console.ReadLine();
