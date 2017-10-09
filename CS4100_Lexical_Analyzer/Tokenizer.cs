@@ -118,7 +118,15 @@ namespace CS4100_Lexical_Analyzer
 
             do
             {
-                nextChar = GetNextChar();
+                if (!tempUsed)
+                {
+                    nextChar = GetNextChar();
+                    x = nextChar;
+                }
+                else
+                {
+                    nextChar = tempChar;
+                }
 
                 // end token if new line
                 if (nextChar.Equals('\a'))
@@ -141,13 +149,7 @@ namespace CS4100_Lexical_Analyzer
                 }
                 else
                 {
-
-                    // set state with first character 
-                    if (!tempUsed)
-                    {
-                        x = nextChar;
-                    }
-
+                    
                     // check to see if already in a state
                     if (workingToken.Length > 1)
                     {
@@ -239,6 +241,7 @@ namespace CS4100_Lexical_Analyzer
                     {
                         case 0:
                             // ignore, don't append
+                            tempUsed = false;
                             break;
 
                         case 1:
@@ -259,7 +262,7 @@ namespace CS4100_Lexical_Analyzer
                             else
                             {
                                 tokenComplete = true;
-                                //tempChar = x;
+                                tempChar = x;
                                 tempUsed = true;
                             }
                             break;
@@ -281,7 +284,7 @@ namespace CS4100_Lexical_Analyzer
                             }
                             else
                             {
-                                //tempChar = x;
+                                tempChar = x;
                                 tempUsed = true;
                                 tokenComplete = true;
                             }
@@ -395,7 +398,7 @@ namespace CS4100_Lexical_Analyzer
                     workingToken.Clear();
                     if (tempUsed)
                     {
-                        workingToken.Append(x);
+                        tempChar = x;
                     }
                 }
 
