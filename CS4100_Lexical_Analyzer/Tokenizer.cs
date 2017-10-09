@@ -72,6 +72,8 @@ namespace CS4100_Lexical_Analyzer
 
             if (lineIndex >= FileHandler.FileText.Length)
             {
+                tokenComplete = true;
+                tokenizerFinished = true;
                 return ("\a");
             }
 
@@ -99,6 +101,7 @@ namespace CS4100_Lexical_Analyzer
             if (lineComplete)
             {
                 string nextLine = GetNextLine();
+                
                 if (echoOn)
                 {
                     Console.Write(nextLine);
@@ -132,7 +135,7 @@ namespace CS4100_Lexical_Analyzer
                 else if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     caseGroup = 0;
-                    if ((nextChar.Equals('\n')) && (!comment1) && (!comment2))
+                    if ((nextChar.Equals('\n')) && (!commentComplete))
                     {
                         tokenComplete = true;
                         lineComplete = true;
