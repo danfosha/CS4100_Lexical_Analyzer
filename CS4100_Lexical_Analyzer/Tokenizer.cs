@@ -90,6 +90,11 @@ namespace CS4100_Lexical_Analyzer
                 }
             }
 
+            if (!workingLine[workingLine.Length-1].Equals('\n'))
+            {
+                workingLine.Append('\n');
+            }
+
             lineComplete = false;
             textLine = workingLine.ToString();
             workingLine.Clear();
