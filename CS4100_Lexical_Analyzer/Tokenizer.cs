@@ -366,7 +366,13 @@ namespace CS4100_Lexical_Analyzer
                                 tempUsed = false;
                                 comment1 = true;
                             }
-                            else if (('*'.Equals(nextChar)) || ('>'.Equals(nextChar)) || ('='.Equals(nextChar)))
+                            else if (('*'.Equals(nextChar)) || ('='.Equals(nextChar)))
+                            {
+                                workingToken.Append(x);
+                                tokenComplete = true;
+
+                            }
+                            else if (('>'.Equals(tempChar) && (!OtherTokenThird(nextChar))))
                             {
                                 workingToken.Append(x);
                                 tokenComplete = true;
@@ -460,8 +466,8 @@ namespace CS4100_Lexical_Analyzer
 
 
         public static bool OtherTokenFirst(char x)
-        {
-            if (('/'.Equals(x)) || ('*'.Equals(x)) || ('+'.Equals(x)) || ('-'.Equals(x)) || (')'.Equals(x)) || (';'.Equals(x)) || (','.Equals(x)) || ('['.Equals(x)) || (']'.Equals(x)) || ('.'.Equals(x)))
+        { //
+            if (('/'.Equals(x))  || ('+'.Equals(x)) || ('*'.Equals(x)) || ('-'.Equals(x)) || (')'.Equals(x)) || (';'.Equals(x)) || (','.Equals(x)) || ('['.Equals(x)) || (']'.Equals(x)) || ('.'.Equals(x)))
             {
 
                 return true;
@@ -475,7 +481,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenSecond(char x)
         {
-            if ((':'.Equals(x)) || ('<'.Equals(x)) || ('('.Equals(x)) || ('>'.Equals(x)) || ('='.Equals(x)) || ('*'.Equals(x)))
+            if ((':'.Equals(x)) || ('<'.Equals(x)) || ('('.Equals(x)) || ('>'.Equals(x)) || ('='.Equals(x))) // || ('*'.Equals(x))
             {
                 return true;
             }
@@ -487,7 +493,14 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenThird(char x)
         {
-            return true;
+            if (('>'.Equals(x)) || ('='.Equals(x))) 
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static void ResetFlags()
