@@ -58,7 +58,7 @@ namespace CS4100_Lexical_Analyzer
             if (charIndex >= textLine.Length)
             {
                 lineComplete = true;
-                return ('\n');
+                return ('\0');
             }
             else
             {
@@ -72,9 +72,7 @@ namespace CS4100_Lexical_Analyzer
 
             if (lineIndex >= FileHandler.FileText.Length)
             {
-                tokenComplete = true;
-                tokenizerFinished = true;
-                return ("\a");
+                return (""); 
             }
 
             while ((lineIndex < FileHandler.FileText.Length) && (!FileHandler.FileText[lineIndex].Equals('\n')))
@@ -98,15 +96,23 @@ namespace CS4100_Lexical_Analyzer
         // could make getNextChar and call it inside below to match specs of assignment
         public static void GetNextToken(bool echoOn)
         {
-            if (lineComplete)
+
+
+            if ((lineComplete) && (!tokenizerFinished))
             {
                 string nextLine = GetNextLine();
-                
+                if (nextLine == "")
+                {
+                    tokenizerFinished = true;
+                    tempUsed = true;
+                    tempChar = '\0';
+                }
                 if (echoOn)
                 {
                     Console.Write(nextLine);
                 }
                 charIndex = 0;
+                //tokenComplete = false;
             }
 
             tokenComplete = false;
@@ -124,7 +130,7 @@ namespace CS4100_Lexical_Analyzer
                 }
 
                 // end token if new line
-                if (nextChar.Equals('\a'))
+                if (nextChar.Equals('\0'))
                 {
                     workingToken.Append("");
                     tokenComplete = true;
@@ -143,7 +149,7 @@ namespace CS4100_Lexical_Analyzer
                     }
 
                 }
-                else
+                else if(!tokenComplete)
                 {
 
                     // check to see if already in a state
