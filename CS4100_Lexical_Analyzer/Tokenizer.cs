@@ -55,12 +55,10 @@ namespace CS4100_Lexical_Analyzer
 
         public static char GetNextChar()
         {
-
             if (charIndex >= textLine.Length)
             {
                 lineComplete = true;
-                tokenizerFinished = true;
-                return ('\a');
+                return ('\n');
             }
             else
             {
@@ -72,29 +70,23 @@ namespace CS4100_Lexical_Analyzer
         public static string GetNextLine()
         {
 
+            if (lineIndex >= FileHandler.FileText.Length)
+            {
+                return ("\a");
+            }
+
             while ((lineIndex < FileHandler.FileText.Length) && (!FileHandler.FileText[lineIndex].Equals('\n')))
             {
-                if (lineIndex >= FileHandler.FileText.Length)
-                {
-                    tokenizerFinished = true;
-                    return "";
-                }
+                workingLine.Append(FileHandler.FileText[lineIndex++]);
 
-                if (FileHandler.FileText[lineIndex].Equals('\n'))
-                {
-                    workingLine.Append('\n');
-                }
-                else
-                {
-                    workingLine.Append(FileHandler.FileText[lineIndex++]);
-                }
             }
 
-            if (!workingLine[workingLine.Length-1].Equals('\n'))
+            if (FileHandler.FileText[lineIndex].Equals('\n'))
             {
                 workingLine.Append('\n');
+                lineIndex++;
             }
-
+            
             lineComplete = false;
             textLine = workingLine.ToString();
             workingLine.Clear();
@@ -143,13 +135,14 @@ namespace CS4100_Lexical_Analyzer
                     if ((nextChar.Equals('\n')) && (!comment1) && (!comment2))
                     {
                         tokenComplete = true;
+                        lineComplete = true;
                         ResetFlags();
                     }
 
                 }
                 else
                 {
-                    
+
                     // check to see if already in a state
                     if (workingToken.Length > 1)
                     {
