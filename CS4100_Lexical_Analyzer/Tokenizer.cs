@@ -136,11 +136,11 @@ namespace CS4100_Lexical_Analyzer
                 }
                 else if (comment1) // ##
                 {
-                    caseGroup = 5;
+                    caseGroup = 4;
                 }
                 else if (comment2) // (**)
                 {
-                    caseGroup = 4;
+                    caseGroup = 5;
                 }
                 else if (other1)
                 {
@@ -281,17 +281,6 @@ namespace CS4100_Lexical_Analyzer
                         break;
 
                     case 4:
-                        // comment handling ##
-                        // append next char
-                        if ((workingToken.Length > 0) && ('#'.Equals(x)) && ('#'.Equals(workingToken[0])))
-                        {
-                            commentComplete = true;
-                            tokenComplete = true;
-                        }
-                        workingToken.Append(x);
-                        //tempChar = '\0';
-                        break;
-                    case 5:
                         // comments (* *)
                         if ('('.Equals(workingToken[0]) && ('*'.Equals(workingToken[1])))
                         {
@@ -303,6 +292,18 @@ namespace CS4100_Lexical_Analyzer
                             }
                         }
                         workingToken.Append(x);
+                        break;
+                    case 5:
+                        
+                        // comment handling ##
+                        // append next char
+                        if ((workingToken.Length > 0) && ('#'.Equals(x)) && ('#'.Equals(workingToken[0])))
+                        {
+                            commentComplete = true;
+                            tokenComplete = true;
+                        }
+                        workingToken.Append(x);
+                        //tempChar = '\0';
                         break;
                     case 6:
                         // other symbol 1 / * + - ( ) ; , [ ] .
