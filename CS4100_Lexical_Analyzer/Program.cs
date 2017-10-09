@@ -13,7 +13,7 @@ namespace CS4100_Lexical_Analyzer
         public static void Main(string[] args)
         {
             bool echoOn = true;
-            string fileName = "lexical_test.txt";
+            string fileName = "lexical_test2.txt";
             InitializeStructures();
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
@@ -26,6 +26,7 @@ namespace CS4100_Lexical_Analyzer
                 PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
             }
 
+            Console.WriteLine("Tokenizer Finished");
             Console.ReadLine();
 
         }

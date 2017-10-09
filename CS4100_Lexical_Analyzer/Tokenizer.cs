@@ -43,7 +43,7 @@ namespace CS4100_Lexical_Analyzer
         public static bool tokenTooLong = false;
         public static bool stringComplete = false;
         public static bool commentComplete = false;
-        public static bool lineComplete = false;
+        public static bool lineComplete = true;
         //public static String fileText; 
         public static string textLine;
 
@@ -59,6 +59,7 @@ namespace CS4100_Lexical_Analyzer
             if (charIndex >= textLine.Length)
             {
                 lineComplete = true;
+                tokenizerFinished = true;
                 return ('\a');
             }
             else
@@ -70,36 +71,42 @@ namespace CS4100_Lexical_Analyzer
 
         public static string GetNextLine()
         {
-            if (lineIndex >= FileHandler.FileText.Length - 1)
+
+            while ((lineIndex < FileHandler.FileText.Length) && (!FileHandler.FileText[lineIndex].Equals('\n')))
             {
-                tokenizerFinished = true;
-                return "";
+                if (lineIndex >= FileHandler.FileText.Length)
+                {
+                    tokenizerFinished = true;
+                    return "";
+                }
+
+                if (FileHandler.FileText[lineIndex].Equals('\n'))
+                {
+                    workingLine.Append('\n');
+                }
+                else
+                {
+                    workingLine.Append(FileHandler.FileText[lineIndex++]);
+                }
             }
 
-            while (!FileHandler.FileText[lineIndex].Equals('\n'))
-            {
-                workingLine.Append(FileHandler.FileText[lineIndex++]);
-            }
-
-            workingLine.Append('\n');
-            lineIndex++;
-            lineComplete = true;
+            lineComplete = false;
             textLine = workingLine.ToString();
             workingLine.Clear();
-            charIndex = 0; // tightly coupled!
             return textLine;
         }
 
         // could make getNextChar and call it inside below to match specs of assignment
         public static void GetNextToken(bool echoOn)
         {
-            if (!tempUsed)
+            if (lineComplete)
             {
                 string nextLine = GetNextLine();
                 if (echoOn)
                 {
                     Console.Write(nextLine);
                 }
+                charIndex = 0;
             }
 
             tokenComplete = false;
@@ -109,8 +116,15 @@ namespace CS4100_Lexical_Analyzer
                 nextChar = GetNextChar();
 
                 // end token if new line
+                if (nextChar.Equals('\a'))
+                {
+                    workingToken.Append("");
+                    tokenComplete = true;
+                    tokenizerFinished = true;
 
-                if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
+                }
+
+                else if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     caseGroup = 0;
                     if ((nextChar.Equals('\n')) && (!comment1) && (!comment2))
@@ -120,251 +134,248 @@ namespace CS4100_Lexical_Analyzer
                     }
 
                 }
-
-                // set state with first character 
-                if (tempChar != '\0')
-                {
-                    x = tempChar;
-                }
                 else
                 {
-                    x = nextChar;
-                }
 
-
-                // check to see if already in a state
-                if (workingToken.Length > 1)
-                {
-                    if (identifier)
+                    // set state with first character 
+                    if (!tempUsed)
                     {
-                        caseGroup = 1;
-                    }
-                    else if (numeric)
-                    {
-                        caseGroup = 2;
-                    }
-                    else if (stringConstant)
-                    {
-                        caseGroup = 3;
-                    }
-                    else if (comment1) // ##
-                    {
-                        caseGroup = 4;
-                    }
-                    else if (comment2) // (**)
-                    {
-                        caseGroup = 5;
-                    }
-                    else if (other1)
-                    {
-                        caseGroup = 6;
-                    }
-                    else if (other2)
-                    {
-                        caseGroup = 7;
-                    }
-                    else if (other3)
-                    {
-                        caseGroup = 8;
-                    }
-                }
-                
-                if (workingToken.Length < 1) // first character
-                {
-                    if (Char.IsWhiteSpace(x))
-                    {
-                        caseGroup = 0;
-                    }
-                    else if (Char.IsLetter(x) || '$'.Equals(x) || '_'.Equals(x))
-                    {
-                        identifier = true;
-                        caseGroup = 1;
-                    }
-                    else if (Char.IsDigit(x))
-                    {
-                        numeric = true;
-                        caseGroup = 2;
-                    }
-                    else if ('"'.Equals(x))
-                    {
-                        stringConstant = true;
-                        caseGroup = 3;
+                        x = nextChar;
                     }
 
-                    else if ('#'.Equals(x))
+                    // check to see if already in a state
+                    if (workingToken.Length > 1)
                     {
-                        comment2 = true;
-                        caseGroup = 5;
-                    }
-                    else if (OtherTokenFirst(x))
-                    {
-                        other1 = true;
-                        caseGroup = 5;
-                    }
-                    else if (OtherTokenSecond(x))
-                    {
-                        other2 = true;
-                        caseGroup = 7;
-                    }
-                    else if (OtherTokenThird(x))
-                    {
-                        other3 = true;
-                        caseGroup = 8;
-                    }
-                    else
-                    { // put undefined here
-                        caseGroup = 0;
-                    }
-
-                }
-
-
-                switch (caseGroup)
-                {
-                    case 0:
-                        // ignore, don't append
-                        break;
-
-                    case 1:
-                        // append to identifier, first character is a letter
-                        if (IdentifierChar(x))
+                        if (identifier)
                         {
-                            if (workingToken.Length > 30)
+                            caseGroup = 1;
+                        }
+                        else if (numeric)
+                        {
+                            caseGroup = 2;
+                        }
+                        else if (stringConstant)
+                        {
+                            caseGroup = 3;
+                        }
+                        else if (comment1) // ##
+                        {
+                            caseGroup = 4;
+                        }
+                        else if (comment2) // (**)
+                        {
+                            caseGroup = 5;
+                        }
+                        else if (other1)
+                        {
+                            caseGroup = 6;
+                        }
+                        else if (other2)
+                        {
+                            caseGroup = 7;
+                        }
+                        else if (other3)
+                        {
+                            caseGroup = 8;
+                        }
+                    }
+
+                    if (workingToken.Length < 1) // first character
+                    {
+                        if (Char.IsWhiteSpace(x))
+                        {
+                            caseGroup = 0;
+                        }
+                        else if (Char.IsLetter(x) || '$'.Equals(x) || '_'.Equals(x))
+                        {
+                            identifier = true;
+                            caseGroup = 1;
+                        }
+                        else if (Char.IsDigit(x))
+                        {
+                            numeric = true;
+                            caseGroup = 2;
+                        }
+                        else if ('"'.Equals(x))
+                        {
+                            stringConstant = true;
+                            caseGroup = 3;
+                        }
+
+                        else if ('#'.Equals(x))
+                        {
+                            comment2 = true;
+                            caseGroup = 5;
+                        }
+                        else if (OtherTokenFirst(x))
+                        {
+                            other1 = true;
+                            caseGroup = 5;
+                        }
+                        else if (OtherTokenSecond(x))
+                        {
+                            other2 = true;
+                            caseGroup = 7;
+                        }
+                        else if (OtherTokenThird(x))
+                        {
+                            other3 = true;
+                            caseGroup = 8;
+                        }
+                        else
+                        { // put undefined here
+                            caseGroup = 0;
+                        }
+
+                    }
+
+
+                    switch (caseGroup)
+                    {
+                        case 0:
+                            // ignore, don't append
+                            break;
+
+                        case 1:
+                            // append to identifier, first character is a letter
+                            if (IdentifierChar(x))
                             {
-                                //tokenComplete = true;
-                                tokenTooLong = true;
-                                break;
+                                if (workingToken.Length > 30)
+                                {
+                                    //tokenComplete = true;
+                                    tokenTooLong = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    workingToken.Append(x);
+                                }
                             }
                             else
                             {
-                                workingToken.Append(x);
+                                tokenComplete = true;
+                                //tempChar = x;
+                                tempUsed = true;
                             }
-                        }
-                        else
-                        {
-                            tokenComplete = true;
-                            tempChar = x;
-                            tempUsed = true;
-                        }
-                        break;
+                            break;
 
-                    case 2:
-                        // append to numeric
-                        string test = workingToken.ToString();
-                        if (NumericChar(x, test))
-                        {
-                            if (test.Length < 29)
+                        case 2:
+                            // append to numeric
+                            string test = workingToken.ToString();
+                            if (NumericChar(x, test))
                             {
-                                workingToken.Append(x);
+                                if (test.Length < 29)
+                                {
+                                    workingToken.Append(x);
+                                }
+                                else
+                                {
+                                    tokenTooLong = true;
+                                }
+
                             }
                             else
                             {
-                                tokenTooLong = true;
+                                //tempChar = x;
+                                tempUsed = true;
+                                tokenComplete = true;
                             }
 
-                        }
-                        else
-                        {
-                            tempChar = x;
-                            tempUsed = true;
-                            tokenComplete = true;
-                        }
+                            break;
 
-                        break;
-
-                    case 3: // stringConstant
-                        if ((workingToken.Length > 0) && ('"'.Equals(x)) && ('"'.Equals(workingToken[0])))
-                        {
-                            commentComplete = true;
-                            tokenComplete = true;
-                        }
-                        workingToken.Append(x);
-                        break;
-
-                    case 4:
-                        // comments (* *)
-                        if ('('.Equals(workingToken[0]) && ('*'.Equals(workingToken[1])))
-                        {
-
-                            if ('*'.Equals(workingToken[workingToken.Length - 1]) && (')'.Equals(x)))
+                        case 3: // stringConstant
+                            if ((workingToken.Length > 0) && ('"'.Equals(x)) && ('"'.Equals(workingToken[0])))
                             {
                                 commentComplete = true;
                                 tokenComplete = true;
                             }
-                        }
-                        workingToken.Append(x);
-                        break;
-                    case 5:
+                            workingToken.Append(x);
+                            break;
 
-                        // comment handling ##
-                        // append next char
-                        if ((workingToken.Length > 0) && ('#'.Equals(x)) && ('#'.Equals(workingToken[0])))
-                        {
-                            commentComplete = true;
-                            tokenComplete = true;
-                        }
-                        workingToken.Append(x);
-                        //tempChar = '\0';
-                        break;
-                    case 6:
-                        // other symbol 1 / * + - ( ) ; , [ ] .
-                        workingToken.Append(x);
-                        if (!('('.Equals(x)))
-                        {
-                            tokenComplete = true;
-                        }
-                        else
-                        {
-                            comment2 = true;
-                        }
-                        break;
-                    case 7:
-                        // other symbol 2 : <
-                        if ((':'.Equals(x)) && ('='.Equals(nextChar)))
-                        {
-                            workingToken.Append(x);
-                            workingToken.Append(nextChar);
-                            tempChar = '\0';
-                            tempUsed = false;
-                            tokenComplete = true;
+                        case 4:
+                            // comments (* *)
+                            if ('('.Equals(workingToken[0]) && ('*'.Equals(workingToken[1])))
+                            {
 
-                        }
-                        else if (('<'.Equals(x)) && (('='.Equals(nextChar)) || ('>'.Equals(nextChar))))
-                        {
+                                if ('*'.Equals(workingToken[workingToken.Length - 1]) && (')'.Equals(x)))
+                                {
+                                    commentComplete = true;
+                                    tokenComplete = true;
+                                }
+                            }
                             workingToken.Append(x);
-                            workingToken.Append(nextChar);
-                            tempChar = '\0';
-                            tempUsed = false;
-                            tokenComplete = true;
-                        }
-                        else
-                        {
+                            break;
+                        case 5:
+
+                            // comment handling ##
+                            // append next char
+                            if ((workingToken.Length > 0) && ('#'.Equals(x)) && ('#'.Equals(workingToken[0])))
+                            {
+                                commentComplete = true;
+                                tokenComplete = true;
+                            }
                             workingToken.Append(x);
-                            tokenComplete = true;
-                            tempChar = nextChar;
-                        }
-                        break;
-                    case 8:
-                        // othersymbol3 > =
-                        if (('>'.Equals(x)) && ('='.Equals(nextChar)))
-                        {
+                            //tempChar = '\0';
+                            break;
+                        case 6:
+                            // other symbol 1 / * + - ( ) ; , [ ] .
                             workingToken.Append(x);
-                            workingToken.Append(nextChar);
-                            tokenComplete = true;
-                        }
-                        else
-                        {
-                            workingToken.Append(x);
-                            tokenComplete = true;
-                            tempChar = nextChar;
-                        }
-                        break;
+                            if (!('('.Equals(x)))
+                            {
+                                tokenComplete = true;
+                            }
+                            else
+                            {
+                                comment2 = true;
+                            }
+                            break;
+                        case 7:
+                            // other symbol 2 : <
+                            if ((':'.Equals(x)) && ('='.Equals(nextChar)))
+                            {
+                                workingToken.Append(x);
+                                workingToken.Append(nextChar);
+                                //tempChar = '\0';
+                                tempUsed = false;
+                                tokenComplete = true;
+
+                            }
+                            else if (('<'.Equals(x)) && (('='.Equals(nextChar)) || ('>'.Equals(nextChar))))
+                            {
+                                workingToken.Append(x);
+                                workingToken.Append(nextChar);
+                                //tempChar = '\0';
+                                tempUsed = false;
+                                tokenComplete = true;
+                            }
+                            else
+                            {
+                                workingToken.Append(x);
+                                tokenComplete = true;
+                                tempChar = nextChar;
+                            }
+                            break;
+                        case 8:
+                            // othersymbol3 > =
+                            if (('>'.Equals(x)) && ('='.Equals(nextChar)))
+                            {
+                                workingToken.Append(x);
+                                workingToken.Append(nextChar);
+                                tokenComplete = true;
+                            }
+                            else
+                            {
+                                workingToken.Append(x);
+                                tokenComplete = true;
+                                tempChar = nextChar;
+                            }
+                            break;
 
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
-
                 // get the token out
                 if (tokenComplete)
                 {
@@ -391,7 +402,7 @@ namespace CS4100_Lexical_Analyzer
         // methods
         public static bool IdentifierChar(char x)
         {
-            if ((Char.IsLetter(x) || '$'.Equals(x) || '_'.Equals(x)))
+            if (Char.IsLetter(x) || '$'.Equals(x) || '_'.Equals(x) || Char.IsNumber(x))
             {
                 return true;
             }
