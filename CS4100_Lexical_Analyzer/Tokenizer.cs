@@ -86,7 +86,7 @@ namespace CS4100_Lexical_Analyzer
                 workingLine.Append('\n');
                 lineIndex++;
             }
-            
+
             lineComplete = false;
             textLine = workingLine.ToString();
             workingLine.Clear();
@@ -158,11 +158,11 @@ namespace CS4100_Lexical_Analyzer
                         {
                             caseGroup = 3;
                         }
-                        else if (comment1) // ##
+                        else if (comment1) // (**)
                         {
                             caseGroup = 4;
                         }
-                        else if (comment2) // (**)
+                        else if (comment2) // ##
                         {
                             caseGroup = 5;
                         }
@@ -210,7 +210,7 @@ namespace CS4100_Lexical_Analyzer
                         else if (OtherTokenFirst(x))
                         {
                             other1 = true;
-                            caseGroup = 5;
+                            caseGroup = 6;
                         }
                         else if (OtherTokenSecond(x))
                         {
@@ -295,14 +295,10 @@ namespace CS4100_Lexical_Analyzer
 
                         case 4:
                             // comments (* *)
-                            if ('('.Equals(workingToken[0]) && ('*'.Equals(workingToken[1])))
+                            if ('*'.Equals(workingToken[workingToken.Length - 1]) && (')'.Equals(x)))
                             {
-
-                                if ('*'.Equals(workingToken[workingToken.Length - 1]) && (')'.Equals(x)))
-                                {
-                                    commentComplete = true;
-                                    tokenComplete = true;
-                                }
+                                commentComplete = true;
+                                tokenComplete = true;
                             }
                             workingToken.Append(x);
                             break;
@@ -315,61 +311,78 @@ namespace CS4100_Lexical_Analyzer
                                 commentComplete = true;
                                 tokenComplete = true;
                             }
+
                             workingToken.Append(x);
                             //tempChar = '\0';
                             break;
                         case 6:
-                            // other symbol 1 / * + - ( ) ; , [ ] .
+                            // other symbol 1 / + -  ) ; , [ ] .
                             workingToken.Append(x);
-                            if (!('('.Equals(x)))
-                            {
-                                tokenComplete = true;
-                            }
-                            else
-                            {
-                                comment2 = true;
-                            }
+                            tokenComplete = true;
                             break;
                         case 7:
-                            // other symbol 2 : <
-                            if ((':'.Equals(x)) && ('='.Equals(nextChar)))
+                            // other symbol 2 : < (
+                            if ((':'.Equals(tempChar)) && ('='.Equals(nextChar)))
                             {
-                                workingToken.Append(x);
+                                //workingToken.Append(x);
                                 workingToken.Append(nextChar);
-                                //tempChar = '\0';
+                                tempChar = '\0';
                                 tempUsed = false;
                                 tokenComplete = true;
 
                             }
-                            else if (('<'.Equals(x)) && (('='.Equals(nextChar)) || ('>'.Equals(nextChar))))
+                            else if (('<'.Equals(tempChar)) && (('='.Equals(nextChar)) || ('>'.Equals(nextChar))))
                             {
-                                workingToken.Append(x);
+                                //workingToken.Append(x);
                                 workingToken.Append(nextChar);
-                                //tempChar = '\0';
+                                tempChar = '\0';
                                 tempUsed = false;
                                 tokenComplete = true;
                             }
-                            else
+
+                            else if (('>'.Equals(tempChar)) && ('='.Equals(nextChar)))
+                            {
+                                //workingToken.Append(x);
+                                workingToken.Append(nextChar);
+                                tempChar = '\0';
+                                tempUsed = false;
+                                tokenComplete = true;
+
+                            }
+                            else if (('('.Equals(tempChar)) && (('*'.Equals(nextChar))))
+                            {
+                                //workingToken.Append(x);
+                                workingToken.Append(nextChar);
+                                tempChar = '\0';
+                                tempUsed = false;
+                                comment1 = true;
+                            }
+                            else if (('*'.Equals(nextChar)) || ('>'.Equals(nextChar)) || ('='.Equals(nextChar)))
                             {
                                 workingToken.Append(x);
                                 tokenComplete = true;
-                                tempChar = nextChar;
                             }
+                            else
+                            {
+                                workingToken.Append(x);
+                                tempChar = x;
+                            }
+
                             break;
                         case 8:
-                            // othersymbol3 > =
-                            if (('>'.Equals(x)) && ('='.Equals(nextChar)))
-                            {
-                                workingToken.Append(x);
-                                workingToken.Append(nextChar);
-                                tokenComplete = true;
-                            }
-                            else
-                            {
-                                workingToken.Append(x);
-                                tokenComplete = true;
-                                tempChar = nextChar;
-                            }
+                            //// othersymbol3 > = *
+                            //if (('>'.Equals(tempChar)) && ('='.Equals(nextChar)))
+                            //{
+                            //    workingToken.Append(x);
+                            //    workingToken.Append(nextChar);
+                            //    tokenComplete = true;
+                            //}
+                            //else
+                            //{
+                            //    workingToken.Append(x);
+                            //    tokenComplete = true;
+                            //    tempChar = nextChar;
+                            //}
                             break;
 
 
@@ -439,7 +452,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenFirst(char x)
         {
-            if (('/'.Equals(x)) || ('*'.Equals(x)) || ('+'.Equals(x)) || ('-'.Equals(x)) || ('('.Equals(x)) || (')'.Equals(x)) || (';'.Equals(x)) || (','.Equals(x)) || ('['.Equals(x)) || (']'.Equals(x)) || ('.'.Equals(x)))
+            if (('/'.Equals(x)) || ('*'.Equals(x)) || ('+'.Equals(x)) || ('-'.Equals(x)) || (')'.Equals(x)) || (';'.Equals(x)) || (','.Equals(x)) || ('['.Equals(x)) || (']'.Equals(x)) || ('.'.Equals(x)))
             {
 
                 return true;
@@ -453,7 +466,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenSecond(char x)
         {
-            if ((':'.Equals(x)) || ('<'.Equals(x)))
+            if ((':'.Equals(x)) || ('<'.Equals(x)) || ('('.Equals(x)) || ('>'.Equals(x)) || ('='.Equals(x)) || ('*'.Equals(x)))
             {
                 return true;
             }
@@ -465,14 +478,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenThird(char x)
         {
-            if (('>'.Equals(x)) || ('='.Equals(x)))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
 
         public static void ResetFlags()
