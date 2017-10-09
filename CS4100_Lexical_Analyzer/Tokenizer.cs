@@ -121,42 +121,6 @@ namespace CS4100_Lexical_Analyzer
 
                 }
 
-                // check to see if already in a state
-                if (identifier)
-                {
-                    caseGroup = 1;
-                }
-                else if (numeric)
-                {
-                    caseGroup = 2;
-                }
-                else if (stringConstant)
-                {
-                    caseGroup = 3;
-                }
-                else if (comment1) // ##
-                {
-                    caseGroup = 4;
-                }
-                else if (comment2) // (**)
-                {
-                    caseGroup = 5;
-                }
-                else if (other1)
-                {
-                    caseGroup = 6;
-                }
-                else if (other2)
-                {
-                    caseGroup = 7;
-                }
-                else if (other3)
-                {
-                    caseGroup = 8;
-                }
-
-
-
                 // set state with first character 
                 if (tempChar != '\0')
                 {
@@ -168,6 +132,43 @@ namespace CS4100_Lexical_Analyzer
                 }
 
 
+                // check to see if already in a state
+                if (workingToken.Length > 1)
+                {
+                    if (identifier)
+                    {
+                        caseGroup = 1;
+                    }
+                    else if (numeric)
+                    {
+                        caseGroup = 2;
+                    }
+                    else if (stringConstant)
+                    {
+                        caseGroup = 3;
+                    }
+                    else if (comment1) // ##
+                    {
+                        caseGroup = 4;
+                    }
+                    else if (comment2) // (**)
+                    {
+                        caseGroup = 5;
+                    }
+                    else if (other1)
+                    {
+                        caseGroup = 6;
+                    }
+                    else if (other2)
+                    {
+                        caseGroup = 7;
+                    }
+                    else if (other3)
+                    {
+                        caseGroup = 8;
+                    }
+                }
+                
                 if (workingToken.Length < 1) // first character
                 {
                     if (Char.IsWhiteSpace(x))
@@ -193,7 +194,7 @@ namespace CS4100_Lexical_Analyzer
                     else if ('#'.Equals(x))
                     {
                         comment2 = true;
-                        caseGroup = 4;
+                        caseGroup = 5;
                     }
                     else if (OtherTokenFirst(x))
                     {
@@ -294,7 +295,7 @@ namespace CS4100_Lexical_Analyzer
                         workingToken.Append(x);
                         break;
                     case 5:
-                        
+
                         // comment handling ##
                         // append next char
                         if ((workingToken.Length > 0) && ('#'.Equals(x)) && ('#'.Equals(workingToken[0])))
@@ -373,7 +374,7 @@ namespace CS4100_Lexical_Analyzer
                     }
 
                     ResetFlags();
-                 
+
                     nextToken = workingToken.ToString();
                     workingToken.Clear();
                     if (tempUsed)
