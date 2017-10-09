@@ -81,7 +81,12 @@ namespace CS4100_Lexical_Analyzer
 
             }
 
-            if (FileHandler.FileText[lineIndex].Equals('\n'))
+            if (lineIndex < FileHandler.FileText.Length)
+            {
+                workingLine.Append('\n');
+                lineIndex++;
+            }
+            else
             {
                 workingLine.Append('\n');
                 lineIndex++;
