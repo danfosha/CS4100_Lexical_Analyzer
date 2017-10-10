@@ -504,7 +504,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenThird(char x)
         {
-            if (('>'.Equals(x)) || ('='.Equals(x))) 
+            if (('>'.Equals(x)) || ('='.Equals(x)) || ('('.Equals(x))) 
             {
                 return true;
             }
