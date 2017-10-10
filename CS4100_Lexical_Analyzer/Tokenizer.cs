@@ -132,6 +132,12 @@ namespace CS4100_Lexical_Analyzer
                 else
                 {
                     nextChar = tempChar;
+                    if (identifier || numeric)
+                    {
+                        tempUsed = false;
+                        identifier = false;
+                        numeric = false;
+                    }
                 }
 
                 // end token if new line
@@ -510,8 +516,8 @@ namespace CS4100_Lexical_Analyzer
 
         public static void ResetFlags()
         {
-            identifier = false;
-            numeric = false;
+            //identifier = false;
+            //numeric = false;
             stringConstant = false;
             comment1 = false;
             comment2 = false;
