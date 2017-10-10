@@ -427,23 +427,6 @@ namespace CS4100_Lexical_Analyzer
                             }
 
                             break;
-                        case 8:
-                            //// othersymbol3 > = *
-                            //if (('>'.Equals(tempChar)) && ('='.Equals(nextChar)))
-                            //{
-                            //    workingToken.Append(x);
-                            //    workingToken.Append(nextChar);
-                            //    tokenComplete = true;
-                            //}
-                            //else
-                            //{
-                            //    workingToken.Append(x);
-                            //    tokenComplete = true;
-                            //    tempChar = nextChar;
-                            //}
-                            break;
-
-
                         default:
                             break;
                     }
