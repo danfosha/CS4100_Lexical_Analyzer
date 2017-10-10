@@ -154,6 +154,10 @@ namespace CS4100_Lexical_Analyzer
                     caseGroup = 0;
                     if ((nextChar.Equals('\n')) && (!commentComplete))
                     {
+                        if (!stringComplete)
+                        {
+                            workingToken.Clear();
+                        }
                         tokenComplete = true;
                         lineComplete = true;
                         ResetFlags();
@@ -307,7 +311,7 @@ namespace CS4100_Lexical_Analyzer
                         case 3: // stringConstant
                             if ((workingToken.Length > 0) && ('"'.Equals(x)) && ('"'.Equals(workingToken[0])))
                             {
-                                commentComplete = true;
+                                stringComplete = true;
                                 tokenComplete = true;
                             }
                             workingToken.Append(x);
