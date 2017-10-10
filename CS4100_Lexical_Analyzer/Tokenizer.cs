@@ -41,11 +41,12 @@ namespace CS4100_Lexical_Analyzer
         public static bool tooLong = false;
         public static bool tokenComplete = false;
         public static bool tokenTooLong = false;
-        public static bool stringComplete = false;
+        public static bool stringComplete = true;
         public static bool commentComplete = false;
         public static bool lineComplete = true;
         //public static String fileText; 
         public static string textLine;
+        public static string nextLine;
 
 
         // getNextChar
@@ -72,7 +73,7 @@ namespace CS4100_Lexical_Analyzer
 
             if (lineIndex >= FileHandler.FileText.Length)
             {
-                return (""); 
+                return ("");
             }
 
             while ((lineIndex < FileHandler.FileText.Length) && (!FileHandler.FileText[lineIndex].Equals('\n')))
@@ -105,7 +106,7 @@ namespace CS4100_Lexical_Analyzer
 
             if ((lineComplete) && (!tokenizerFinished))
             {
-                string nextLine = GetNextLine();
+                nextLine = GetNextLine();
                 if (nextLine == "")
                 {
                     tokenizerFinished = true;
@@ -146,25 +147,51 @@ namespace CS4100_Lexical_Analyzer
                     workingToken.Append("");
                     tokenComplete = true;
                     tokenizerFinished = true;
-
                 }
 
                 else if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     caseGroup = 0;
-                    if ((nextChar.Equals('\n')) && (!commentComplete))
+                    //if ((nextChar.Equals('\n')) && (!commentComplete))
+                    //{
+                    if (nextChar.Equals('\n'))
                     {
                         if (!stringComplete)
                         {
                             workingToken.Clear();
+                            tokenComplete = true;
+                            lineComplete = true;
+                            ResetFlags();
                         }
-                        tokenComplete = true;
-                        lineComplete = true;
-                        ResetFlags();
-                    }
+                        else if ((comment1 || comment2) && (!commentComplete))
+                        {
+                            tokenComplete = false;
+                            //refactor this into a method
+                            nextLine = GetNextLine();
+                            if (nextLine == "")
+                            {
+                                tokenizerFinished = true;
+                                tempUsed = true;
+                                tempChar = '\0';
+                            }
+                            if (echoOn)
+                            {
+                                Console.Write(nextLine);
+                            }
+                            charIndex = 0;
 
+
+                        }
+                        else
+                        {
+                            tokenComplete = true;
+                            lineComplete = true;
+                            ResetFlags();
+                        }
+
+                    }
                 }
-                else if(!tokenComplete)
+                else if (!tokenComplete)
                 {
 
                     // check to see if already in a state
@@ -309,6 +336,7 @@ namespace CS4100_Lexical_Analyzer
                             break;
 
                         case 3: // stringConstant
+                            stringComplete = false;
                             if ((workingToken.Length > 0) && ('"'.Equals(x)) && ('"'.Equals(workingToken[0])))
                             {
                                 stringComplete = true;
@@ -482,7 +510,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenFirst(char x)
         { //
-            if (('/'.Equals(x))  || ('+'.Equals(x)) || ('*'.Equals(x)) || ('-'.Equals(x)) || (')'.Equals(x)) || (';'.Equals(x)) || (','.Equals(x)) || ('['.Equals(x)) || (']'.Equals(x)) || ('.'.Equals(x)))
+            if (('/'.Equals(x)) || ('+'.Equals(x)) || ('*'.Equals(x)) || ('-'.Equals(x)) || (')'.Equals(x)) || (';'.Equals(x)) || (','.Equals(x)) || ('['.Equals(x)) || (']'.Equals(x)) || ('.'.Equals(x)))
             {
 
                 return true;
@@ -508,7 +536,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenThird(char x)
         {
-            if (('>'.Equals(x)) || ('='.Equals(x)) || ('('.Equals(x))) 
+            if (('>'.Equals(x)) || ('='.Equals(x)) || ('('.Equals(x)))
             {
                 return true;
             }
@@ -531,7 +559,7 @@ namespace CS4100_Lexical_Analyzer
 
             tooLong = false;
             tokenTooLong = false;
-            stringComplete = false;
+            stringComplete = true;
             commentComplete = false;
         }
     }
