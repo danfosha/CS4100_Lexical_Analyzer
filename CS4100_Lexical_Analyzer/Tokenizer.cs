@@ -115,6 +115,7 @@ namespace CS4100_Lexical_Analyzer
                 }
                 if (echoOn)
                 {
+                    Console.Write("Line: ");
                     Console.Write(nextLine);
                 }
                 charIndex = 0;
