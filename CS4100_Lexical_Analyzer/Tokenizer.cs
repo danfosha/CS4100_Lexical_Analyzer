@@ -233,11 +233,12 @@ namespace CS4100_Lexical_Analyzer
 
                     if (workingToken.Length < 1) // first character
                     {
+                        
                         while (Char.IsWhiteSpace(x))
                         {
-                            x= GetNextChar();
+                            x = GetNextChar();
                         }
-                        
+
                         if (Char.IsLetter(x) || '$'.Equals(x) || '_'.Equals(x))
                         {
                             identifier = true;
@@ -291,9 +292,33 @@ namespace CS4100_Lexical_Analyzer
 
                         case 1:
                             // append to identifier, first character is a letter
-                            if (IdentifierChar(x))
+                            workingToken.Append(x);
+                            x = GetNextChar();
+                            while (IdentifierChar(x))
                             {
-                                if (workingToken.Length > 30)
+                                if (workingToken.Length > 29)
+                                {
+                                    //tokenComplete = true;
+                                    tokenTooLong = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    workingToken.Append(x);
+}
+                                x = GetNextChar();
+                            }
+                            tokenComplete = true;
+                            break;
+
+                        case 2:
+                            // append to numeric
+                            workingToken.Append(x);
+                            x = GetNextChar();
+                            string test = workingToken.ToString();
+                            while (NumericChar(x, test))
+                            {
+                                if (workingToken.Length > 29)
                                 {
                                     //tokenComplete = true;
                                     tokenTooLong = true;
@@ -303,47 +328,30 @@ namespace CS4100_Lexical_Analyzer
                                 {
                                     workingToken.Append(x);
                                 }
+                                x = GetNextChar();
                             }
-                            else
-                            {
-                                tokenComplete = true;
-                                tempChar = x;
-                                tempUsed = true;
-                            }
-                            break;
-
-                        case 2:
-                            // append to numeric
-                            string test = workingToken.ToString();
-                            if (NumericChar(x, test))
-                            {
-                                if (test.Length < 29)
-                                {
-                                    workingToken.Append(x);
-                                }
-                                else
-                                {
-                                    tokenTooLong = true;
-                                }
-
-                            }
-                            else
-                            {
-                                tempChar = x;
-                                tempUsed = true;
-                                tokenComplete = true;
-                            }
-
+                            tokenComplete = true;
                             break;
 
                         case 3: // stringConstant
                             stringComplete = false;
-                            if ((workingToken.Length > 0) && ('"'.Equals(x)) && ('"'.Equals(workingToken[0])))
+                            while (!('"'.Equals(x)) && ('"'.Equals(workingToken[0])))
                             {
-                                stringComplete = true;
-                                tokenComplete = true;
+                                workingToken.Append(x);
+                                x = GetNextChar();
                             }
-                            workingToken.Append(x);
+                            if ('"'.Equals(x))
+                            {
+                                workingToken.Append(x);
+                                x = GetNextChar();
+                                stringComplete = true; // may not need
+                            }
+                            else if (LineEnd(x) || Formatting(x))
+                            {
+                                workingToken.Clear();
+                                x = GetNextChar();
+                            }
+                            tokenComplete = true;                            
                             break;
 
                         case 4:
@@ -529,6 +537,31 @@ namespace CS4100_Lexical_Analyzer
                 return false;
             }
         }
+
+        public static bool LineEnd(char x)
+        {
+            if ('\n'.Equals(x))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool Formatting(char x)
+        {
+            if ('\r'.Equals(x))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         public static void ResetFlags()
         {
