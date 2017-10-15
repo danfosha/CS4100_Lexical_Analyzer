@@ -21,7 +21,6 @@ namespace CS4100_Lexical_Analyzer
 
         public static string nextToken;
         public static char tempChar;
-        // public static char x;
         public static char nextChar;
         public static int caseGroup = -1;
         public static int tokenCode = -1;
@@ -36,15 +35,11 @@ namespace CS4100_Lexical_Analyzer
         public static bool other2 = false;
         public static bool other3 = false;
         public static bool unidentified = false;
-        public static bool tempUsed = false;
-
-        public static bool tooLong = false;
         public static bool tokenComplete = false;
         public static bool tokenTooLong = false;
         public static bool stringComplete = true;
         public static bool commentComplete = false;
         public static bool lineComplete = true;
-        //public static String fileText; 
         public static string textLine;
         public static string nextLine;
 
@@ -102,50 +97,31 @@ namespace CS4100_Lexical_Analyzer
         // could make getNextChar and call it inside below to match specs of assignment
         public static void GetNextToken(bool echoOn)
         {
-
-
             if ((lineComplete) && (!tokenizerFinished))
             {
                 nextLine = GetNextLine();
                 if (nextLine == "")
                 {
                     tokenizerFinished = true;
-                    //tempUsed = true;
-                    //tempChar = '\0';
                 }
                 if (echoOn)
                 {
                     Console.Write(nextLine);
                 }
                 charIndex = 0;
-                //tokenComplete = false;
             }
 
             tokenComplete = false;
-            nextChar = GetNextChar();
+            if (nextChar == '\0')
+            {
+                nextChar = GetNextChar();
+            }
 
             do
-            {
-                //if (!tempUsed)
-                //{
-                //    nextChar = GetNextChar();
-                //    x = nextChar;
-                //}
-                //else
-                //{
-                //    nextChar = tempChar;
-                //    if (identifier || numeric)
-                //    {
-                //        tempUsed = false;
-                //        identifier = false;
-                //        numeric = false;
-                //    }
-                //}
-
-                // end token if new line
+            {   // end token if new line
                 if (nextChar.Equals('\0'))
                 {
-                    workingToken.Append("");
+
                     tokenComplete = true;
                     tokenizerFinished = true;
                 }
@@ -153,6 +129,7 @@ namespace CS4100_Lexical_Analyzer
                 else if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     caseGroup = 0;
+                    nextChar = GetNextChar();
 
                     if (nextChar.Equals('\n'))
                     {
@@ -171,16 +148,13 @@ namespace CS4100_Lexical_Analyzer
                             if (nextLine == "")
                             {
                                 tokenizerFinished = true;
-                                //tempUsed = true;
-                                //tempChar = '\0';
+
                             }
                             if (echoOn)
                             {
                                 Console.Write(nextLine);
                             }
                             charIndex = 0;
-
-
                         }
                         else
                         {
@@ -188,51 +162,10 @@ namespace CS4100_Lexical_Analyzer
                             lineComplete = true;
                             ResetFlags();
                         }
-
                     }
                 }
                 else if (!tokenComplete)
                 {
-
-                    // check to see if already in a state
-                    //if (workingToken.Length > 1)
-                    //{
-                    //    if (identifier)
-                    //    {
-                    //        caseGroup = 1;
-                    //    }
-                    //    else if (numeric)
-                    //    {
-                    //        caseGroup = 2;
-                    //    }
-                    //    else if (stringConstant)
-                    //    {
-                    //        caseGroup = 3;
-                    //    }
-                    //    else if (comment1) // (**)
-                    //    {
-                    //        caseGroup = 4;
-                    //    }
-                    //    else if (comment2) // ##
-                    //    {
-                    //        caseGroup = 5;
-                    //    }
-                    //    else if (other1)
-                    //    {
-                    //        caseGroup = 6;
-                    //    }
-                    //    else if (other2)
-                    //    {
-                    //        caseGroup = 7;
-                    //    }
-                    //    else if (other3)
-                    //    {
-                    //        caseGroup = 8;
-                    //    }
-                    //}
-
-                    //if (workingToken.Length < 1) // first character
-                    //{
 
                     while (Char.IsWhiteSpace(nextChar))
                     {
@@ -287,7 +220,7 @@ namespace CS4100_Lexical_Analyzer
                     {
                         case 0:
                             // ignore, don't append
-                            tempUsed = false;
+                            // tempUsed = false;
                             break;
 
                         case 1:
@@ -317,8 +250,7 @@ namespace CS4100_Lexical_Analyzer
                             // append to numeric
                             workingToken.Append(nextChar);
                             nextChar = GetNextChar();
-                            string test = workingToken.ToString();
-                            while (NumericChar(nextChar, test))
+                            while (NumericChar(nextChar, workingToken.ToString()))
                             {
                                 if (workingToken.Length > 29)
                                 {
@@ -391,7 +323,7 @@ namespace CS4100_Lexical_Analyzer
                                 //workingToken.Append(x);
                                 workingToken.Append(nextChar);
                                 tempChar = '\0';
-                                tempUsed = false;
+                                // tempUsed = false;
                                 tokenComplete = true;
 
                             }
@@ -400,7 +332,7 @@ namespace CS4100_Lexical_Analyzer
                                 //workingToken.Append(x);
                                 workingToken.Append(nextChar);
                                 tempChar = '\0';
-                                tempUsed = false;
+                                // tempUsed = false;
                                 tokenComplete = true;
                             }
 
@@ -409,7 +341,7 @@ namespace CS4100_Lexical_Analyzer
                                 //workingToken.Append(x);
                                 workingToken.Append(nextChar);
                                 tempChar = '\0';
-                                tempUsed = false;
+                                // tempUsed = false;
                                 tokenComplete = true;
 
                             }
@@ -418,7 +350,7 @@ namespace CS4100_Lexical_Analyzer
                                 //workingToken.Append(x);
                                 workingToken.Append(nextChar);
                                 tempChar = '\0';
-                                tempUsed = false;
+                                // tempUsed = false;
                                 comment1 = true;
                             }
                             else if (('*'.Equals(nextChar)) || ('='.Equals(nextChar)))
@@ -455,10 +387,10 @@ namespace CS4100_Lexical_Analyzer
 
                     nextToken = workingToken.ToString();
                     workingToken.Clear();
-                    if (tempUsed)
-                    {
-                        tempChar = nextChar;
-                    }
+                    //if (tempUsed)
+                    //{
+                    //    tempChar = nextChar;
+                    //}
                 }
 
             }
@@ -489,7 +421,11 @@ namespace CS4100_Lexical_Analyzer
             {
                 return true;
             }
-            else if (('E'.Equals(x)) || ('e'.Equals(x))) // && ((!(test.Contains("E")) || !(test.Contains("e")))) && (test.Contains(".")) )
+            else if (
+                ( ('E'.Equals(x)) || ('e'.Equals(x)) )
+                    && (!(test.Contains("E")) || !(test.Contains("e"))) 
+                        && (test.Contains(".")) 
+                )
             {
                 return true;
             }
@@ -570,14 +506,13 @@ namespace CS4100_Lexical_Analyzer
         {
             //identifier = false;
             //numeric = false;
+            // tokenComplete = false;
             stringConstant = false;
             comment1 = false;
             comment2 = false;
             other1 = false;
             other2 = false;
             unidentified = false;
-
-            tooLong = false;
             tokenTooLong = false;
             stringComplete = true;
             commentComplete = false;
