@@ -141,7 +141,7 @@ namespace CS4100_Lexical_Analyzer
                 //        numeric = false;
                 //    }
                 //}
-                
+
                 // end token if new line
                 if (nextChar.Equals('\0'))
                 {
@@ -153,7 +153,7 @@ namespace CS4100_Lexical_Analyzer
                 else if ((nextChar.Equals('\n')) || (nextChar.Equals('\r')))
                 {
                     caseGroup = 0;
-                    
+
                     if (nextChar.Equals('\n'))
                     {
                         if (!stringComplete)
@@ -233,52 +233,52 @@ namespace CS4100_Lexical_Analyzer
 
                     //if (workingToken.Length < 1) // first character
                     //{
-                        
-                        while (Char.IsWhiteSpace(nextChar))
-                        {
-                            nextChar = GetNextChar();
-                        }
 
-                        if (Char.IsLetter(nextChar) || '$'.Equals(nextChar) || '_'.Equals(nextChar))
-                        {
-                            identifier = true;
-                            caseGroup = 1;
-                        }
-                        else if (Char.IsDigit(nextChar))
-                        {
-                            numeric = true;
-                            caseGroup = 2;
-                        }
-                        else if ('"'.Equals(nextChar))
-                        {
-                            stringConstant = true;
-                            caseGroup = 3;
-                        }
+                    while (Char.IsWhiteSpace(nextChar))
+                    {
+                        nextChar = GetNextChar();
+                    }
 
-                        else if ('#'.Equals(nextChar))
-                        {
-                            comment2 = true;
-                            caseGroup = 5;
-                        }
-                        else if (OtherTokenFirst(nextChar))
-                        {
-                            other1 = true;
-                            caseGroup = 6;
-                        }
-                        else if (OtherTokenSecond(nextChar))
-                        {
-                            other2 = true;
-                            caseGroup = 7;
-                        }
-                        else if (OtherTokenThird(nextChar))
-                        {
-                            other3 = true;
-                            caseGroup = 8;
-                        }
-                        else
-                        { // put undefined here
-                            caseGroup = 0;
-                        }
+                    if (Char.IsLetter(nextChar) || '$'.Equals(nextChar) || '_'.Equals(nextChar))
+                    {
+                        identifier = true;
+                        caseGroup = 1;
+                    }
+                    else if (Char.IsDigit(nextChar))
+                    {
+                        numeric = true;
+                        caseGroup = 2;
+                    }
+                    else if ('"'.Equals(nextChar))
+                    {
+                        stringConstant = true;
+                        caseGroup = 3;
+                    }
+
+                    else if ('#'.Equals(nextChar))
+                    {
+                        comment2 = true;
+                        caseGroup = 5;
+                    }
+                    else if (OtherTokenFirst(nextChar))
+                    {
+                        other1 = true;
+                        caseGroup = 6;
+                    }
+                    else if (OtherTokenSecond(nextChar))
+                    {
+                        other2 = true;
+                        caseGroup = 7;
+                    }
+                    else if (OtherTokenThird(nextChar))
+                    {
+                        other3 = true;
+                        caseGroup = 8;
+                    }
+                    else
+                    { // put undefined here
+                        caseGroup = 0;
+                    }
 
                     //}
 
@@ -296,17 +296,19 @@ namespace CS4100_Lexical_Analyzer
                             nextChar = GetNextChar();
                             while (IdentifierChar(nextChar))
                             {
-                                if (workingToken.Length > 29)
+                                if (workingToken.Length < 30)
                                 {
-                                    //tokenComplete = true;
-                                    tokenTooLong = true;
-                                    break;
+                                    workingToken.Append(nextChar);
+                                    nextChar = GetNextChar();
                                 }
                                 else
                                 {
-                                    workingToken.Append(nextChar);
-}
-                                nextChar = GetNextChar();
+                                    tokenTooLong = true;
+                                    while (IdentifierChar(nextChar))
+                                    {
+                                        nextChar = GetNextChar();
+                                    }
+                                }
                             }
                             tokenComplete = true;
                             break;
@@ -352,7 +354,7 @@ namespace CS4100_Lexical_Analyzer
                                 workingToken.Clear();
                                 nextChar = GetNextChar();
                             }
-                            tokenComplete = true;                            
+                            tokenComplete = true;
                             break;
 
                         case 4:
@@ -487,7 +489,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 return true;
             }
-            else if (('E'.Equals(x))  || ('e'.Equals(x))) // && ((!(test.Contains("E")) || !(test.Contains("e")))) && (test.Contains(".")) )
+            else if (('E'.Equals(x)) || ('e'.Equals(x))) // && ((!(test.Contains("E")) || !(test.Contains("e")))) && (test.Contains(".")) )
             {
                 return true;
             }
