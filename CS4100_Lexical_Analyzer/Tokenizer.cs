@@ -233,11 +233,12 @@ namespace CS4100_Lexical_Analyzer
 
                     if (workingToken.Length < 1) // first character
                     {
-                        if (Char.IsWhiteSpace(x))
+                        while (Char.IsWhiteSpace(x))
                         {
-                            caseGroup = 0;
+                            x= GetNextChar();
                         }
-                        else if (Char.IsLetter(x) || '$'.Equals(x) || '_'.Equals(x))
+                        
+                        if (Char.IsLetter(x) || '$'.Equals(x) || '_'.Equals(x))
                         {
                             identifier = true;
                             caseGroup = 1;
