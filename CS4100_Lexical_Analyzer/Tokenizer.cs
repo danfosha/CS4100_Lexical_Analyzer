@@ -133,14 +133,8 @@ namespace CS4100_Lexical_Analyzer
 
                     if (nextChar.Equals('\n'))
                     {
-                        if (!stringComplete)
-                        {
-                            workingToken.Clear();
-                            tokenComplete = true;
-                            lineComplete = true;
-                            ResetFlags();
-                        }
-                        else if ((comment1 || comment2) && (!commentComplete))
+                        
+                        if ((comment1 || comment2) && (!commentComplete))
                         {
                             tokenComplete = false;
                             //refactor this into a method
@@ -277,8 +271,9 @@ namespace CS4100_Lexical_Analyzer
                                 nextChar = GetNextChar();
                                 if (LineEnd(nextChar) || Formatting(nextChar))
                                 {
+                                    lineComplete = true;
+                                    tokenComplete = true;
                                     workingToken.Clear();
-                                    nextChar = GetNextChar();
                                     break;
                                 }
                             }
