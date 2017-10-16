@@ -439,9 +439,6 @@ namespace CS4100_Lexical_Analyzer
             return false;
         }
 
-
-
-
         public static bool OtherTokenFirst(char x)
         { //
             if (('/'.Equals(x)) || ('+'.Equals(x)) || ('*'.Equals(x)) || ('-'.Equals(x)) || (')'.Equals(x)) || (';'.Equals(x)) || (','.Equals(x)) || ('['.Equals(x)) || (']'.Equals(x)) || ('.'.Equals(x)))
@@ -523,6 +520,7 @@ namespace CS4100_Lexical_Analyzer
                     break;
                 case 5:
                     tokenCode = getReserveCode(token);
+                    // -1 means no symbol found
                     if (tokenCode == -1)
                     {
                         tokenCode = 99;
@@ -532,11 +530,9 @@ namespace CS4100_Lexical_Analyzer
                 default:
                     break;
             }
-            return 0;
-
+            return tokenCode;
         }
-
-
+        
         public static int getReserveCode(string token)
         {
             int code = ReserveWordClass.LookupCode(token);

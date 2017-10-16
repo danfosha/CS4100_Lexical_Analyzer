@@ -24,12 +24,12 @@ namespace CS4100_Lexical_Analyzer
 
         }
 
-        public static ReserveWords[] ReserveWordTable = new ReserveWords[100];
+        public static ReserveWords[] ReserveWordTable = new ReserveWords[44];
 
         public void Initialize()
         // Constructor
         {
-            
+
             Add("GOTO");
             Add("INTEGER");
             Add("TO");
@@ -77,7 +77,7 @@ namespace CS4100_Lexical_Analyzer
             Add("]");
             Add(":");
             Add(".");
-            
+
         }
 
         public void Add(string word)
@@ -94,11 +94,13 @@ namespace CS4100_Lexical_Analyzer
         {
             foreach (ReserveWords Data in ReserveWordTable)
             {
-
-                if (Data.Word == word)
-                {
-                    return Data.Code;
-                }
+                //if (Data.Word != null)
+                //{
+                    if (Data.Word.Equals(word))
+                    {
+                        return Data.Code;
+                    }
+                //}
             }
             return -1;
         }
