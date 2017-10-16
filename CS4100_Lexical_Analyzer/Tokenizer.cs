@@ -334,6 +334,7 @@ namespace CS4100_Lexical_Analyzer
                             // other symbol 1 / + -  ) ; , [ ] .
                             workingToken.Append(nextChar);
                             tokenComplete = true;
+                            nextChar = GetNextChar();
                             break;
                         case 7:
                             // other symbol 2 : < (
