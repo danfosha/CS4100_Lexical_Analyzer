@@ -133,7 +133,7 @@ namespace CS4100_Lexical_Analyzer
 
                     if (nextChar.Equals('\n'))
                     {
-                        
+
                         if ((comment1 || comment2) && (!commentComplete))
                         {
                             tokenComplete = false;
@@ -296,17 +296,39 @@ namespace CS4100_Lexical_Analyzer
                             workingToken.Append(nextChar);
                             break;
                         case 5:
-
                             // comment handling ##
-                            // append next char
-                            if ((workingToken.Length > 0) && ('#'.Equals(nextChar)) && ('#'.Equals(workingToken[0])))
-                            {
-                                commentComplete = true;
-                                tokenComplete = true;
-                            }
-
                             workingToken.Append(nextChar);
-                            //tempChar = '\0';
+                            nextChar = GetNextChar();
+                            while (!('#'.Equals(nextChar)))
+                            {
+                                if (nextChar == '\0')
+                                {
+                                    workingToken.Clear();
+                                    tokenComplete = true;
+                                    tokenizerFinished = true;
+                                    break;
+                                }
+                                else if (nextChar == '\n')
+                                {
+                                    nextLine = GetNextLine();
+                                    // below refactored into GetNextLine method?
+                                    if (nextLine == "")
+                                    {
+                                        tokenizerFinished = true;
+                                    }
+                                    if (echoOn)
+                                    {
+                                        Console.Write(nextLine);
+                                    }
+                                    charIndex = 0;
+
+                                }
+                                workingToken.Append(nextChar);
+                                nextChar = GetNextChar();
+                            }
+                            workingToken.Append(nextChar);
+                            nextChar = GetNextChar();
+                            tokenComplete = true;
                             break;
                         case 6:
                             // other symbol 1 / + -  ) ; , [ ] .
