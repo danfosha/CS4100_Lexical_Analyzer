@@ -169,7 +169,9 @@ namespace CS4100_Lexical_Analyzer
                     switch (caseGroup)
                     {
                         case 0:
-                            tokenComplete = true;
+                            workingToken.Append(nextChar);
+                            nextChar = GetNextChar();
+                            tokenComplete = true;                            
                             // return unidentified
                             break;
 
@@ -204,9 +206,8 @@ namespace CS4100_Lexical_Analyzer
                             {
                                 if (workingToken.Length > 29)
                                 {
-                                    //tokenComplete = true;
+                                    nextChar = GetNextChar();
                                     tokenTooLong = true;
-                                    break;
                                 }
                                 else
                                 {
@@ -389,10 +390,7 @@ namespace CS4100_Lexical_Analyzer
 
                     nextToken = workingToken.ToString();
                     workingToken.Clear();
-                    //if (tempUsed)
-                    //{
-                    //    tempChar = nextChar;
-                    //}
+                    tokenTooLong = false;
                 }
 
             }
@@ -466,18 +464,6 @@ namespace CS4100_Lexical_Analyzer
                 return false;
             }
         }
-        //
-        //public static bool OtherTokenThird(char x)
-        //{
-        //    if (('>'.Equals(x)) || ('='.Equals(x)) || ('('.Equals(x)))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
 
         public static bool LineEnd(char x)
         {
