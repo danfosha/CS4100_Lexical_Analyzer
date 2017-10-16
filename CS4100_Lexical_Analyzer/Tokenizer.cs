@@ -52,7 +52,7 @@ namespace CS4100_Lexical_Analyzer
 
         }
 
-        public static string GetNextLine()
+        public static string GetNextLine(bool echoOn)
         {
 
             if (lineIndex >= FileHandler.FileText.Length)
@@ -80,6 +80,10 @@ namespace CS4100_Lexical_Analyzer
             lineComplete = false;
             textLine = workingLine.ToString();
             workingLine.Clear();
+            if (echoOn)
+            {
+                Console.Write("Source Line: " + textLine);
+            }
             return textLine;
         }
 
@@ -88,14 +92,10 @@ namespace CS4100_Lexical_Analyzer
         {
             if ((lineComplete) && (!tokenizerFinished))
             {
-                nextLine = GetNextLine();
+                nextLine = GetNextLine(echoOn);
                 if (nextLine == "")
                 {
                     tokenizerFinished = true;
-                }
-                if (echoOn)
-                {
-                    Console.Write(nextLine);
                 }
                 charIndex = 0;
             }
@@ -196,6 +196,9 @@ namespace CS4100_Lexical_Analyzer
                                 }
                             }
                             tokenComplete = true;
+                            SetIdentifierCode(workingToken.ToString()))
+                            
+                            
                             break;
 
                         case 2:
@@ -216,6 +219,7 @@ namespace CS4100_Lexical_Analyzer
                                 nextChar = GetNextChar();
                             }
                             tokenComplete = true;
+                            tokenCode = 52;
                             break;
 
                         case 3: // stringConstant
@@ -227,6 +231,7 @@ namespace CS4100_Lexical_Analyzer
                                 nextChar = GetNextChar();
                                 if (LineEnd(nextChar) || Formatting(nextChar))
                                 {
+                                    Console.WriteLine("Warning: Unterminated string found.");
                                     lineComplete = true;
                                     tokenComplete = true;
                                     workingToken.Clear();
@@ -239,6 +244,7 @@ namespace CS4100_Lexical_Analyzer
                                 nextChar = GetNextChar();
                             }
                             tokenComplete = true;
+                            tokenCode = 53;
                             break;
 
                         case 4:
@@ -249,6 +255,7 @@ namespace CS4100_Lexical_Analyzer
                             {
                                 if (nextChar == '\0')
                                 {
+                                    Console.WriteLine("Warning: End of file found before comment terminated");
                                     workingToken.Clear();
                                     tokenComplete = true;
                                     tokenizerFinished = true;
@@ -256,15 +263,11 @@ namespace CS4100_Lexical_Analyzer
                                 }
                                 else if (nextChar == '\n')
                                 {
-                                    nextLine = GetNextLine();
+                                    nextLine = GetNextLine(echoOn);
                                     // below refactored into GetNextLine method?
                                     if (nextLine == "")
                                     {
                                         tokenizerFinished = true;
-                                    }
-                                    if (echoOn)
-                                    {
-                                        Console.Write(nextLine);
                                     }
                                     charIndex = 0;
 
@@ -314,6 +317,7 @@ namespace CS4100_Lexical_Analyzer
                                 {
                                     if (nextChar == '\0')
                                     {
+                                        Console.WriteLine("Warning: End of file found before comment terminated");
                                         workingToken.Clear();
                                         tokenComplete = true;
                                         tokenizerFinished = true;
@@ -321,15 +325,11 @@ namespace CS4100_Lexical_Analyzer
                                     }
                                     else if (nextChar == '\n')
                                     {
-                                        nextLine = GetNextLine();
+                                        nextLine = GetNextLine(echoOn);
                                         // below refactored into GetNextLine method?
                                         if (nextLine == "")
                                         {
                                             tokenizerFinished = true;
-                                        }
-                                        if (echoOn)
-                                        {
-                                            Console.Write(nextLine);
                                         }
                                         charIndex = 0;
                                     }
@@ -351,15 +351,11 @@ namespace CS4100_Lexical_Analyzer
                                     }
                                     else if (nextChar == '\n')
                                     {
-                                        nextLine = GetNextLine();
+                                        nextLine = GetNextLine(echoOn);
                                         // below refactored into GetNextLine method?
                                         if (nextLine == "")
                                         {
                                             tokenizerFinished = true;
-                                        }
-                                        if (echoOn)
-                                        {
-                                            Console.Write(nextLine);
                                         }
                                         charIndex = 0;
                                     }
@@ -387,9 +383,13 @@ namespace CS4100_Lexical_Analyzer
                     {
                         Console.WriteLine("Warning: Token longer than 30 characters and is truncated.");
                     }
-
+                   
                     nextToken = workingToken.ToString();
                     workingToken.Clear();
+                    if (tokenCode== -1)
+                        {
+                        tokenCode = getTokenCode(nextToken);
+                    }
                     tokenTooLong = false;
                 }
 
@@ -487,6 +487,21 @@ namespace CS4100_Lexical_Analyzer
             {
                 return false;
             }
+        }
+
+        public static int ReserveWordCode(string token)
+        {
+
+        }
+
+
+        public static int getTokenCode(string token)
+        {
+
+
+
+
+            return 0;
         }
     }
 }
