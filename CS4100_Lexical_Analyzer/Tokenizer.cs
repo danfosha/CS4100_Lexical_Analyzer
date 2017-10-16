@@ -20,25 +20,14 @@ namespace CS4100_Lexical_Analyzer
         public static StringBuilder workingLine = new StringBuilder();
 
         public static string nextToken;
-        public static char tempChar;
         public static char nextChar;
         public static int caseGroup = -1;
         public static int tokenCode = -1;
 
         public static bool tokenizerFinished = false;
-        public static bool identifier = false;
-        public static bool numeric = false;
-        public static bool stringConstant = false;
-        public static bool comment1 = false;
-        public static bool comment2 = false;
-        public static bool other1 = false;
-        public static bool other2 = false;
-        public static bool other3 = false;
-        public static bool unidentified = false;
         public static bool tokenComplete = false;
         public static bool tokenTooLong = false;
         public static bool stringComplete = true;
-        public static bool commentComplete = false;
         public static bool lineComplete = true;
         public static string textLine;
         public static string nextLine;
@@ -133,31 +122,11 @@ namespace CS4100_Lexical_Analyzer
 
                     if (nextChar.Equals('\n'))
                     {
-
-                        if ((comment1 || comment2) && (!commentComplete))
-                        {
-                            tokenComplete = false;
-                            //refactor this into a method
-                            nextLine = GetNextLine();
-                            if (nextLine == "")
-                            {
-                                tokenizerFinished = true;
-
-                            }
-                            if (echoOn)
-                            {
-                                Console.Write(nextLine);
-                            }
-                            charIndex = 0;
-                        }
-                        else
-                        {
-                            tokenComplete = true;
-                            lineComplete = true;
-                            ResetFlags();
-                        }
+                        tokenComplete = true;
+                        lineComplete = true;
                     }
                 }
+
                 else if (!tokenComplete)
                 {
 
@@ -168,53 +137,40 @@ namespace CS4100_Lexical_Analyzer
 
                     if (Char.IsLetter(nextChar) || '$'.Equals(nextChar) || '_'.Equals(nextChar))
                     {
-                        identifier = true;
                         caseGroup = 1;
                     }
                     else if (Char.IsDigit(nextChar))
                     {
-                        numeric = true;
                         caseGroup = 2;
                     }
                     else if ('"'.Equals(nextChar))
                     {
-                        stringConstant = true;
                         caseGroup = 3;
                     }
 
                     else if ('#'.Equals(nextChar))
                     {
-                        comment2 = true;
-                        caseGroup = 5;
+                        caseGroup = 4;
                     }
                     else if (OtherTokenFirst(nextChar))
                     {
-                        other1 = true;
-                        caseGroup = 6;
+                        caseGroup = 5;
                     }
                     else if (OtherTokenSecond(nextChar))
                     {
-                        other2 = true;
-                        caseGroup = 7;
-                    }
-                    else if (OtherTokenThird(nextChar))
-                    {
-                        other3 = true;
-                        caseGroup = 8;
+                        caseGroup = 6;
                     }
                     else
-                    { // put undefined here
+                    {
                         caseGroup = 0;
                     }
-
-                    //}
 
 
                     switch (caseGroup)
                     {
                         case 0:
-                            // ignore, don't append
-                            // tempUsed = false;
+                            tokenComplete = true;
+                            // return unidentified
                             break;
 
                         case 1:
@@ -262,7 +218,6 @@ namespace CS4100_Lexical_Analyzer
                             break;
 
                         case 3: // stringConstant
-                            stringComplete = false;
                             workingToken.Append(nextChar);
                             nextChar = GetNextChar();
                             while (!('"'.Equals(nextChar)))
@@ -281,21 +236,11 @@ namespace CS4100_Lexical_Analyzer
                             {
                                 workingToken.Append(nextChar);
                                 nextChar = GetNextChar();
-                                stringComplete = true; // may not need
                             }
                             tokenComplete = true;
                             break;
 
                         case 4:
-                            // comments (* *)
-                            if ('*'.Equals(workingToken[workingToken.Length - 1]) && (')'.Equals(nextChar)))
-                            {
-                                commentComplete = true;
-                                tokenComplete = true;
-                            }
-                            workingToken.Append(nextChar);
-                            break;
-                        case 5:
                             // comment handling ##
                             workingToken.Append(nextChar);
                             nextChar = GetNextChar();
@@ -330,66 +275,105 @@ namespace CS4100_Lexical_Analyzer
                             nextChar = GetNextChar();
                             tokenComplete = true;
                             break;
-                        case 6:
+                        case 5:
                             // other symbol 1 / + -  ) ; , [ ] .
                             workingToken.Append(nextChar);
                             tokenComplete = true;
                             nextChar = GetNextChar();
                             break;
-                        case 7:
+                        case 6:
                             // other symbol 2 : < (
-                            if ((':'.Equals(tempChar)) && ('='.Equals(nextChar)))
+                            workingToken.Append(nextChar);
+                            nextChar = GetNextChar();
+                            if ((':'.Equals(workingToken[0])) && ('='.Equals(nextChar)))
                             {
-                                //workingToken.Append(x);
                                 workingToken.Append(nextChar);
-                                tempChar = '\0';
-                                // tempUsed = false;
                                 tokenComplete = true;
-
+                                nextChar = GetNextChar();
                             }
-                            else if (('<'.Equals(tempChar)) && (('='.Equals(nextChar)) || ('>'.Equals(nextChar))))
+                            else if (('<'.Equals(workingToken[0])) && (('='.Equals(nextChar)) || ('>'.Equals(nextChar))))
                             {
-                                //workingToken.Append(x);
                                 workingToken.Append(nextChar);
-                                tempChar = '\0';
-                                // tempUsed = false;
                                 tokenComplete = true;
+                                nextChar = GetNextChar();
                             }
 
-                            else if (('>'.Equals(tempChar)) && ('='.Equals(nextChar)))
+                            else if (('>'.Equals(workingToken[0])) && ('='.Equals(nextChar)))
                             {
-                                //workingToken.Append(x);
                                 workingToken.Append(nextChar);
-                                tempChar = '\0';
-                                // tempUsed = false;
                                 tokenComplete = true;
+                                nextChar = GetNextChar();
 
                             }
-                            else if (('('.Equals(tempChar)) && (('*'.Equals(nextChar))))
-                            {
-                                //workingToken.Append(x);
-                                workingToken.Append(nextChar);
-                                tempChar = '\0';
-                                // tempUsed = false;
-                                comment1 = true;
-                            }
-                            else if (('*'.Equals(nextChar)) || ('='.Equals(nextChar)))
+                            else if (('('.Equals(workingToken[0])) && (('*'.Equals(nextChar))))
                             {
                                 workingToken.Append(nextChar);
+                                nextChar = GetNextChar();
+                                while (!('*'.Equals(nextChar)))
+                                {
+                                    if (nextChar == '\0')
+                                    {
+                                        workingToken.Clear();
+                                        tokenComplete = true;
+                                        tokenizerFinished = true;
+                                        break;
+                                    }
+                                    else if (nextChar == '\n')
+                                    {
+                                        nextLine = GetNextLine();
+                                        // below refactored into GetNextLine method?
+                                        if (nextLine == "")
+                                        {
+                                            tokenizerFinished = true;
+                                        }
+                                        if (echoOn)
+                                        {
+                                            Console.Write(nextLine);
+                                        }
+                                        charIndex = 0;
+                                    }
+                                    workingToken.Append(nextChar);
+                                    nextChar = GetNextChar();
+                                }
+                                workingToken.Append(nextChar);
+                                nextChar = GetNextChar();
+                                while (nextChar != ')')
+                                {
+                                    workingToken.Append(nextChar);
+                                    nextChar = GetNextChar();
+                                    if (nextChar == '\0')
+                                    {
+                                        workingToken.Clear();
+                                        tokenComplete = true;
+                                        tokenizerFinished = true;
+                                        break;
+                                    }
+                                    else if (nextChar == '\n')
+                                    {
+                                        nextLine = GetNextLine();
+                                        // below refactored into GetNextLine method?
+                                        if (nextLine == "")
+                                        {
+                                            tokenizerFinished = true;
+                                        }
+                                        if (echoOn)
+                                        {
+                                            Console.Write(nextLine);
+                                        }
+                                        charIndex = 0;
+                                    }
+                                }
+                                workingToken.Append(nextChar);
+                                nextChar = GetNextChar();
                                 tokenComplete = true;
-
-                            }
-                            else if (('>'.Equals(tempChar) && (!OtherTokenThird(nextChar))))
-                            {
-                                workingToken.Append(nextChar);
-                                tokenComplete = true;
+                                break;
                             }
                             else
                             {
-                                workingToken.Append(nextChar);
-                                tempChar = nextChar;
+                                // workingToken.Append(nextChar);
+                                // nextChar = GetNextChar();
+                                tokenComplete = true;
                             }
-
                             break;
                         default:
                             break;
@@ -402,8 +386,6 @@ namespace CS4100_Lexical_Analyzer
                     {
                         Console.WriteLine("Warning: Token longer than 30 characters and is truncated.");
                     }
-
-                    ResetFlags();
 
                     nextToken = workingToken.ToString();
                     workingToken.Clear();
@@ -475,7 +457,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static bool OtherTokenSecond(char x)
         {
-            if ((':'.Equals(x)) || ('<'.Equals(x)) || ('('.Equals(x)) || ('>'.Equals(x)) || ('='.Equals(x))) // || ('*'.Equals(x))
+            if ((':'.Equals(x)) || ('<'.Equals(x)) || ('('.Equals(x)) || ('>'.Equals(x)) || ('*'.Equals(x)) || (('>'.Equals(x)) || ('='.Equals(x))))
             {
                 return true;
             }
@@ -484,18 +466,18 @@ namespace CS4100_Lexical_Analyzer
                 return false;
             }
         }
-
-        public static bool OtherTokenThird(char x)
-        {
-            if (('>'.Equals(x)) || ('='.Equals(x)) || ('('.Equals(x)))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        //
+        //public static bool OtherTokenThird(char x)
+        //{
+        //    if (('>'.Equals(x)) || ('='.Equals(x)) || ('('.Equals(x)))
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public static bool LineEnd(char x)
         {
@@ -519,23 +501,6 @@ namespace CS4100_Lexical_Analyzer
             {
                 return false;
             }
-        }
-
-
-        public static void ResetFlags()
-        {
-            //identifier = false;
-            //numeric = false;
-            // tokenComplete = false;
-            stringConstant = false;
-            comment1 = false;
-            comment2 = false;
-            other1 = false;
-            other2 = false;
-            unidentified = false;
-            tokenTooLong = false;
-            stringComplete = true;
-            commentComplete = false;
         }
     }
 }
