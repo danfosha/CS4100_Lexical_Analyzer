@@ -270,21 +270,23 @@ namespace CS4100_Lexical_Analyzer
                         case 3: // stringConstant
                             stringComplete = false;
                             workingToken.Append(nextChar);
-                            while (!('"'.Equals(nextChar)) && ('"'.Equals(workingToken[0])))
+                            nextChar = GetNextChar();
+                            while (!('"'.Equals(nextChar)))
                             {
                                 workingToken.Append(nextChar);
                                 nextChar = GetNextChar();
+                                if (LineEnd(nextChar) || Formatting(nextChar))
+                                {
+                                    workingToken.Clear();
+                                    nextChar = GetNextChar();
+                                    break;
+                                }
                             }
                             if ('"'.Equals(nextChar))
                             {
                                 workingToken.Append(nextChar);
                                 nextChar = GetNextChar();
                                 stringComplete = true; // may not need
-                            }
-                            else if (LineEnd(nextChar) || Formatting(nextChar))
-                            {
-                                workingToken.Clear();
-                                nextChar = GetNextChar();
                             }
                             tokenComplete = true;
                             break;
@@ -422,9 +424,9 @@ namespace CS4100_Lexical_Analyzer
                 return true;
             }
             else if (
-                ( ('E'.Equals(x)) || ('e'.Equals(x)) )
-                    && (!(test.Contains("E")) || !(test.Contains("e"))) 
-                        && (test.Contains(".")) 
+                (('E'.Equals(x)) || ('e'.Equals(x)))
+                    && (!(test.Contains("E")) || !(test.Contains("e")))
+                        && (test.Contains("."))
                 )
             {
                 return true;
