@@ -35,10 +35,11 @@ namespace CS4100_Lexical_Analyzer
         {
             int MaxQuad = 100;
             FileHandler FileGetter = new FileHandler();
+            ReserveWordClass ReserveTable = new ReserveWordClass();
+            ReserveTable.Initialize();
             SymbolClass SymbolTable = new SymbolClass(MaxQuad);
             TokenizerClass Tokenizer = new TokenizerClass();
-
-
+            
         }
 
         public static void PrintToken(string token, int tokenCode)

@@ -37,6 +37,9 @@ namespace CS4100_Lexical_Analyzer
         public static int charIndex = 0;
         public static int lineIndex = 0;
 
+        object[] array = new object[3];
+
+
 
         public static char GetNextChar()
         {
@@ -171,7 +174,7 @@ namespace CS4100_Lexical_Analyzer
                         case 0:
                             workingToken.Append(nextChar);
                             nextChar = GetNextChar();
-                            tokenComplete = true;                            
+                            tokenComplete = true;
                             // return unidentified
                             break;
 
@@ -196,9 +199,7 @@ namespace CS4100_Lexical_Analyzer
                                 }
                             }
                             tokenComplete = true;
-                            SetIdentifierCode(workingToken.ToString()))
-                            
-                            
+                            tokenCode = SetTokenCode(workingToken.ToString(), caseGroup);
                             break;
 
                         case 2:
@@ -294,12 +295,14 @@ namespace CS4100_Lexical_Analyzer
                                 workingToken.Append(nextChar);
                                 tokenComplete = true;
                                 nextChar = GetNextChar();
+
                             }
                             else if (('<'.Equals(workingToken[0])) && (('='.Equals(nextChar)) || ('>'.Equals(nextChar))))
                             {
                                 workingToken.Append(nextChar);
                                 tokenComplete = true;
                                 nextChar = GetNextChar();
+
                             }
 
                             else if (('>'.Equals(workingToken[0])) && ('='.Equals(nextChar)))
@@ -383,12 +386,12 @@ namespace CS4100_Lexical_Analyzer
                     {
                         Console.WriteLine("Warning: Token longer than 30 characters and is truncated.");
                     }
-                   
+
                     nextToken = workingToken.ToString();
                     workingToken.Clear();
-                    if (tokenCode== -1)
-                        {
-                        tokenCode = getTokenCode(nextToken);
+                    if (tokenCode == -1)
+                    {
+                        tokenCode = SetTokenCode(nextToken, caseGroup);
                     }
                     tokenTooLong = false;
                 }
@@ -489,19 +492,55 @@ namespace CS4100_Lexical_Analyzer
             }
         }
 
-        public static int ReserveWordCode(string token)
+        public static int SetTokenCode(string token, int casegroup)
         {
+            // codes are assigned redundantly for now
+            switch (caseGroup)
+            {
+                case 0:
+                    // unidentified
+                    tokenCode = 99;
+                    break;
+                case 1:
+                    // identifiers
+                    tokenCode = getReserveCode(token);
+                    if (tokenCode == -1)
+                    {
+                        tokenCode = 50;
+                    }
+                    break;
+                case 2:
+                    //numeric
+                    tokenCode = 52;
+                    break;
+                case 3:
+                    // stringConstant
+                    tokenCode = 53;
+                    break;
+                case 4:
+                    // # comment - no change here
+                    tokenCode = -1;
+                    break;
+                case 5:
+                    tokenCode = getReserveCode(token);
+                    if (tokenCode == -1)
+                    {
+                        tokenCode = 99;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            return 0;
 
         }
 
 
-        public static int getTokenCode(string token)
+        public static int getReserveCode(string token)
         {
-
-
-
-
-            return 0;
+            int code = ReserveWordClass.LookupCode(token);
+            return code;
         }
     }
 }
