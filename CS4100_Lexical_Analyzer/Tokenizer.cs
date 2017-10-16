@@ -526,7 +526,14 @@ namespace CS4100_Lexical_Analyzer
                         tokenCode = 99;
                     }
                     break;
-
+                case 6:
+                    tokenCode = getReserveCode(token);
+                    // -1 means no symbol found
+                    if (tokenCode == -1)
+                    {
+                        tokenCode = 99;
+                    }
+                    break;
                 default:
                     break;
             }
