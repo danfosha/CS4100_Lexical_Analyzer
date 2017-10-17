@@ -201,7 +201,11 @@ namespace CS4100_Lexical_Analyzer
                             }
                             tokenComplete = true;
                             tokenCode = SetTokenCode(workingToken.ToString(), caseGroup);
-                            SymbolClass.AddSymbol(workingToken.ToString, "variable", tokenCode);
+                            if (tokenCode == 50)
+                            {
+                                SymbolClass.AddSymbol(workingToken.ToString(), SymbolClass.Data_Kind.variable, 0);
+                            }
+
                             break;
 
                         case 2:
@@ -222,7 +226,14 @@ namespace CS4100_Lexical_Analyzer
                                 nextChar = GetNextChar();
                             }
                             tokenComplete = true;
-                            tokenCode = 52;
+                            if (workingToken.ToString().Contains("."))
+                            {
+                                tokenCode = 52;
+                            }
+                            else
+                            {
+                                tokenCode = 51;
+                            }
                             break;
 
                         case 3: // stringConstant
@@ -541,7 +552,7 @@ namespace CS4100_Lexical_Analyzer
             }
             return tokenCode;
         }
-        
+
         public static int getReserveCode(string token)
         {
             int code = ReserveWordClass.LookupCode(token);
