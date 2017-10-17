@@ -23,6 +23,7 @@ namespace CS4100_Lexical_Analyzer
             while (!TokenizerClass.tokenizerFinished)
             {
                 TokenizerClass.GetNextToken(echoOn);
+                TokentoSymTable(TokenizerClass.nextToken, TokenizerClass.tokenCode);
                 PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
             }
 
@@ -39,9 +40,19 @@ namespace CS4100_Lexical_Analyzer
             ReserveTable.Initialize();
             SymbolClass SymbolTable = new SymbolClass(MaxQuad);
             TokenizerClass Tokenizer = new TokenizerClass();
-            
+
         }
 
+
+        public static void TokentoSymTable(string token, int tokenCode)
+        {
+            if ((tokenCode ==50) || (tokenCode == 51) || (tokenCode == 52))
+            {
+                SymbolClass.       
+            }
+
+        }
+            
         public static void PrintToken(string token, int tokenCode)
         {
             if (token.Length > 0)

@@ -201,6 +201,7 @@ namespace CS4100_Lexical_Analyzer
                             }
                             tokenComplete = true;
                             tokenCode = SetTokenCode(workingToken.ToString(), caseGroup);
+                            SymbolClass.AddSymbol(workingToken.ToString, "variable", tokenCode);
                             break;
 
                         case 2:

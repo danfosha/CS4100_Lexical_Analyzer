@@ -11,7 +11,7 @@ namespace CS4100_Lexical_Analyzer
     {
         // Properties    
         public enum Data_Kind { label, variable, constant }
-        public int numUsed = 0;
+        public static int numUsed = 0;
         static int MaxSymbols = 100;
 
         public SymbolClass(int maxSymbols)
@@ -38,7 +38,7 @@ namespace CS4100_Lexical_Analyzer
 
         }
 
-        public Symbol[] SymbolTableArray = new Symbol[MaxSymbols];
+        public static Symbol[] SymbolTableArray = new Symbol[MaxSymbols];
 
         //Methods
 
@@ -47,7 +47,7 @@ namespace CS4100_Lexical_Analyzer
         // the index where the symbol was found.
         // These three could be combind, but keeping all three per assignment instructions
 
-        public int AddSymbol(String symbol, Data_Kind Kind, int value)
+        public static int AddSymbol(String symbol, Data_Kind Kind, int value)
         {
 
             int index = LookupSymbol(symbol);
@@ -59,7 +59,7 @@ namespace CS4100_Lexical_Analyzer
 
             return LookupSymbol(symbol);
         }
-        public int AddSymbol(String symbol, Data_Kind Kind, double value)
+        public static int AddSymbol(String symbol, Data_Kind Kind, double value)
         {
             int index = LookupSymbol(symbol);
             if (index < 0)
@@ -71,7 +71,7 @@ namespace CS4100_Lexical_Analyzer
             return LookupSymbol(symbol);
         }
 
-        public int AddSymbol(String symbol, Data_Kind Kind, String value)
+        public static int AddSymbol(String symbol, Data_Kind Kind, String value)
         {
             int index = LookupSymbol(symbol);
             if (index < 0)
@@ -83,7 +83,7 @@ namespace CS4100_Lexical_Analyzer
             return LookupSymbol(symbol);
         }
 
-        int LookupSymbol(string symbol)
+        public static int LookupSymbol(string symbol)
         //// Returns the index where symbol is found, or -1 if not in the table 
         {
             int i = 0;
@@ -101,7 +101,7 @@ namespace CS4100_Lexical_Analyzer
         }
 
 
-        Symbol GetSymbol(int index)
+        public static Symbol GetSymbol(int index)
         //// Return kind, data type, and value fields stored at index
         {
             // Don't return name? I'll return entire symbol object 
