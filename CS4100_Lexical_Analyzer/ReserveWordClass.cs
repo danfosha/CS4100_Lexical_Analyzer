@@ -13,14 +13,16 @@ namespace CS4100_Lexical_Analyzer
 
         public class ReserveWords
         {
-            public ReserveWords(int code, string word)
+            public ReserveWords(int code, string word, string menm)
             {
                 Word = word;
                 Code = code;
+                Mnemonic = menm;
             }
 
             public string Word { get; set; }
             public int Code { get; set; }
+            public string Mnemonic { get; set; }
 
         }
 
@@ -30,60 +32,60 @@ namespace CS4100_Lexical_Analyzer
         // Constructor
         {
 
-            Add("GOTO");
-            Add("INTEGER");
-            Add("TO");
-            Add("DO");
-            Add("IF");
-            Add("THEN");
-            Add("ELSE");
-            Add("FOR");
-            Add("OF");
-            Add("WRITELN");
-            Add("BEGIN");
-            Add("END");
-            Add("ARRAY");
-            Add("VAR");
-            Add("WHILE");
-            Add("UNIT");
-            Add("LABEL");
-            Add("REPEAT");
-            Add("UNTIL");
-            Add("PROCEDURE");
-            Add("DOWNTO");
-            Add("READLN");
-            Add("RETURN");
-            Add("FLOAT");
-            Add("STRING");
+            Add("GOTO","GOTO");
+            Add("INTEGER","INTG");
+            Add("TO","TO__");
+            Add("DO","DO__");
+            Add("IF","IF__");
+            Add("THEN","THEN");
+            Add("ELSE", "ELSE");
+            Add("FOR","FOR_");
+            Add("OF","OF__");
+            Add("WRITELN","WRLN");
+            Add("BEGIN","BEGI");
+            Add("END","END_");
+            Add("ARRAY","ARRY");
+            Add("VAR","VAR_");
+            Add("WHILE","WHIL");
+            Add("UNIT","UNIT");
+            Add("LABEL","LABL");
+            Add("REPEAT","RPET");
+            Add("UNTIL","UNTL");
+            Add("PROCEDURE","PROC");
+            Add("DOWNTO","DOWN");
+            Add("READLN","RDLN");
+            Add("RETURN","RTRN");
+            Add("FLOAT","FLOT");
+            Add("STRING","STRG");
 
             codeUsed = 30;
 
-            Add("/");
-            Add("*");
-            Add("+");
-            Add("-");
-            Add("(");
-            Add(")");
-            Add(";");
-            Add(":=");
-            Add(">");
-            Add("<");
-            Add(">=");
-            Add("<=");
-            Add("=");
-            Add("<>");
-            Add(",");
-            Add("[");
-            Add("]");
-            Add(":");
-            Add(".");
+            Add("/","");
+            Add("*","");
+            Add("+","");
+            Add("-","");
+            Add("(","");
+            Add(")","");
+            Add(";","");
+            Add(":=","");
+            Add(">","");
+            Add("<","");
+            Add(">=","");
+            Add("<=","");
+            Add("=","");
+            Add("<>","");
+            Add(",","");
+            Add("[","");
+            Add("]","");
+            Add(":","");
+            Add(".","");
 
         }
 
-        public void Add(string word)
+        public void Add(string word, string menm)
         // Returns the index of the row where the data was placed; just adds to end of list.
         {
-            ReserveWordTable[numUsed] = new ReserveWords(codeUsed, word);
+            ReserveWordTable[numUsed] = new ReserveWords(codeUsed, word, menm);
             numUsed++;
             codeUsed++;
         }
