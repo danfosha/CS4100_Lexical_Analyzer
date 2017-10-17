@@ -104,6 +104,7 @@ namespace CS4100_Lexical_Analyzer
             }
 
             tokenComplete = false;
+            tokenCode = -1;
             if (nextChar == '\0')
             {
                 nextChar = GetNextChar();
