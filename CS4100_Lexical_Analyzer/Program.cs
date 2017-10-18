@@ -30,7 +30,7 @@ namespace CS4100_Lexical_Analyzer
             Console.WriteLine("Tokenizer Finished");
             Console.ReadLine();
             SymbolTable.PrintSymbolTable();
-
+            Console.ReadLine();
         }
 
         public static void InitializeStructures()
