@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 // CS4100 Fall 2017 Lexical Analyzer Project - Fosha
 namespace CS4100_Lexical_Analyzer
 {
-    class SymbolClass
+    class SymbolTable
     {
         // Properties    
         public enum Data_Kind { label, variable, constant }
         public static int numUsed = 0;
         static int MaxSymbols = 100;
 
-        public SymbolClass(int maxSymbols)
+        public SymbolTable(int maxSymbols)
         {
             MaxSymbols = maxSymbols;
         }
@@ -99,8 +99,7 @@ namespace CS4100_Lexical_Analyzer
             return -1;
 
         }
-
-
+        
         public static Symbol GetSymbol(int index)
         //// Return kind, data type, and value fields stored at index
         {
@@ -140,7 +139,7 @@ namespace CS4100_Lexical_Analyzer
             SymbolTableArray[index] = updated;
         }
 
-        public void PrintSymbolTable()
+        public static void PrintSymbolTable()
         //// Prints the utilized rows of the symbol table in neat tabular format, showing only
         //// the value field which is active for that row
         {

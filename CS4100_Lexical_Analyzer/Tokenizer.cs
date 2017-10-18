@@ -203,7 +203,7 @@ namespace CS4100_Lexical_Analyzer
                             tokenCode = SetTokenCode(workingToken.ToString(), caseGroup);
                             if (tokenCode == 50)
                             {
-                                SymbolClass.AddSymbol(workingToken.ToString(), SymbolClass.Data_Kind.variable, 0);
+                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.variable, 0);
                             }
 
                             break;
@@ -229,13 +229,13 @@ namespace CS4100_Lexical_Analyzer
                             if (workingToken.ToString().Contains("."))
                             {
                                 tokenCode = 52;
-                                SymbolClass.AddSymbol(workingToken.ToString(), SymbolClass.Data_Kind.constant, 0);
+                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, 0);
 
                             }
                             else
                             {
                                 tokenCode = 51;
-                                SymbolClass.AddSymbol(workingToken.ToString(), SymbolClass.Data_Kind.constant, 0);
+                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, 0);
 
                             }
                             break;

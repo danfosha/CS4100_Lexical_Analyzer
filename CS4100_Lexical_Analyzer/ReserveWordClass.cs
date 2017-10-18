@@ -122,6 +122,20 @@ namespace CS4100_Lexical_Analyzer
             return "";
         }
 
+        public static string LookupMnem(int code)
+        // Returns the associated name if code is there, else an empty string
+        {
+            foreach (ReserveWords Data in ReserveWordTable)
+            {
+
+                if (Data.Code == code)
+                {
+                    return Data.Mnemonic;
+                }
+            }
+            return "";
+        }
+
     }
 
 }

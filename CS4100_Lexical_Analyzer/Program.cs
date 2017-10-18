@@ -13,7 +13,7 @@ namespace CS4100_Lexical_Analyzer
         public static void Main(string[] args)
         {
             bool echoOn = true;
-            string fileName = "lexical_test2.txt";
+            string fileName = "lexical_test.txt";
             InitializeStructures();
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
@@ -29,6 +29,7 @@ namespace CS4100_Lexical_Analyzer
 
             Console.WriteLine("Tokenizer Finished");
             Console.ReadLine();
+            SymbolTable.PrintSymbolTable();
 
         }
 
@@ -38,7 +39,7 @@ namespace CS4100_Lexical_Analyzer
             FileHandler FileGetter = new FileHandler();
             ReserveWordClass ReserveTable = new ReserveWordClass();
             ReserveTable.Initialize();
-            SymbolClass SymbolTable = new SymbolClass(MaxQuad);
+            SymbolTable SymbolTable = new SymbolTable(MaxQuad);
             TokenizerClass Tokenizer = new TokenizerClass();
 
         }
@@ -48,7 +49,16 @@ namespace CS4100_Lexical_Analyzer
         {
             if ((tokenCode ==50) || (tokenCode == 51) || (tokenCode == 52))
             {
-                SymbolClass.       
+                SymbolTable.AddSymbol("token", SymbolTable.Data_Kind.variable, 0);       
+            }
+            else if (tokenCode == 51)
+            {
+                SymbolTable.AddSymbol("token", SymbolTable.Data_Kind.constant, Convert.ToInt32(token) );
+            }
+            else if (tokenCode == 52)
+            {
+                SymbolTable.AddSymbol("token", SymbolTable.Data_Kind.constant, Convert.ToDouble(token));
+
             }
 
         }
@@ -57,7 +67,7 @@ namespace CS4100_Lexical_Analyzer
         {
             if (token.Length > 0)
             {
-                Console.WriteLine(token + "\t" + tokenCode);
+                Console.WriteLine(token + "\t" + tokenCode + "\t" + ReserveWordClass.LookupMnem(tokenCode) + "\t" + SymbolTable.LookupSymbol(token));
             }
         }
 
