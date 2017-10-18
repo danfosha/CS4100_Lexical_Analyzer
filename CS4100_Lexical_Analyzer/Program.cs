@@ -86,7 +86,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static void PrintHeader()
         {
-            Console.WriteLine("Lexeme \tToken Code \t \tMnemonic \tSymbolTable Index");
+            Console.WriteLine("Lexeme \tToken Code Mnemonic SymbolTable Index");
             Console.WriteLine("*********************************************************");
         }
     }

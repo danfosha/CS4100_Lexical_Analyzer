@@ -98,7 +98,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 //if (Data.Word != null)
                 //{
-                    if (Data.Word.Equals(word))
+                    if (Data.Word.Equals(word, StringComparison.OrdinalIgnoreCase))
                     {
                         return Data.Code;
                     }
