@@ -294,6 +294,7 @@ namespace CS4100_Lexical_Analyzer
                                 nextChar = GetNextChar();
                             }
                             workingToken.Append(nextChar);
+                            workingToken.Clear(); // comments are ignored - clear it out
                             nextChar = GetNextChar();
                             tokenComplete = true;
                             break;
@@ -381,6 +382,7 @@ namespace CS4100_Lexical_Analyzer
                                     }
                                 }
                                 workingToken.Append(nextChar);
+                                workingToken.Clear(); // comments are ignored - clear it out
                                 nextChar = GetNextChar();
                                 tokenComplete = true;
                                 break;
@@ -552,6 +554,7 @@ namespace CS4100_Lexical_Analyzer
                     }
                     break;
                 default:
+                    tokenCode = -1;
                     break;
             }
             return tokenCode;
