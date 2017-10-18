@@ -67,7 +67,20 @@ namespace CS4100_Lexical_Analyzer
         {
             if (token.Length > 0)
             {
-                Console.WriteLine(token + "\t" + tokenCode + "\t" + ReserveWordClass.LookupMnem(tokenCode) + "\t" + SymbolTable.LookupSymbol(token));
+                string mnem = ReserveWordClass.LookupMnem(tokenCode);
+                int symIndex = SymbolTable.LookupSymbol(token);
+                if (symIndex != -1)
+                {
+                    Console.WriteLine(token + "\t" + tokenCode + "\t" + mnem + "\t" + symIndex);
+                }
+                else if (tokenCode == -1)
+                {
+                    Console.WriteLine(token + "\t" + tokenCode + "\t" + mnem + "\t" + symIndex);
+                }
+                else
+                {
+                    Console.WriteLine(token + "\t" + tokenCode + "\t" + mnem);
+                }
             }
         }
 
