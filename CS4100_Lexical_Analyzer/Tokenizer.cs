@@ -85,7 +85,7 @@ namespace CS4100_Lexical_Analyzer
             workingLine.Clear();
             if (echoOn)
             {   
-                Console.Write("Source Line: " + textLine);
+                Console.Write(" - Source Line: " + textLine);
             }
             return textLine;
         }

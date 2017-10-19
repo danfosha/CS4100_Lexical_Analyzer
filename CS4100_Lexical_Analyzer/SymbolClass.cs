@@ -143,7 +143,7 @@ namespace CS4100_Lexical_Analyzer
         //// Prints the utilized rows of the symbol table in neat tabular format, showing only
         //// the value field which is active for that row
         {
-            Console.WriteLine("Name".PadRight(16) + "Kind" + "\t\t" + "Type" + "\t\t" + "Value");
+            Console.WriteLine("Name".PadRight(20) + "Kind".PadRight(12) + "Type" + "\t\t" + "Value");
             Console.WriteLine("***************************************************************");
             foreach (Symbol test_symbol in SymbolTableArray)
             {
