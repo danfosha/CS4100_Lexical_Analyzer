@@ -47,7 +47,7 @@ namespace CS4100_Lexical_Analyzer
         // the index where the symbol was found.
         // These three could be combind, but keeping all three per assignment instructions
 
-        public static int AddSymbol(String symbol, Data_Kind Kind, int value)
+        public static int AddSymbol(string symbol, Data_Kind Kind, int value)
         {
 
             int index = LookupSymbol(symbol);
@@ -59,7 +59,7 @@ namespace CS4100_Lexical_Analyzer
 
             return LookupSymbol(symbol);
         }
-        public static int AddSymbol(String symbol, Data_Kind Kind, double value)
+        public static int AddSymbol(string symbol, Data_Kind Kind, double value)
         {
             int index = LookupSymbol(symbol);
             if (index < 0)
@@ -71,7 +71,7 @@ namespace CS4100_Lexical_Analyzer
             return LookupSymbol(symbol);
         }
 
-        public static int AddSymbol(String symbol, Data_Kind Kind, String value)
+        public static int AddSymbol(string symbol, Data_Kind Kind, string value)
         {
             int index = LookupSymbol(symbol);
             if (index < 0)

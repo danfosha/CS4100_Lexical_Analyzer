@@ -39,8 +39,6 @@ namespace CS4100_Lexical_Analyzer
 
         object[] array = new object[3];
 
-
-
         public static char GetNextChar()
         {
             if (charIndex >= textLine.Length)
@@ -52,7 +50,6 @@ namespace CS4100_Lexical_Analyzer
             {
                 return textLine[charIndex++];
             }
-
         }
 
         public static string GetNextLine(bool echoOn)
@@ -84,7 +81,7 @@ namespace CS4100_Lexical_Analyzer
             textLine = workingLine.ToString();
             workingLine.Clear();
             if (echoOn)
-            {   
+            {
                 Console.Write(" - Source Line: " + textLine);
             }
             return textLine;
@@ -236,8 +233,7 @@ namespace CS4100_Lexical_Analyzer
                             {
                                 tokenCode = 51;
                                 // convert ints with too many digits to doubles
-                                long x = 0;
-                                if (Int64.TryParse(workingToken.ToString(), out x))
+                                if (int.TryParse(workingToken.ToString(), out int x))
                                 {
                                     SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, x);
                                 }
@@ -358,7 +354,9 @@ namespace CS4100_Lexical_Analyzer
                                         // below refactored into GetNextLine method?
                                         if (nextLine == "")
                                         {
+                                            Console.WriteLine("Warning: End of file found before comment terminated");
                                             tokenizerFinished = true;
+                                            break;
                                         }
                                         charIndex = 0;
                                     }
@@ -374,6 +372,7 @@ namespace CS4100_Lexical_Analyzer
                                     if (nextChar == '\0')
                                     {
                                         workingToken.Clear();
+                                        Console.WriteLine("Warning: End of file found before comment terminated");
                                         tokenComplete = true;
                                         tokenizerFinished = true;
                                         break;
@@ -384,7 +383,9 @@ namespace CS4100_Lexical_Analyzer
                                         // below refactored into GetNextLine method?
                                         if (nextLine == "")
                                         {
+                                            Console.WriteLine("Warning: End of file found before comment terminated");
                                             tokenizerFinished = true;
+                                            break;
                                         }
                                         charIndex = 0;
                                     }
@@ -411,7 +412,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     if (tokenTooLong)
                     {
-                        Console.WriteLine("Warning: Token longer than 30 characters and is truncated.");
+                        Console.WriteLine("Warning: Token longer than 30 characters and is truncated. Numeric values > 19 digits may be converted to doubles.");
                     }
 
                     nextToken = workingToken.ToString();
