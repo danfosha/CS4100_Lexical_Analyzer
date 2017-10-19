@@ -25,7 +25,7 @@ namespace CS4100_Lexical_Analyzer
 
         public string GetFileName()
         {
-
+            // not used
             //Console.Write("Enter a filename: ");
             // filename = Convert.ToString(Console.ReadLine());
             string filename = "lexical_test.txt";

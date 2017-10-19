@@ -18,8 +18,6 @@ namespace CS4100_Lexical_Analyzer
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
 
-
-
             while (!TokenizerClass.tokenizerFinished)
             {
                 TokenizerClass.GetNextToken(echoOn);
@@ -44,12 +42,11 @@ namespace CS4100_Lexical_Analyzer
 
         }
 
-
         public static void TokentoSymTable(string token, int tokenCode)
         {
-            if (tokenCode ==50)
+            if (tokenCode == 50)
             {
-                SymbolTable.AddSymbol(token, SymbolTable.Data_Kind.variable, 0);       
+                SymbolTable.AddSymbol(token, SymbolTable.Data_Kind.variable, 0);
             }
             else if (tokenCode == 51)
             {
@@ -58,11 +55,9 @@ namespace CS4100_Lexical_Analyzer
             else if (tokenCode == 52)
             {
                 SymbolTable.AddSymbol(token, SymbolTable.Data_Kind.constant, Convert.ToDouble(token));
-
             }
-
         }
-            
+
         public static void PrintToken(string token, int tokenCode)
         {
             if (token.Length > 0)
@@ -76,7 +71,7 @@ namespace CS4100_Lexical_Analyzer
                 }
                 else
                 {
-                    Console.WriteLine(SymbolTable.Truncate(token, 16).PadRight(20) + tokenCode.ToString().PadRight(10)  + mnem.PadRight(10));
+                    Console.WriteLine(SymbolTable.Truncate(token, 16).PadRight(20) + tokenCode.ToString().PadRight(10) + mnem.PadRight(10));
                 }
             }
         }
@@ -84,7 +79,7 @@ namespace CS4100_Lexical_Analyzer
         public static void PrintHeader()
         {
             Console.WriteLine("Lexeme".PadRight(16) + "Token Code".PadRight(12) + "Mnemonic".PadRight(10) + "SymbolTable Index".PadRight(17));
-            Console.WriteLine("*".PadRight(55,'*'));
+            Console.WriteLine("*".PadRight(55, '*'));
         }
     }
 
