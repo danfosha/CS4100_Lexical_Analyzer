@@ -72,23 +72,19 @@ namespace CS4100_Lexical_Analyzer
                 // anything with a symbol table value
                 if (symIndex != -1)
                 {
-                    Console.WriteLine(token + "\t" + tokenCode + "\t" + mnem + "\t" + symIndex);
-                }
-                else if (tokenCode == -1)
-                {
-                    Console.WriteLine(token + "\t" + tokenCode + "\t" + mnem + "\t" + symIndex);
+                    Console.WriteLine(SymbolTable.Truncate(token, 16).PadRight(20) + tokenCode.ToString().PadRight(22) + symIndex);
                 }
                 else
                 {
-                    Console.WriteLine(token + "\t" + tokenCode + "\t\t" + mnem);
+                    Console.WriteLine(SymbolTable.Truncate(token, 16).PadRight(20) + tokenCode.ToString().PadRight(10)  + mnem.PadRight(10));
                 }
             }
         }
 
         public static void PrintHeader()
         {
-            Console.WriteLine("Lexeme \tToken Code Mnemonic SymbolTable Index");
-            Console.WriteLine("*********************************************************");
+            Console.WriteLine("Lexeme".PadRight(16) + "Token Code".PadRight(12) + "Mnemonic".PadRight(10) + "SymbolTable Index".PadRight(17));
+            Console.WriteLine("*".PadRight(55,'*'));
         }
     }
 

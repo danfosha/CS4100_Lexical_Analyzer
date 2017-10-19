@@ -84,7 +84,7 @@ namespace CS4100_Lexical_Analyzer
             textLine = workingLine.ToString();
             workingLine.Clear();
             if (echoOn)
-            {
+            {   
                 Console.Write("Source Line: " + textLine);
             }
             return textLine;
@@ -203,7 +203,7 @@ namespace CS4100_Lexical_Analyzer
                             tokenCode = SetTokenCode(workingToken.ToString(), caseGroup);
                             if (tokenCode == 50)
                             {
-                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.variable, 0);
+                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.variable, workingToken.ToString());
                             }
 
                             break;
@@ -229,14 +229,22 @@ namespace CS4100_Lexical_Analyzer
                             if (workingToken.ToString().Contains("."))
                             {
                                 tokenCode = 52;
-                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, 0);
+                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, Convert.ToDouble(workingToken.ToString()));
 
                             }
                             else
                             {
                                 tokenCode = 51;
-                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, 0);
-
+                                // convert ints with too many digits to doubles
+                                long x = 0;
+                                if (Int64.TryParse(workingToken.ToString(), out x))
+                                {
+                                    SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, x);
+                                }
+                                else
+                                {
+                                    SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, Convert.ToDouble(workingToken.ToString()));
+                                }
                             }
                             break;
 
