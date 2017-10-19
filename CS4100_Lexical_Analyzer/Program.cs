@@ -47,17 +47,17 @@ namespace CS4100_Lexical_Analyzer
 
         public static void TokentoSymTable(string token, int tokenCode)
         {
-            if ((tokenCode ==50) || (tokenCode == 51) || (tokenCode == 52))
+            if (tokenCode ==50)
             {
-                SymbolTable.AddSymbol("token", SymbolTable.Data_Kind.variable, 0);       
+                SymbolTable.AddSymbol(token, SymbolTable.Data_Kind.variable, 0);       
             }
             else if (tokenCode == 51)
             {
-                SymbolTable.AddSymbol("token", SymbolTable.Data_Kind.constant, Convert.ToInt32(token) );
+                SymbolTable.AddSymbol(token, SymbolTable.Data_Kind.constant, Convert.ToDouble(token));
             }
             else if (tokenCode == 52)
             {
-                SymbolTable.AddSymbol("token", SymbolTable.Data_Kind.constant, Convert.ToDouble(token));
+                SymbolTable.AddSymbol(token, SymbolTable.Data_Kind.constant, Convert.ToDouble(token));
 
             }
 
@@ -69,6 +69,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 string mnem = ReserveWordClass.LookupMnem(tokenCode);
                 int symIndex = SymbolTable.LookupSymbol(token);
+                // anything with a symbol table value
                 if (symIndex != -1)
                 {
                     Console.WriteLine(token + "\t" + tokenCode + "\t" + mnem + "\t" + symIndex);
@@ -79,7 +80,7 @@ namespace CS4100_Lexical_Analyzer
                 }
                 else
                 {
-                    Console.WriteLine(token + "\t" + tokenCode + "\t" + mnem);
+                    Console.WriteLine(token + "\t" + tokenCode + "\t\t" + mnem);
                 }
             }
         }

@@ -41,8 +41,6 @@ namespace CS4100_Lexical_Analyzer
                 {
                     // Read the stream to a string, and write the string to the console.
                     string text = sr.ReadToEnd();
-                    Console.WriteLine(text);
-                    Console.ReadLine();
                     
                     FileText = text;
                     return FileText;

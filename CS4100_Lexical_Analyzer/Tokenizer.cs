@@ -139,7 +139,7 @@ namespace CS4100_Lexical_Analyzer
                         nextChar = GetNextChar();
                     }
 
-                    if (Char.IsLetter(nextChar) || '$'.Equals(nextChar) || '_'.Equals(nextChar))
+                    if (Char.IsLetter(nextChar))
                     {
                         caseGroup = 1;
                     }
