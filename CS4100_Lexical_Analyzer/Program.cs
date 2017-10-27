@@ -12,6 +12,8 @@ namespace CS4100_Lexical_Analyzer
     {
         public static void Main(string[] args)
         {
+            string globalToken;
+            int globalTokenCode;
             bool echoOn = true;
             string fileName = "lexical_test.txt";
             InitializeStructures();
@@ -23,6 +25,9 @@ namespace CS4100_Lexical_Analyzer
                 TokenizerClass.GetNextToken(echoOn);
                 TokentoSymTable(TokenizerClass.nextToken, TokenizerClass.tokenCode);
                 PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+                globalToken = TokenizerClass.nextToken;
+                globalTokenCode = TokenizerClass.tokenCode;
+                
             }
 
             Console.WriteLine("Tokenizer Finished");
