@@ -88,7 +88,7 @@ namespace CS4100_Lexical_Analyzer
         }
 
         // could make getNextChar and call it inside below to match specs of assignment
-        public static string GetNextToken(bool echoOn)
+        public static void GetNextToken(bool echoOn)
         {
             if ((lineComplete) && (!tokenizerFinished))
             {
@@ -426,7 +426,7 @@ namespace CS4100_Lexical_Analyzer
 
             }
             while (!tokenComplete);
-            return nextToken;
+            
         }
 
 
