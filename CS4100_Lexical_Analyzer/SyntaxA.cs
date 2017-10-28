@@ -12,146 +12,260 @@ namespace CS4100_Lexical_Analyzer
         public bool echoOn = true;
         public bool trace = true;
         public bool error = false;
+        public static int tokenCode = TokenizerClass.tokenCode;
 
         public void Analyze(int tokenCode)
         {
-            program(tokenCode);
+            program();
         }
 
 
         // Methods
-        public void program(int tokenCode)
+        public int program()
         {
             if (!error)
             {
                 Debug(true, "program");
 
-                if (tokenCode == 18)
+                if (tokenCode == 18) // $UNIT
                 {
                     TokenizerClass.GetNextToken(echoOn);
                     // need to advance tokencode
-                    prog_identifier(tokenCode);
+                    prog_identifier();
                     TokenizerClass.GetNextToken(echoOn);
-                    if (tokenCode == 36)
+                    if (tokenCode == 36) // $;
                     {
-                        block(tokenCode);
-                        if (tokenCode == 48)
+                        block();
+                        if (tokenCode == 48) // $.
                         {
                             Console.WriteLine("You did it!");
                         }
+                        else
+                        {
+                            error = true;
+                            ErrorMessage(48, tokenCode);
+                        }
                     }
+                    else
+                    {
+                        error = true;
+                        ErrorMessage(36, tokenCode);
+                    }
+                }
+                else
+                {
+                    error = true;
+                    ErrorMessage(18, tokenCode);
                 }
                 Debug(false, "program");
             }
+            return 0;
         }
 
-        public void prog_identifier(int tokenCode)
+        public int prog_identifier()
         {
             if (!error)
             {
                 Debug(true, "prog_identifier");
-                identifier(tokenCode);
+                identifier();
                 Debug(false, "prog_identifier");
             }
+            return 0;
         }
 
-        public void block(int tokenCode)
+        public int block()
         {
             if (!error)
             {
                 Debug(true, "block");
+                if (tokenCode == 10) // $BEGIN
+                {
+                    statement();
+                    if (tokenCode == 36) // $;
+                    {
+                        statement();
+                        if (tokenCode != 11) // $END
+                        {
+                            error = true;
+                            ErrorMessage(11, tokenCode);
+                        }
+                    }
+                    else
+                    {
+                        error = true;
+                        ErrorMessage(36, tokenCode);
+                    }
+                }
+                else
+                {
+                    error = true;
+                    ErrorMessage(10, tokenCode);
+                }
                 Debug(false, "block");
             }
+            return 0;
         }
 
-        public void statement(int tokenCode)
+        public int statement()
         {
             if (!error)
             {
                 Debug(true, "statement");
+                variable();
+                if (tokenCode == 37) // $:=
+                {
+                    simple_expression();
+                }
+                else
+                {
+                    error = true;
+                    ErrorMessage(37, tokenCode);
+                }
                 Debug(false, "statement");
             }
+            return 0;
         }
 
-        public void identifier(int tokenCode)
+        public int variable()
+        {
+            if (!error)
+            {
+                Debug(true, "variable");
+                identifier();
+                Debug(false, "variable");
+            }
+            return 0;
+        }
+
+        public int simple_expression()
+        {
+            if (!error)
+            {
+                Debug(true, "simple_expression");
+                sign(); // optional
+                term();
+                addop();
+                term();
+
+                Debug(false, "simple_expression");
+            }
+            return 0;
+        }
+
+        public int addop()
+        {
+            if (!error)
+            {
+                Debug(true, "addop");
+                if ((tokenCode != 32) || (tokenCode != 33)) 
+                {
+                    error = true;
+                    ErrorMessage(31, 32, tokenCode);
+                }
+                Debug(false, "addop");
+            }
+            return 0;
+        }
+
+        public int sign()
+        {
+            if (!error)
+            {
+                Debug(true, "sign");
+                if ((tokenCode != 32) || (tokenCode != 33))
+                {
+                    error = true;
+                    ErrorMessage(32, 33, tokenCode);
+                }
+                Debug(false, "sign");
+            }
+            return 0;
+        }
+
+        public int term()
+        {
+            if (!error)
+            {
+                Debug(true, "term");
+                factor();
+                mulop();
+                factor();
+                Debug(false, "term");
+            }
+            return 0;
+        }
+
+        public int mulop()
+        {
+            if (!error)
+            {
+                Debug(true, "mulop");
+                if ((tokenCode != 30) || (tokenCode != 31))
+                {
+                    error = true;
+                }
+                Debug(false, "mulop");
+            }
+            return 0;
+        }
+
+        public int factor()
+        {
+            if (!error)
+            {
+                Debug(true, "factor");
+                unsigned_constant();
+                variable();
+                if (tokenCode == 34)
+                {
+                    simple_expression();
+                    if (tokenCode != 35)
+                    {
+                        error = true;
+                    }
+                }
+                else
+                {
+                    error = true;
+                }
+                Debug(false, "factor");
+            }
+            return 0;
+        }
+
+        public int unsigned_constant()
+        {
+            if (!error)
+            {
+                Debug(true, "unsigned_constant");
+                unsigned_number();
+                Debug(false, "unsigned_constant");
+            }
+            return 0;
+        }
+
+        public int unsigned_number()
+        {
+            if (!error)
+            {
+                Debug(true, "unsigned_number");
+                if ((tokenCode != 51) || (tokenCode != 52))
+                {
+                    error = true;
+                }
+                Debug(false, "unsigned_number");
+            }
+            return 0;
+        }
+
+        public int identifier()
         {
             if (!error)
             {
                 Debug(true, "identifier");
                 Debug(false, "identifier");
             }
-        }
-
-        public void simple_expression(int tokenCode)
-        {
-            if (!error)
-            {
-                Debug(true, "simple_expression");
-                Debug(false, "simple_expression");
-            }
-        }
-
-        public void addop(int tokenCode)
-        {
-            if (!error)
-            {
-                Debug(true, "addop");
-                Debug(false, "addop");
-            }
-        }
-
-        public void sign(int tokenCode)
-        {
-            if (!error)
-            {
-                Debug(true, "sign");
-                Debug(false, "sign");
-            }
-        }
-
-        public void term(int tokenCode)
-        {
-            if (!error)
-            {
-                Debug(true, "term");
-                Debug(false, "term");
-            }
-        }
-
-        public void mulop(int tokenCode)
-        {
-            if (!error)
-            {
-                Debug(true, "mulop");
-                Debug(false, "mulop");
-            }
-        }
-
-        public void factor(int tokenCode)
-        {
-            if (!error)
-            {
-                Debug(true, "factor");
-                Debug(false, "factor");
-            }
-        }
-
-        public void unsigned_constant(int tokenCode)
-        {
-            if (!error)
-            {
-                Debug(true, "unsigned_constant");
-                Debug(false, "unsigned_constant");
-            }
-        }
-
-        public void unsigned_number(int tokenCode)
-        {
-            if (!error)
-            {
-                Debug(true, "unsigned_number");
-                Debug(false, "unsigned_number");
-            }
+            return 0;
         }
 
         public void Debug(bool entering, string name)
@@ -167,6 +281,16 @@ namespace CS4100_Lexical_Analyzer
                     Console.WriteLine("Exiting " + name);
                 }
             }
+        }
+
+        public void ErrorMessage(int rightTokenCode, int wrongTokenCode)
+        {
+            Console.WriteLine(rightTokenCode + " expected, but " + wrongTokenCode + " found");
+        }
+
+        public void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int wrongTokenCode)
+        {
+            Console.WriteLine(rightTokenCode1 + " or " + rightTokenCode2 + " expected, but " + wrongTokenCode + " found.");
         }
     }
 }
