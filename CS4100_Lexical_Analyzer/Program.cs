@@ -88,4 +88,20 @@ namespace CS4100_Lexical_Analyzer
         }
     }
 
+    // CFG
+    // <program>            -> $UNIT <prog-identifier> $SEMICOLON <block> $PERIOD
+    // <block>              -> $BEGIN <statement> {$SEMICOLON <statement>} $END
+    // <prog-identifier>    -> <identifier>
+    // <statement>          -> <variable> $COLON-EQUALS <simple expression>
+    // <variable>           -> <identifier>
+    // <simple expression>  -> [<sign] <term> {<addop> <term>}*
+    // <addop>              -> $PLUS | $MINUS
+    // <sign>               -> $PLUS | $MINUS
+    // <term>               -> <factor> {<mulop> <factor> }*
+    // <mulop>              -> $MULTIPLY | $DIVIDE
+    // <factor>             -> <unsigned constant> | <variable> | $LPAR <simple expression> $RPAR
+    // <unsigned constant>  -> <unsigned number>
+    // <unsigned number>    -> $FLOAT | $INTTYPE // as defined for lexical
+    // <identifier>         -> $IDENTIFIER
+
 }
