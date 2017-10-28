@@ -11,6 +11,7 @@ namespace CS4100_Lexical_Analyzer
 
         public bool echoOn = true;
         public bool trace = true;
+        public bool error = false;
 
         public void Analyze(int tokenCode)
         {
@@ -21,105 +22,136 @@ namespace CS4100_Lexical_Analyzer
         // Methods
         public void program(int tokenCode)
         {
-            Debug(true, "program");
-            if (tokenCode == 18)
+            if (!error)
             {
-                TokenizerClass.GetNextToken(echoOn);
-                // need to advance tokencode
-                prog_identifier(tokenCode);
-                TokenizerClass.GetNextToken(echoOn);
-                if (tokenCode == 36)
+                Debug(true, "program");
+
+                if (tokenCode == 18)
                 {
-                    block(tokenCode);
-                    if (tokenCode == 48)
+                    TokenizerClass.GetNextToken(echoOn);
+                    // need to advance tokencode
+                    prog_identifier(tokenCode);
+                    TokenizerClass.GetNextToken(echoOn);
+                    if (tokenCode == 36)
                     {
-                        Console.WriteLine("You did it!");
+                        block(tokenCode);
+                        if (tokenCode == 48)
+                        {
+                            Console.WriteLine("You did it!");
+                        }
                     }
                 }
+                Debug(false, "program");
             }
-            Debug(false, "program");
         }
 
         public void prog_identifier(int tokenCode)
         {
-            Debug(true, "prog_identifier");
-            identifier(tokenCode);
-            Debug(false, "prog_identifier");
+            if (!error)
+            {
+                Debug(true, "prog_identifier");
+                identifier(tokenCode);
+                Debug(false, "prog_identifier");
+            }
         }
 
         public void block(int tokenCode)
         {
-
-            Debug(true, "block");
-            Debug(false, "block");
+            if (!error)
+            {
+                Debug(true, "block");
+                Debug(false, "block");
+            }
         }
 
         public void statement(int tokenCode)
         {
-            Debug(true, "statement");
-            Debug(false, "statement");
+            if (!error)
+            {
+                Debug(true, "statement");
+                Debug(false, "statement");
+            }
         }
 
         public void identifier(int tokenCode)
         {
-            Debug(true, "identifier");
-            Debug(false, "identifier");
+            if (!error)
+            {
+                Debug(true, "identifier");
+                Debug(false, "identifier");
+            }
         }
 
         public void simple_expression(int tokenCode)
         {
-            Debug(true, "simple_expression");
-            Debug(false, "simple_expression");
-
+            if (!error)
+            {
+                Debug(true, "simple_expression");
+                Debug(false, "simple_expression");
+            }
         }
 
         public void addop(int tokenCode)
         {
-            Debug(true, "addop");
-            Debug(false, "addop");
-
+            if (!error)
+            {
+                Debug(true, "addop");
+                Debug(false, "addop");
+            }
         }
 
         public void sign(int tokenCode)
         {
-            Debug(true, "sign");
-            Debug(false, "sign");
-
+            if (!error)
+            {
+                Debug(true, "sign");
+                Debug(false, "sign");
+            }
         }
 
         public void term(int tokenCode)
         {
-            Debug(true, "term");
-            Debug(false, "term");
-
+            if (!error)
+            {
+                Debug(true, "term");
+                Debug(false, "term");
+            }
         }
 
         public void mulop(int tokenCode)
         {
-            Debug(true, "mulop");
-            Debug(false, "mulop");
-
+            if (!error)
+            {
+                Debug(true, "mulop");
+                Debug(false, "mulop");
+            }
         }
 
         public void factor(int tokenCode)
         {
-            Debug(true, "factor");
-            Debug(false, "factor");
-
+            if (!error)
+            {
+                Debug(true, "factor");
+                Debug(false, "factor");
+            }
         }
 
         public void unsigned_constant(int tokenCode)
         {
-            Debug(true, "unsigned_constant");
-            Debug(false, "unsigned_constant");
-
+            if (!error)
+            {
+                Debug(true, "unsigned_constant");
+                Debug(false, "unsigned_constant");
+            }
         }
 
         public void unsigned_number(int tokenCode)
         {
-            Debug(true, "unsigned_number");
-            Debug(false, "unsigned_number");
-
+            if (!error)
+            {
+                Debug(true, "unsigned_number");
+                Debug(false, "unsigned_number");
+            }
         }
 
         public void Debug(bool entering, string name)
