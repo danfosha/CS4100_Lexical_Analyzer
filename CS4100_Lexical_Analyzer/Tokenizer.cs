@@ -393,6 +393,7 @@ namespace CS4100_Lexical_Analyzer
                                     }
                                 }
                                 workingToken.Append(nextChar);
+                                caseGroup = 4;
                                 workingToken.Clear(); // comments are ignored - clear it out
                                 nextChar = GetNextChar();
                                 tokenComplete = true;
@@ -527,7 +528,8 @@ namespace CS4100_Lexical_Analyzer
             {
                 case 0:
                     // unidentified
-                    tokenCode = 99;
+                    if (!token.Equals(""))
+                        tokenCode = 99;
                     break;
                 case 1:
                     // identifiers

@@ -8,61 +8,70 @@ namespace CS4100_Lexical_Analyzer
 {
     class SyntaxA
     {
-
-        public bool echoOn = true;
-        public bool trace = true;
-        public bool error = false;
-        public static int tokenCode = TokenizerClass.tokenCode;
-
-        public void Analyze(int tokenCode)
+        public SyntaxA()
         {
-            program();
+        }
+
+        public static bool echoOn = true;
+        public static bool trace = true;
+        public static bool error = false;
+        // public static int tokenCode = TokenizerClass.tokenCode;
+
+        public static void Analyze(bool echoon)
+        {
+            echoOn = echoon;
+            if ((TokenizerClass.tokenCode >= 0) && (TokenizerClass.tokenCode < 100)) // skip -1
+            {
+                program();
+            }
+
         }
 
 
         // Methods
-        public int program()
+        public static int program()
         {
             if (!error)
             {
                 Debug(true, "program");
 
-                if (tokenCode == 18) // $UNIT
+                if (TokenizerClass.tokenCode == 15)// $UNIT
                 {
-                    TokenizerClass.GetNextToken(echoOn);
+                    GetNextToken(echoOn);
                     // need to advance tokencode
                     prog_identifier();
-                    TokenizerClass.GetNextToken(echoOn);
-                    if (tokenCode == 36) // $;
+                    GetNextToken(echoOn);
+                    if (TokenizerClass.tokenCode == 36) // $;
                     {
+                        GetNextToken(echoOn);
                         block();
-                        if (tokenCode == 48) // $.
+                        if (TokenizerClass.tokenCode == 48) // $.
                         {
                             Console.WriteLine("You did it!");
                         }
                         else
                         {
                             error = true;
-                            ErrorMessage(48, tokenCode);
+                            ErrorMessage(48, TokenizerClass.tokenCode);
                         }
                     }
                     else
                     {
                         error = true;
-                        ErrorMessage(36, tokenCode);
+                        ErrorMessage(36, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
                     error = true;
-                    ErrorMessage(18, tokenCode);
+                    ErrorMessage(18, TokenizerClass.tokenCode);
                 }
                 Debug(false, "program");
             }
             return 0;
         }
 
-        public int prog_identifier()
+        public static int prog_identifier()
         {
             if (!error)
             {
@@ -73,60 +82,56 @@ namespace CS4100_Lexical_Analyzer
             return 0;
         }
 
-        public int block()
+        public static int block()
         {
             if (!error)
             {
                 Debug(true, "block");
-                if (tokenCode == 10) // $BEGIN
+                if (TokenizerClass.tokenCode == 10) // $BEGIN
                 {
+                    GetNextToken(echoOn);
                     statement();
-                    if (tokenCode == 36) // $;
+                    while (TokenizerClass.tokenCode == 36) // $;
                     {
                         statement();
-                        if (tokenCode != 11) // $END
-                        {
-                            error = true;
-                            ErrorMessage(11, tokenCode);
-                        }
                     }
-                    else
+                    if (TokenizerClass.tokenCode != 11) // $END
                     {
                         error = true;
-                        ErrorMessage(36, tokenCode);
+                        ErrorMessage(11, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
                     error = true;
-                    ErrorMessage(10, tokenCode);
+                    ErrorMessage(10, TokenizerClass.tokenCode);
                 }
                 Debug(false, "block");
             }
             return 0;
         }
 
-        public int statement()
+        public static int statement()
         {
             if (!error)
             {
                 Debug(true, "statement");
                 variable();
-                if (tokenCode == 37) // $:=
+                if (TokenizerClass.tokenCode == 37) // $:=
                 {
                     simple_expression();
                 }
                 else
                 {
                     error = true;
-                    ErrorMessage(37, tokenCode);
+                    ErrorMessage(37, TokenizerClass.tokenCode);
                 }
                 Debug(false, "statement");
             }
             return 0;
         }
 
-        public int variable()
+        public static int variable()
         {
             if (!error)
             {
@@ -137,103 +142,128 @@ namespace CS4100_Lexical_Analyzer
             return 0;
         }
 
-        public int simple_expression()
+        public static int simple_expression()
         {
             if (!error)
             {
                 Debug(true, "simple_expression");
                 sign(); // optional
                 term();
-                addop();
-                term();
+                while (addop() == 1)
+                {
+                    term();
+                    addop();
+                }
 
                 Debug(false, "simple_expression");
             }
             return 0;
         }
 
-        public int addop()
+        public static int addop()
         {
             if (!error)
             {
                 Debug(true, "addop");
-                if ((tokenCode != 32) || (tokenCode != 33)) 
+                if ((TokenizerClass.tokenCode != 32) || (TokenizerClass.tokenCode != 33))
                 {
                     error = true;
-                    ErrorMessage(31, 32, tokenCode);
+                    ErrorMessage(31, 32, TokenizerClass.tokenCode);
+                    Debug(false, "addop"); // check this!
+                    return 0;
                 }
                 Debug(false, "addop");
             }
-            return 0;
+            return 1;
         }
 
-        public int sign()
+        public static int sign()
         {
             if (!error)
             {
                 Debug(true, "sign");
-                if ((tokenCode != 32) || (tokenCode != 33))
+                if ((TokenizerClass.tokenCode != 32) || (TokenizerClass.tokenCode != 33))
                 {
-                    error = true;
-                    ErrorMessage(32, 33, tokenCode);
+                    //error = true;
+                    ErrorMessage(32, 33, TokenizerClass.tokenCode);
+                    Console.WriteLine("No optional sign. Going on.");
                 }
                 Debug(false, "sign");
             }
             return 0;
         }
 
-        public int term()
+        public static int term()
         {
             if (!error)
             {
                 Debug(true, "term");
                 factor();
-                mulop();
-                factor();
+                while (mulop() == 1)
+                {
+                    factor();
+                    mulop();
+                }
                 Debug(false, "term");
             }
             return 0;
         }
 
-        public int mulop()
+        public static int mulop()
         {
             if (!error)
             {
                 Debug(true, "mulop");
-                if ((tokenCode != 30) || (tokenCode != 31))
+                if ((TokenizerClass.tokenCode != 30) || (TokenizerClass.tokenCode != 31))
                 {
-                    error = true;
+                    // error = true;
+                    ErrorMessage(30, 31, TokenizerClass.tokenCode);
+                    Console.WriteLine("Not a mulop. Going on.");
+                    return 0;
                 }
                 Debug(false, "mulop");
             }
-            return 0;
+            return 1;
         }
 
-        public int factor()
+        public static int factor()
         {
             if (!error)
             {
                 Debug(true, "factor");
-                unsigned_constant();
-                variable();
-                if (tokenCode == 34)
+                if ((TokenizerClass.tokenCode == 51) || (TokenizerClass.tokenCode == 52)) // int or float
                 {
+                    unsigned_constant();
+                }
+                else if (TokenizerClass.tokenCode == 50) // identifier
+                {
+                    variable();
+                }
+                else if (TokenizerClass.tokenCode == 34) // $(
+                {
+                    GetNextToken(echoOn);
                     simple_expression();
-                    if (tokenCode != 35)
+                    if (TokenizerClass.tokenCode == 35) //$)
+                    {
+                        GetNextToken(echoOn);
+                    }
+                    else
                     {
                         error = true;
+                        ErrorMessage(35, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
                     error = true;
+                    ErrorMessage(34, TokenizerClass.tokenCode);
                 }
                 Debug(false, "factor");
             }
             return 0;
         }
 
-        public int unsigned_constant()
+        public static int unsigned_constant()
         {
             if (!error)
             {
@@ -244,31 +274,38 @@ namespace CS4100_Lexical_Analyzer
             return 0;
         }
 
-        public int unsigned_number()
+        public static int unsigned_number()
         {
             if (!error)
             {
                 Debug(true, "unsigned_number");
-                if ((tokenCode != 51) || (tokenCode != 52))
+                if ((TokenizerClass.tokenCode != 51) || (TokenizerClass.tokenCode != 52))
                 {
                     error = true;
+                    ErrorMessage(51, 52, TokenizerClass.tokenCode);
+                    return 0;
                 }
                 Debug(false, "unsigned_number");
             }
-            return 0;
+            return 1;
         }
 
-        public int identifier()
+        public static int identifier()
         {
             if (!error)
             {
                 Debug(true, "identifier");
+                if (TokenizerClass.tokenCode != 50)
+                {
+                    error = true;
+                    ErrorMessage(50, TokenizerClass.tokenCode);
+                }
                 Debug(false, "identifier");
             }
             return 0;
         }
 
-        public void Debug(bool entering, string name)
+        public static void Debug(bool entering, string name)
         {
             if (trace)
             {
@@ -283,14 +320,44 @@ namespace CS4100_Lexical_Analyzer
             }
         }
 
-        public void ErrorMessage(int rightTokenCode, int wrongTokenCode)
+        public static void ErrorMessage(int rightTokenCode, int wrongTokenCode)
         {
             Console.WriteLine(rightTokenCode + " expected, but " + wrongTokenCode + " found");
         }
 
-        public void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int wrongTokenCode)
+        public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int wrongTokenCode)
         {
             Console.WriteLine(rightTokenCode1 + " or " + rightTokenCode2 + " expected, but " + wrongTokenCode + " found.");
+        }
+
+        public static void GetNextToken(bool echoOn)
+        {
+            TokenizerClass.GetNextToken(echoOn);
+            while (TokenizerClass.tokenCode == -1)
+            {
+                TokenizerClass.GetNextToken(echoOn);
+            }
+            //TokentoSymTable(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+            PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+        }
+
+
+        public static void PrintToken(string token, int tokenCode)
+        {
+            if (token.Length > 0)
+            {
+                string mnem = ReserveWordClass.LookupMnem(tokenCode);
+                int symIndex = SymbolTable.LookupSymbol(token);
+                // anything with a symbol table value
+                if (symIndex != -1)
+                {
+                    Console.WriteLine(SymbolTable.Truncate(token, 16).PadRight(20) + tokenCode.ToString().PadRight(22) + symIndex);
+                }
+                else
+                {
+                    Console.WriteLine(SymbolTable.Truncate(token, 16).PadRight(20) + tokenCode.ToString().PadRight(10) + mnem.PadRight(10));
+                }
+            }
         }
     }
 }

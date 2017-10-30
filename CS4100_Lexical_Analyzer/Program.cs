@@ -15,18 +15,17 @@ namespace CS4100_Lexical_Analyzer
             string globalToken;
             int globalTokenCode;
             bool echoOn = true;
-            string fileName = "lexical_test.txt";
+            string fileName = "GoodtreeA.txt";
             InitializeStructures();
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
 
             while (!TokenizerClass.tokenizerFinished)
             {
-                TokenizerClass.GetNextToken(echoOn);
-                TokentoSymTable(TokenizerClass.nextToken, TokenizerClass.tokenCode);
-                PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
-                globalToken = TokenizerClass.nextToken;
-                globalTokenCode = TokenizerClass.tokenCode;
+                GetNextToken(echoOn);
+                SyntaxA.Analyze(echoOn);
+                //globalToken = TokenizerClass.nextToken;
+                //globalTokenCode = TokenizerClass.tokenCode;
                 
             }
 
@@ -44,7 +43,15 @@ namespace CS4100_Lexical_Analyzer
             ReserveTable.Initialize();
             SymbolTable SymbolTable = new SymbolTable(MaxQuad);
             TokenizerClass Tokenizer = new TokenizerClass();
+            SyntaxA SyntaxAnalyzer = new SyntaxA();
 
+        }
+
+        public static void GetNextToken(bool echoOn)
+        {
+            TokenizerClass.GetNextToken(echoOn);
+            TokentoSymTable(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+            PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
         }
 
         public static void TokentoSymTable(string token, int tokenCode)
@@ -94,7 +101,7 @@ namespace CS4100_Lexical_Analyzer
     // <prog-identifier>    -> <identifier>
     // <statement>          -> <variable> $COLON-EQUALS <simple expression>
     // <variable>           -> <identifier>
-    // <simple expression>  -> [<sign] <term> {<addop> <term>}*
+    // <simple expression>  -> [<sign>] <term> {<addop> <term>}*
     // <addop>              -> $PLUS | $MINUS
     // <sign>               -> $PLUS | $MINUS
     // <term>               -> <factor> {<mulop> <factor> }*
