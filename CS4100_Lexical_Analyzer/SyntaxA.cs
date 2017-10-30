@@ -330,6 +330,17 @@ namespace CS4100_Lexical_Analyzer
             Console.WriteLine(rightTokenCode1 + " or " + rightTokenCode2 + " expected, but " + wrongTokenCode + " found.");
         }
 
+        public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int wrongTokenCode)
+        {
+            Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", or" + rightTokenCode3+" expected, but " + wrongTokenCode + " found.");
+        }
+
+        public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int rightTokenCode4, int wrongTokenCode)
+        {
+            Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", " + rightTokenCode3+ ", or" + rightTokenCode4 + " expected, but " + wrongTokenCode + " found.");
+        }
+
+
         public static void GetNextToken(bool echoOn)
         {
             TokenizerClass.GetNextToken(echoOn);
