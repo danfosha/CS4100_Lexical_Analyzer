@@ -38,12 +38,10 @@ namespace CS4100_Lexical_Analyzer
                     GetNextToken(echoOn);
                     // need to advance tokencode
                     prog_identifier();
-                    GetNextToken(echoOn);
                     if (TokenizerClass.tokenCode == 36) // $;
                     {
                         GetNextToken(echoOn);
                         block();
-                        // GNT?
                         if (TokenizerClass.tokenCode == 48) // $.
                         {
                             Console.WriteLine("You did it!");
@@ -95,8 +93,11 @@ namespace CS4100_Lexical_Analyzer
                         GetNextToken(echoOn);
                         statement();
                     }
-                    //GNT?
-                    if (TokenizerClass.tokenCode != 11) // $END
+                    if (TokenizerClass.tokenCode == 11) // $END
+                    {
+                        GetNextToken(echoOn);
+                    }
+                    else
                     {
                         error = true;
                         ErrorMessage(11, TokenizerClass.tokenCode);
@@ -118,7 +119,6 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "statement");
                 variable();
-                GetNextToken(echoOn);
                 if (TokenizerClass.tokenCode == 37) // $:=
                 {
                     GetNextToken(echoOn);
@@ -153,15 +153,12 @@ namespace CS4100_Lexical_Analyzer
                 if ((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33))
                 {
                     sign();
-                    GetNextToken(echoOn);
                 }
                 term();
-                GetNextToken(echoOn);
                 while ((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33))
                 {
                     GetNextToken(echoOn);
                     term();
-                    GetNextToken(echoOn);
                 }
 
                 Debug(false, "simple_expression");
@@ -174,13 +171,14 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "addop");
-                if ((TokenizerClass.tokenCode != 32) || (TokenizerClass.tokenCode != 33))
+                if ((TokenizerClass.tokenCode != 32) && (TokenizerClass.tokenCode != 33))
                 {
                     error = true;
                     ErrorMessage(31, 32, TokenizerClass.tokenCode);
                     Debug(false, "addop"); // check this!
                     return 0;
                 }
+                GetNextToken(echoOn);
                 Debug(false, "addop");
             }
             return 1;
@@ -191,12 +189,13 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "sign");
-                if ((TokenizerClass.tokenCode != 32) || (TokenizerClass.tokenCode != 33))
+                if ((TokenizerClass.tokenCode != 32) && (TokenizerClass.tokenCode != 33))
                 {
-                    //error = true;
+                    error = true;
                     ErrorMessage(32, 33, TokenizerClass.tokenCode);
-                    Console.WriteLine("No optional sign. Going on.");
+                    return 0;
                 }
+                GetNextToken(echoOn);
                 Debug(false, "sign");
             }
             return 0;
@@ -208,11 +207,9 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "term");
                 factor();
-                GetNextToken(echoOn);
                 while ((TokenizerClass.tokenCode == 31) || (TokenizerClass.tokenCode == 30))
                 {
                     mulop();
-                    GetNextToken(echoOn);
                     factor();
                     // GetNextToken(echoOn);
                 }
@@ -233,6 +230,7 @@ namespace CS4100_Lexical_Analyzer
                     Console.WriteLine("Not a mulop. Going on.");
                     return 0;
                 }
+                GetNextToken(echoOn);
                 Debug(false, "mulop");
             }
             return 1;
@@ -250,7 +248,7 @@ namespace CS4100_Lexical_Analyzer
                 else if (TokenizerClass.tokenCode == 50) // identifier
                 {
                     variable();
-                    }
+                }
                 else if (TokenizerClass.tokenCode == 34) // $(
                 {
                     GetNextToken(echoOn);
@@ -260,6 +258,7 @@ namespace CS4100_Lexical_Analyzer
                         error = true;
                         ErrorMessage(35, TokenizerClass.tokenCode);
                     }
+                    GetNextToken(echoOn);
                 }
                 else
                 {
@@ -293,6 +292,7 @@ namespace CS4100_Lexical_Analyzer
                     ErrorMessage(51, 52, TokenizerClass.tokenCode);
                     return 0;
                 }
+                GetNextToken(echoOn);
                 Debug(false, "unsigned_number");
             }
             return 1;
@@ -307,7 +307,9 @@ namespace CS4100_Lexical_Analyzer
                 {
                     error = true;
                     ErrorMessage(50, TokenizerClass.tokenCode);
+                    return 0;
                 }
+                GetNextToken(echoOn);
                 Debug(false, "identifier");
             }
             return 0;
