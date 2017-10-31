@@ -341,26 +341,36 @@ namespace CS4100_Lexical_Analyzer
             }
         }
 
+       
         public static void ErrorMessage(int rightTokenCode, int wrongTokenCode)
         {
+            Error();
             Console.WriteLine(rightTokenCode + " expected, but " + wrongTokenCode + " found");
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int wrongTokenCode)
         {
+            Error();
             Console.WriteLine(rightTokenCode1 + " or " + rightTokenCode2 + " expected, but " + wrongTokenCode + " found.");
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int wrongTokenCode)
         {
+            Error();
             Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", or" + rightTokenCode3 + " expected, but " + wrongTokenCode + " found.");
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int rightTokenCode4, int wrongTokenCode)
         {
+            Error();
             Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", " + rightTokenCode3 + ", or" + rightTokenCode4 + " expected, but " + wrongTokenCode + " found.");
         }
 
+        public static void Error()
+        {
+            error = true;
+            TokenizerClass.tokenizerFinished = true;
+        }
 
         public static void GetNextToken(bool echoOn)
         {

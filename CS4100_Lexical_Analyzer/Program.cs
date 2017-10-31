@@ -12,10 +12,12 @@ namespace CS4100_Lexical_Analyzer
     {
         public static void Main(string[] args)
         {
-            string globalToken;
-            int globalTokenCode;
+            // string globalToken;
+            // int globalTokenCode;
             bool echoOn = true;
-            string fileName = "GoodtreeA.txt";
+            // string fileName = "GoodtreeA.txt";
+            // string fileName = "BadProg1.txt";
+            string fileName = "BadProg2B.txt";
             InitializeStructures();
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
