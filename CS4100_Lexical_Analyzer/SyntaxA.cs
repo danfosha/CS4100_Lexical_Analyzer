@@ -24,10 +24,8 @@ namespace CS4100_Lexical_Analyzer
             {
                 program();
             }
-
         }
-
-
+        
         // Methods
         public static int program()
         {
@@ -94,6 +92,7 @@ namespace CS4100_Lexical_Analyzer
                     while (TokenizerClass.tokenCode == 36) // $;
                     {
                         statement();
+                        GetNextToken(echoOn);
                     }
                     if (TokenizerClass.tokenCode != 11) // $END
                     {
@@ -149,15 +148,16 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "simple_expression");
-                if ((TokenizerClass.tokenCode==32) || (TokenizerClass.tokenCode == 33))
+                if ((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33))
                 {
                     sign();
+                    GetNextToken(echoOn);
                 }
-                GetNextToken(echoOn);
                 term();
                 GetNextToken(echoOn);
-                while ((TokenizerClass.tokenCode==32) || (TokenizerClass.tokenCode==33))
+                while ((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33))
                 {
+                    GetNextToken(echoOn);
                     term();
                     GetNextToken(echoOn);
                 }
@@ -207,10 +207,13 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "term");
                 factor();
                 GetNextToken(echoOn);
-                while ((TokenizerClass.tokenCode==31)|| (TokenizerClass.tokenCode == 31))
+                while ((TokenizerClass.tokenCode == 31) || (TokenizerClass.tokenCode == 30))
                 {
+                    mulop();
+                    GetNextToken(echoOn);
                     factor();
                     GetNextToken(echoOn);
+                    
                 }
                 Debug(false, "term");
             }
@@ -222,7 +225,7 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "mulop");
-                if ((TokenizerClass.tokenCode != 30) || (TokenizerClass.tokenCode != 31))
+                if ((TokenizerClass.tokenCode != 30) && (TokenizerClass.tokenCode != 31))
                 {
                     // error = true;
                     ErrorMessage(30, 31, TokenizerClass.tokenCode);
@@ -264,7 +267,7 @@ namespace CS4100_Lexical_Analyzer
                 else
                 {
                     error = true;
-                    ErrorMessage(34, TokenizerClass.tokenCode);
+                    ErrorMessage(50, 51, 52, 34, TokenizerClass.tokenCode);
                 }
                 Debug(false, "factor");
             }
@@ -287,7 +290,7 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "unsigned_number");
-                if ((TokenizerClass.tokenCode != 51) || (TokenizerClass.tokenCode != 52))
+                if ((TokenizerClass.tokenCode != 51) && (TokenizerClass.tokenCode != 52))
                 {
                     error = true;
                     ErrorMessage(51, 52, TokenizerClass.tokenCode);
@@ -340,12 +343,12 @@ namespace CS4100_Lexical_Analyzer
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int wrongTokenCode)
         {
-            Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", or" + rightTokenCode3+" expected, but " + wrongTokenCode + " found.");
+            Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", or" + rightTokenCode3 + " expected, but " + wrongTokenCode + " found.");
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int rightTokenCode4, int wrongTokenCode)
         {
-            Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", " + rightTokenCode3+ ", or" + rightTokenCode4 + " expected, but " + wrongTokenCode + " found.");
+            Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", " + rightTokenCode3 + ", or" + rightTokenCode4 + " expected, but " + wrongTokenCode + " found.");
         }
 
 
