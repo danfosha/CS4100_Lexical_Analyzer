@@ -25,7 +25,7 @@ namespace CS4100_Lexical_Analyzer
                 program();
             }
         }
-        
+
         // Methods
         public static int program()
         {
@@ -43,6 +43,7 @@ namespace CS4100_Lexical_Analyzer
                     {
                         GetNextToken(echoOn);
                         block();
+                        // GNT?
                         if (TokenizerClass.tokenCode == 48) // $.
                         {
                             Console.WriteLine("You did it!");
@@ -91,9 +92,10 @@ namespace CS4100_Lexical_Analyzer
                     statement();
                     while (TokenizerClass.tokenCode == 36) // $;
                     {
-                        statement();
                         GetNextToken(echoOn);
+                        statement();
                     }
+                    //GNT?
                     if (TokenizerClass.tokenCode != 11) // $END
                     {
                         error = true;
@@ -212,8 +214,7 @@ namespace CS4100_Lexical_Analyzer
                     mulop();
                     GetNextToken(echoOn);
                     factor();
-                    GetNextToken(echoOn);
-                    
+                    // GetNextToken(echoOn);
                 }
                 Debug(false, "term");
             }
@@ -249,16 +250,12 @@ namespace CS4100_Lexical_Analyzer
                 else if (TokenizerClass.tokenCode == 50) // identifier
                 {
                     variable();
-                }
+                    }
                 else if (TokenizerClass.tokenCode == 34) // $(
                 {
                     GetNextToken(echoOn);
                     simple_expression();
-                    if (TokenizerClass.tokenCode == 35) //$)
-                    {
-                        GetNextToken(echoOn);
-                    }
-                    else
+                    if (TokenizerClass.tokenCode != 35) //$)
                     {
                         error = true;
                         ErrorMessage(35, TokenizerClass.tokenCode);
