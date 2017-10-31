@@ -1,0 +1,12 @@
+unit B;
+begin
+a:=1; (*a*)
+ 
+a :=(a+c)* (b-d)                ;
+(* There is a double ** error below *)
+quad1 := -b +(b**b) - 4 * a* c / 2*a;
+final := this - (that*other)
+end.
+
+
+

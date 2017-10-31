@@ -69,6 +69,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BadProg1.txt" />
+    <Content Include="BadProg2B.txt" />
+    <Content Include="BadProg3B.txt" />
+    <Content Include="GoodtreeA.txt" />
     <Content Include="lexical_test.txt" />
   </ItemGroup>
   <ItemGroup>
