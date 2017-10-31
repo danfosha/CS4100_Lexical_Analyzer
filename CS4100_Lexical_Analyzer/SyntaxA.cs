@@ -15,6 +15,7 @@ namespace CS4100_Lexical_Analyzer
         public static bool echoOn = true;
         public static bool trace = true;
         public static bool error = false;
+        public static int paddingIndent = 0;
         // public static int tokenCode = TokenizerClass.tokenCode;
 
         public static void Analyze(bool echoon)
@@ -321,11 +322,21 @@ namespace CS4100_Lexical_Analyzer
             {
                 if (entering)
                 {
-                    Console.WriteLine("Entering " + name);
+                    for (int i=0; i <= paddingIndent; i ++)
+                    {
+                        Console.Write(" ");
+                    }
+                    Console.WriteLine(("Entering " + name)); //.PadLeft(paddingIndent));
+                    paddingIndent += 5;
                 }
                 else
                 {
-                    Console.WriteLine("Exiting " + name);
+                    for (int i = 0; i <= paddingIndent; i ++)
+                    {
+                        Console.Write(" ");
+                    }
+                    Console.WriteLine(("Exiting " + name)); // .PadLeft(paddingIndent));
+                    paddingIndent -= 5;
                 }
             }
         }
