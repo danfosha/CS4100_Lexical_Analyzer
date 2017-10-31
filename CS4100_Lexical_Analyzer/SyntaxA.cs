@@ -117,8 +117,10 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "statement");
                 variable();
+                GetNextToken(echoOn);
                 if (TokenizerClass.tokenCode == 37) // $:=
                 {
+                    GetNextToken(echoOn);
                     simple_expression();
                 }
                 else
@@ -147,12 +149,17 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "simple_expression");
-                sign(); // optional
+                if ((TokenizerClass.tokenCode==32) || (TokenizerClass.tokenCode == 33))
+                {
+                    sign();
+                }
+                GetNextToken(echoOn);
                 term();
-                while (addop() == 1)
+                GetNextToken(echoOn);
+                while ((TokenizerClass.tokenCode==32) || (TokenizerClass.tokenCode==33))
                 {
                     term();
-                    addop();
+                    GetNextToken(echoOn);
                 }
 
                 Debug(false, "simple_expression");
@@ -199,10 +206,11 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "term");
                 factor();
-                while (mulop() == 1)
+                GetNextToken(echoOn);
+                while ((TokenizerClass.tokenCode==31)|| (TokenizerClass.tokenCode == 31))
                 {
                     factor();
-                    mulop();
+                    GetNextToken(echoOn);
                 }
                 Debug(false, "term");
             }
