@@ -213,7 +213,7 @@ namespace CS4100_Lexical_Analyzer
                             nextChar = GetNextChar();
                             while (NumericChar(nextChar, workingToken.ToString()))
                             {
-                                if (workingToken.Length > 29)
+                                if (workingToken.Length > 16)
                                 {
                                     nextChar = GetNextChar();
                                     tokenTooLong = true;
@@ -240,7 +240,8 @@ namespace CS4100_Lexical_Analyzer
                                     SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, x);
                                 }
                                 else
-                                {
+                                { 
+
                                     SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, Convert.ToDouble(workingToken.ToString()));
                                 }
                             }
@@ -415,7 +416,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     if (tokenTooLong)
                     {
-                        Console.WriteLine("Warning: Token longer than 30 characters and is truncated. Numeric values > 19 digits may be converted to doubles.");
+                        Console.WriteLine("Warning: Token longer than 30 characters and is truncated. Numeric values > 16 digits may be converted to doubles.");
                     }
 
                     nextToken = workingToken.ToString();
