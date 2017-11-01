@@ -131,7 +131,7 @@ namespace CS4100_Lexical_Analyzer
                 else if (!tokenComplete)
                 {
 
-                    while (Char.IsWhiteSpace(nextChar))
+                    while (' '.Equals(nextChar)) 
                     {
                         nextChar = GetNextChar();
                     }
@@ -160,6 +160,10 @@ namespace CS4100_Lexical_Analyzer
                     else if (OtherTokenSecond(nextChar))
                     {
                         caseGroup = 6;
+                    }
+                    else if ('\r'.Equals(nextChar))
+                    {
+                        caseGroup = 7;
                     }
                     else
                     {
@@ -403,6 +407,8 @@ namespace CS4100_Lexical_Analyzer
                                 tokenComplete = true;
                             }
                             break;
+                        case 7:
+                            break;
                         default:
                             break;
                     }
@@ -524,6 +530,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 case 0:
                     // unidentified
+                    if (!("".Equals(token)))
                     tokenCode = 99;
                     break;
                 case 1:
