@@ -15,9 +15,9 @@ namespace CS4100_Lexical_Analyzer
             // string globalToken;
             // int globalTokenCode;
             bool echoOn = true;
-            string fileName = "GoodtreeA.txt";
+            // string fileName = "GoodtreeA.txt";
             // string fileName = "BadProg1.txt";
-            // string fileName = "BadProg2B.txt";
+            string fileName = "BadProg2B.txt";
             // string fileName = "BadProg3B.txt";
             InitializeStructures();
             FileHandler.InitializeInputFile(fileName);
