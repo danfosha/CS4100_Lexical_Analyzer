@@ -89,7 +89,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     GetNextToken(echoOn);
                     statement();
-                    while (TokenizerClass.tokenCode == 36) // $;
+                    while ((TokenizerClass.tokenCode == 36) && !error) // $;
                     {
                         GetNextToken(echoOn);
                         statement();
@@ -156,7 +156,7 @@ namespace CS4100_Lexical_Analyzer
                     sign();
                 }
                 term();
-                while ((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33))
+                while (((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33)) && !error)
                 {
                     GetNextToken(echoOn);
                     term();
@@ -208,7 +208,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "term");
                 factor();
-                while ((TokenizerClass.tokenCode == 31) || (TokenizerClass.tokenCode == 30))
+                while ( ((TokenizerClass.tokenCode == 31) || (TokenizerClass.tokenCode == 30)) && !error )
                 {
                     mulop();
                     factor();
@@ -228,7 +228,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     // error = true;
                     ErrorMessage(30, 31, TokenizerClass.tokenCode);
-                    Console.WriteLine("Not a mulop. Going on.");
+                    
                     return 0;
                 }
                 GetNextToken(echoOn);
@@ -254,12 +254,16 @@ namespace CS4100_Lexical_Analyzer
                 {
                     GetNextToken(echoOn);
                     simple_expression();
-                    if (TokenizerClass.tokenCode != 35) //$)
+                    if (TokenizerClass.tokenCode == 35) //$)
+                    {
+                        GetNextToken(echoOn);
+                    }
+                    else
                     {
                         error = true;
                         ErrorMessage(35, TokenizerClass.tokenCode);
                     }
-                    GetNextToken(echoOn);
+                    
                 }
                 else
                 {
@@ -331,12 +335,13 @@ namespace CS4100_Lexical_Analyzer
                 }
                 else
                 {
+                    paddingIndent -= 5;
                     for (int i = 0; i <= paddingIndent; i ++)
                     {
                         Console.Write(" ");
                     }
                     Console.WriteLine(("Exiting " + name)); // .PadLeft(paddingIndent));
-                    paddingIndent -= 5;
+                    
                 }
             }
         }

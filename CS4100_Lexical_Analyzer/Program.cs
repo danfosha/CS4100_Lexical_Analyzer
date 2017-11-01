@@ -16,9 +16,10 @@ namespace CS4100_Lexical_Analyzer
             // int globalTokenCode;
             bool echoOn = true;
             // string fileName = "GoodtreeA.txt";
-            // string fileName = "BadProg1.txt";
-            string fileName = "BadProg2B.txt";
+            string fileName = "BadProg1.txt";
+            // string fileName = "BadProg2B.txt";
             // string fileName = "BadProg3B.txt";
+            // string fileName = "working.txt";
             InitializeStructures();
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
@@ -34,7 +35,10 @@ namespace CS4100_Lexical_Analyzer
 
             Console.WriteLine("Tokenizer Finished");
             Console.ReadLine();
-            SymbolTable.PrintSymbolTable();
+            if (!SyntaxA.error)
+            {
+                SymbolTable.PrintSymbolTable();
+            }
             Console.ReadLine();
         }
 
