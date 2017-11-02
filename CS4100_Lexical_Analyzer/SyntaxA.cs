@@ -16,6 +16,8 @@ namespace CS4100_Lexical_Analyzer
         public static bool trace = true;
         public static bool error = false;
         public static int paddingIndent = 0;
+        public static bool uniqueProgIdent = false;
+        public static string ProgIdent;
         // public static int tokenCode = TokenizerClass.tokenCode;
 
         public static void Analyze(bool echoon)
@@ -49,19 +51,19 @@ namespace CS4100_Lexical_Analyzer
                         }
                         else
                         {
-                            error = true;
+                           
                             ErrorMessage(48, TokenizerClass.tokenCode);
                         }
                     }
                     else
                     {
-                        error = true;
+                        
                         ErrorMessage(36, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
-                    error = true;
+                   
                     ErrorMessage(18, TokenizerClass.tokenCode);
                 }
                 Debug(false, "program");
@@ -100,13 +102,13 @@ namespace CS4100_Lexical_Analyzer
                     }
                     else
                     {
-                        error = true;
+                       
                         ErrorMessage(11, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
-                    error = true;
+                   
                     ErrorMessage(10, TokenizerClass.tokenCode);
                 }
                 Debug(false, "block");
@@ -127,7 +129,7 @@ namespace CS4100_Lexical_Analyzer
                 }
                 else
                 {
-                    error = true;
+                   
                     ErrorMessage(37, TokenizerClass.tokenCode);
                 }
                 Debug(false, "statement");
@@ -174,7 +176,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "addop");
                 if ((TokenizerClass.tokenCode != 32) && (TokenizerClass.tokenCode != 33))
                 {
-                    error = true;
+                    
                     ErrorMessage(31, 32, TokenizerClass.tokenCode);
                     Debug(false, "addop"); // check this!
                     return 0;
@@ -192,7 +194,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "sign");
                 if ((TokenizerClass.tokenCode != 32) && (TokenizerClass.tokenCode != 33))
                 {
-                    error = true;
+                    
                     ErrorMessage(32, 33, TokenizerClass.tokenCode);
                     return 0;
                 }
@@ -260,14 +262,14 @@ namespace CS4100_Lexical_Analyzer
                     }
                     else
                     {
-                        error = true;
+                        
                         ErrorMessage(35, TokenizerClass.tokenCode);
                     }
                     
                 }
                 else
                 {
-                    error = true;
+                    
                     ErrorMessage(50, 51, 52, 34, TokenizerClass.tokenCode);
                 }
                 Debug(false, "factor");
@@ -293,7 +295,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "unsigned_number");
                 if ((TokenizerClass.tokenCode != 51) && (TokenizerClass.tokenCode != 52))
                 {
-                    error = true;
+                   
                     ErrorMessage(51, 52, TokenizerClass.tokenCode);
                     return 0;
                 }
@@ -310,9 +312,24 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "identifier");
                 if (TokenizerClass.tokenCode != 50)
                 {
-                    error = true;
+                    
                     ErrorMessage(50, TokenizerClass.tokenCode);
                     return 0;
+                }
+                // first pass sets the program identifier
+                if (uniqueProgIdent == false)
+                {
+                    uniqueProgIdent = true;
+                    ProgIdent = TokenizerClass.nextToken;
+                }
+                else
+                {
+                    // if -1 is returned, program identifier is already in symbol table
+                    if (SymbolTable.LookupSymbol(ProgIdent) < 0)
+                    {
+                        ProgIdentErrorMessage(TokenizerClass.nextToken);
+                        return 0;
+                    }
                 }
                 GetNextToken(echoOn);
                 Debug(false, "identifier");
@@ -369,6 +386,12 @@ namespace CS4100_Lexical_Analyzer
         {
             Error();
             Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", " + ReserveWordClass.LookupMnem(rightTokenCode3) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode4) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+        }
+
+        public static void ProgIdentErrorMessage(string token)
+        {
+            Error();
+            Console.WriteLine("Error: " + token + " has already been declared.");
         }
 
         public static void Error()
