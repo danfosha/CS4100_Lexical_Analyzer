@@ -329,7 +329,7 @@ namespace CS4100_Lexical_Analyzer
                 else
                 {
                     // if -1 is returned, program identifier is already in symbol table
-                    if (SymbolTable.LookupSymbol(ProgIdent) < 0)
+                    if (SymbolTable.LookupSymbol(ProgIdent) >= 0)
                     {
                         ProgIdentErrorMessage(TokenizerClass.nextToken);
                         return 0;
