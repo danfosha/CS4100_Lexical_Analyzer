@@ -19,7 +19,7 @@ namespace CS4100_Lexical_Analyzer
         public static int paddingIndent = 0;
         public static bool uniqueProgIdent = false;
         public static string ProgIdent;
-       
+
         // public static int tokenCode = TokenizerClass.tokenCode;
 
         public static void Analyze(bool echoon)
@@ -328,11 +328,14 @@ namespace CS4100_Lexical_Analyzer
                 }
                 else
                 {
-                    // if -1 is returned, program identifier is already in symbol table
-                    if (SymbolTable.LookupSymbol(ProgIdent) >= 0)
-                    {
-                        ProgIdentErrorMessage(TokenizerClass.nextToken);
-                        return 0;
+                    if (TokenizerClass.nextToken.Equals(ProgIdent))
+                        {
+                        // if -1 is returned, program identifier is already in symbol table
+                        if (SymbolTable.LookupSymbol(ProgIdent) >= 0)
+                        {
+                            ProgIdentErrorMessage(ProgIdent);
+                            return 0;
+                        }
                     }
                 }
                 GetNextToken(echoOn);
@@ -351,7 +354,7 @@ namespace CS4100_Lexical_Analyzer
                     {
                         Console.Write(" ");
                     }
-                    Console.WriteLine(("Entering " + name)); 
+                    Console.WriteLine(("Entering " + name));
                     paddingIndent += 5;
                 }
                 else
@@ -361,7 +364,7 @@ namespace CS4100_Lexical_Analyzer
                     {
                         Console.Write(" ");
                     }
-                    Console.WriteLine(("Exiting " + name)); 
+                    Console.WriteLine(("Exiting " + name));
 
                 }
             }
