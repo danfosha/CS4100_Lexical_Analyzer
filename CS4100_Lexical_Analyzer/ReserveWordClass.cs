@@ -27,7 +27,7 @@ namespace CS4100_Lexical_Analyzer
 
         }
 
-        public static ReserveWords[] ReserveWordTable = new ReserveWords[44];
+        public static ReserveWords[] ReserveWordTable = new ReserveWords[49];
 
         public void Initialize()
         // Constructor
@@ -80,6 +80,13 @@ namespace CS4100_Lexical_Analyzer
             Add("]","RBRA");
             Add(":","COLN");
             Add(".","PERD");
+            Add("", "NULL");
+            Add("IDENTIFIER", "IDEN");
+            Add("INTEGER", "INT");
+            Add("FLOAT", "FLOA");
+            Add("STRING", "STRN");
+
+
 
         }
 

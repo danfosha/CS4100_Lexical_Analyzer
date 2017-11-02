@@ -51,19 +51,19 @@ namespace CS4100_Lexical_Analyzer
                         }
                         else
                         {
-                           
+
                             ErrorMessage(48, TokenizerClass.tokenCode);
                         }
                     }
                     else
                     {
-                        
+
                         ErrorMessage(36, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
-                   
+
                     ErrorMessage(18, TokenizerClass.tokenCode);
                 }
                 Debug(false, "program");
@@ -102,13 +102,13 @@ namespace CS4100_Lexical_Analyzer
                     }
                     else
                     {
-                       
+
                         ErrorMessage(11, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
-                   
+
                     ErrorMessage(10, TokenizerClass.tokenCode);
                 }
                 Debug(false, "block");
@@ -129,7 +129,7 @@ namespace CS4100_Lexical_Analyzer
                 }
                 else
                 {
-                   
+
                     ErrorMessage(37, TokenizerClass.tokenCode);
                 }
                 Debug(false, "statement");
@@ -176,7 +176,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "addop");
                 if ((TokenizerClass.tokenCode != 32) && (TokenizerClass.tokenCode != 33))
                 {
-                    
+
                     ErrorMessage(31, 32, TokenizerClass.tokenCode);
                     Debug(false, "addop"); // check this!
                     return 0;
@@ -194,7 +194,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "sign");
                 if ((TokenizerClass.tokenCode != 32) && (TokenizerClass.tokenCode != 33))
                 {
-                    
+
                     ErrorMessage(32, 33, TokenizerClass.tokenCode);
                     return 0;
                 }
@@ -210,7 +210,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "term");
                 factor();
-                while ( ((TokenizerClass.tokenCode == 31) || (TokenizerClass.tokenCode == 30)) && !error )
+                while (((TokenizerClass.tokenCode == 31) || (TokenizerClass.tokenCode == 30)) && !error)
                 {
                     mulop();
                     factor();
@@ -230,7 +230,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     // error = true;
                     ErrorMessage(30, 31, TokenizerClass.tokenCode);
-                    
+
                     return 0;
                 }
                 GetNextToken(echoOn);
@@ -262,14 +262,14 @@ namespace CS4100_Lexical_Analyzer
                     }
                     else
                     {
-                        
+
                         ErrorMessage(35, TokenizerClass.tokenCode);
                     }
-                    
+
                 }
                 else
                 {
-                    
+
                     ErrorMessage(50, 51, 52, 34, TokenizerClass.tokenCode);
                 }
                 Debug(false, "factor");
@@ -295,7 +295,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "unsigned_number");
                 if ((TokenizerClass.tokenCode != 51) && (TokenizerClass.tokenCode != 52))
                 {
-                   
+
                     ErrorMessage(51, 52, TokenizerClass.tokenCode);
                     return 0;
                 }
@@ -312,7 +312,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "identifier");
                 if (TokenizerClass.tokenCode != 50)
                 {
-                    
+
                     ErrorMessage(50, TokenizerClass.tokenCode);
                     return 0;
                 }
@@ -343,7 +343,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 if (entering)
                 {
-                    for (int i=0; i <= paddingIndent; i ++)
+                    for (int i = 0; i <= paddingIndent; i++)
                     {
                         Console.Write(" ");
                     }
@@ -353,39 +353,51 @@ namespace CS4100_Lexical_Analyzer
                 else
                 {
                     paddingIndent -= 5;
-                    for (int i = 0; i <= paddingIndent; i ++)
+                    for (int i = 0; i <= paddingIndent; i++)
                     {
                         Console.Write(" ");
                     }
                     Console.WriteLine(("Exiting " + name)); // .PadLeft(paddingIndent));
-                    
+
                 }
             }
         }
 
-       
+
         public static void ErrorMessage(int rightTokenCode, int wrongTokenCode)
         {
-            Error();
-            Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+            if (!error)
+            {
+                Error();
+                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+            }
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int wrongTokenCode)
         {
-            Error();
-            Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + " or " + ReserveWordClass.LookupMnem(rightTokenCode2) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+            if (!error)
+            {
+                Error();
+                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + " or " + ReserveWordClass.LookupMnem(rightTokenCode2) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+            }
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int wrongTokenCode)
         {
-            Error();
-            Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode3) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+            if (!error)
+            {
+                Error();
+                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode3) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+            }
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int rightTokenCode4, int wrongTokenCode)
         {
-            Error();
-            Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", " + ReserveWordClass.LookupMnem(rightTokenCode3) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode4) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+            if (!error)
+            {
+                Error();
+                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", " + ReserveWordClass.LookupMnem(rightTokenCode3) + ", or " + ReserveWordClass.LookupMnem(rightTokenCode4) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+            }
         }
 
         public static void ProgIdentErrorMessage(string token)
