@@ -13,8 +13,8 @@ namespace CS4100_Lexical_Analyzer
         }
 
         public static bool echoOn = true;
-        public static bool trace = false;
-        public static bool verbose = false;
+        public static bool trace = true;
+        public static bool verbose = true;
         public static bool error = false;
         public static int paddingIndent = 0;
         public static bool uniqueProgIdent = false;
@@ -49,7 +49,7 @@ namespace CS4100_Lexical_Analyzer
                         block();
                         if (TokenizerClass.tokenCode == 48) // $.
                         {
-                            Console.WriteLine("You did it!");
+                            Console.WriteLine("No syntax errors found.");
                             TokenizerClass.tokenizerFinished = true;
                             // will ignore rest of file
                         }
@@ -351,7 +351,7 @@ namespace CS4100_Lexical_Analyzer
                     {
                         Console.Write(" ");
                     }
-                    Console.WriteLine(("Entering " + name)); //.PadLeft(paddingIndent));
+                    Console.WriteLine(("Entering " + name)); 
                     paddingIndent += 5;
                 }
                 else
@@ -361,7 +361,7 @@ namespace CS4100_Lexical_Analyzer
                     {
                         Console.Write(" ");
                     }
-                    Console.WriteLine(("Exiting " + name)); // .PadLeft(paddingIndent));
+                    Console.WriteLine(("Exiting " + name)); 
 
                 }
             }

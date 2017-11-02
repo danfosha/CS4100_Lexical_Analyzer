@@ -12,12 +12,11 @@ namespace CS4100_Lexical_Analyzer
     {
         public static void Main(string[] args)
         {
-            
+
             bool echoOn = true;
-            string fileName = "GoodtreeA.txt";
-            // string fileName = "BadProg1.txt";
+            // string fileName = "GoodtreeA.txt";
+            string fileName = "BadProg1.txt";
             // string fileName = "BadProg2B.txt";
-            // string fileName = "BadProg3B.txt";
             // string fileName = "working.txt";
             InitializeStructures();
             FileHandler.InitializeInputFile(fileName);
@@ -32,7 +31,7 @@ namespace CS4100_Lexical_Analyzer
 
             }
 
-            Console.WriteLine("Tokenizer Finished");
+            // Console.WriteLine("Tokenizer Finished");
             Console.ReadLine();
             if (!SyntaxA.error)
             {

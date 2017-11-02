@@ -55,7 +55,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static string GetNextLine(bool echoOn)
         {
-            
+            lineNumber++;
 
             if (lineIndex >= FileHandler.FileText.Length)
             {
@@ -86,7 +86,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 Console.Write("Line "+lineNumber+": " + textLine);
             }
-            lineNumber++;
+            
             return textLine;
         }
 
