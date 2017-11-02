@@ -23,7 +23,7 @@ namespace CS4100_Lexical_Analyzer
         public static char nextChar;
         public static int caseGroup = -1;
         public static int tokenCode = -1;
-        public static int lineNumber = 1;
+        public static int lineNumber = 0;
 
         public static bool tokenizerFinished = false;
         public static bool tokenComplete = false;
@@ -55,6 +55,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static string GetNextLine(bool echoOn)
         {
+            
 
             if (lineIndex >= FileHandler.FileText.Length)
             {

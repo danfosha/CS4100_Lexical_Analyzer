@@ -350,25 +350,25 @@ namespace CS4100_Lexical_Analyzer
         public static void ErrorMessage(int rightTokenCode, int wrongTokenCode)
         {
             Error();
-            Console.WriteLine(rightTokenCode + " expected, but " + wrongTokenCode + " found");
+            Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int wrongTokenCode)
         {
             Error();
-            Console.WriteLine(rightTokenCode1 + " or " + rightTokenCode2 + " expected, but " + wrongTokenCode + " found.");
+            Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + " or " + ReserveWordClass.LookupMnem(rightTokenCode2) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int wrongTokenCode)
         {
             Error();
-            Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", or" + rightTokenCode3 + " expected, but " + wrongTokenCode + " found.");
+            Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode3) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int rightTokenCode4, int wrongTokenCode)
         {
             Error();
-            Console.WriteLine(rightTokenCode1 + ", " + rightTokenCode2 + ", " + rightTokenCode3 + ", or" + rightTokenCode4 + " expected, but " + wrongTokenCode + " found.");
+            Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", " + ReserveWordClass.LookupMnem(rightTokenCode3) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode4) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
         }
 
         public static void Error()

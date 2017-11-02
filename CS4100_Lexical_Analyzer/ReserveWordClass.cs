@@ -61,25 +61,25 @@ namespace CS4100_Lexical_Analyzer
 
             codeUsed = 30;
 
-            Add("/","");
-            Add("*","");
-            Add("+","");
-            Add("-","");
-            Add("(","");
-            Add(")","");
-            Add(";","");
-            Add(":=","");
-            Add(">","");
-            Add("<","");
-            Add(">=","");
-            Add("<=","");
-            Add("=","");
-            Add("<>","");
-            Add(",","");
-            Add("[","");
-            Add("]","");
-            Add(":","");
-            Add(".","");
+            Add("/","DIVI");
+            Add("*","MULT");
+            Add("+","PLUS");
+            Add("-","MINU");
+            Add("(","LPAR");
+            Add(")","RPAR");
+            Add(";","SEMI");
+            Add(":=","ASSN");
+            Add(">","GRTR");
+            Add("<","LSSR");
+            Add(">=","GREQ");
+            Add("<=","LSEQ");
+            Add("=","EQUA");
+            Add("<>","NTEQ");
+            Add(",","COMM");
+            Add("[","LBRA");
+            Add("]","RBRA");
+            Add(":","COLN");
+            Add(".","PERD");
 
         }
 
