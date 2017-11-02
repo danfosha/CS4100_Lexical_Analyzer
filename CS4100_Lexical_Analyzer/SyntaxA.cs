@@ -13,11 +13,13 @@ namespace CS4100_Lexical_Analyzer
         }
 
         public static bool echoOn = true;
-        public static bool trace = true;
+        public static bool trace = false;
+        public static bool verbose = false;
         public static bool error = false;
         public static int paddingIndent = 0;
         public static bool uniqueProgIdent = false;
         public static string ProgIdent;
+       
         // public static int tokenCode = TokenizerClass.tokenCode;
 
         public static void Analyze(bool echoon)
@@ -48,6 +50,8 @@ namespace CS4100_Lexical_Analyzer
                         if (TokenizerClass.tokenCode == 48) // $.
                         {
                             Console.WriteLine("You did it!");
+                            TokenizerClass.tokenizerFinished = true;
+                            // will ignore rest of file
                         }
                         else
                         {
@@ -420,7 +424,10 @@ namespace CS4100_Lexical_Analyzer
                 TokenizerClass.GetNextToken(echoOn);
             }
             //TokentoSymTable(TokenizerClass.nextToken, TokenizerClass.tokenCode);
-            PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+            if (verbose)
+            {
+                PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+            }
         }
 
 

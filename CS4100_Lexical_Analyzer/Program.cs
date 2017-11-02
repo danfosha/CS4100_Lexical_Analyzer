@@ -12,12 +12,11 @@ namespace CS4100_Lexical_Analyzer
     {
         public static void Main(string[] args)
         {
-            // string globalToken;
-            // int globalTokenCode;
+            
             bool echoOn = true;
-            // string fileName = "GoodtreeA.txt";
+            string fileName = "GoodtreeA.txt";
             // string fileName = "BadProg1.txt";
-            string fileName = "BadProg2B.txt";
+            // string fileName = "BadProg2B.txt";
             // string fileName = "BadProg3B.txt";
             // string fileName = "working.txt";
             InitializeStructures();
@@ -30,7 +29,7 @@ namespace CS4100_Lexical_Analyzer
                 SyntaxA.Analyze(echoOn);
                 //globalToken = TokenizerClass.nextToken;
                 //globalTokenCode = TokenizerClass.tokenCode;
-                
+
             }
 
             Console.WriteLine("Tokenizer Finished");
@@ -58,7 +57,11 @@ namespace CS4100_Lexical_Analyzer
         {
             TokenizerClass.GetNextToken(echoOn);
             TokentoSymTable(TokenizerClass.nextToken, TokenizerClass.tokenCode);
-            PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+            if (SyntaxA.verbose)
+            {
+                PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
+            }
+
         }
 
         public static void TokentoSymTable(string token, int tokenCode)
