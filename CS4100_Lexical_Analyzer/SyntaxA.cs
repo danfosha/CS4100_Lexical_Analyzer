@@ -91,6 +91,28 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "block");
+                if (TokenizerClass.tokenCode == 16) // $LABEL
+                {
+                    GetNextToken(echoOn);
+                    label_declaration();
+                }
+                while ((TokenizerClass.tokenCode == 13) && !error) // $VAR
+                {
+                    GetNextToken(echoOn);
+                    variable_dec_sec();
+                }
+                block_body();
+                Debug(false, "block");
+
+            }
+            return 0;
+        }
+
+        public static int block_body()
+        {
+            if (!error)
+            {
+                Debug(true, "block_body");
                 if (TokenizerClass.tokenCode == 10) // $BEGIN
                 {
                     GetNextToken(echoOn);
@@ -115,7 +137,21 @@ namespace CS4100_Lexical_Analyzer
 
                     ErrorMessage(10, TokenizerClass.tokenCode);
                 }
-                Debug(false, "block");
+                Debug(false, "block_body");
+            }
+            return 0;
+        }
+
+        public static int label_declaration()
+        {
+            if (!error)
+            {
+                Debug(true, "statement");
+                
+
+
+                Debug(false, "statement");
+
             }
             return 0;
         }
@@ -329,7 +365,7 @@ namespace CS4100_Lexical_Analyzer
                 else
                 {
                     if (TokenizerClass.nextToken.Equals(ProgIdent))
-                        {
+                    {
                         // if -1 is returned, program identifier is already in symbol table
                         if (SymbolTable.LookupSymbol(ProgIdent) >= 0)
                         {
