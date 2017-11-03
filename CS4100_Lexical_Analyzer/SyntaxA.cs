@@ -93,12 +93,10 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "block");
                 if (TokenizerClass.tokenCode == 16) // $LABEL
                 {
-                    GetNextToken(echoOn);
                     label_declaration();
                 }
                 while ((TokenizerClass.tokenCode == 13) && !error) // $VAR
                 {
-                    GetNextToken(echoOn);
                     variable_dec_sec();
                 }
                 block_body();
@@ -128,7 +126,6 @@ namespace CS4100_Lexical_Analyzer
                     }
                     else
                     {
-
                         ErrorMessage(11, TokenizerClass.tokenCode);
                     }
                 }
@@ -147,11 +144,86 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "statement");
-                
-
-
+                if (TokenizerClass.tokenCode == 16) // $LABEL
+                {
+                    GetNextToken(echoOn);
+                    identifier();
+                    while ((TokenizerClass.tokenCode == 44) && !error)
+                    {
+                        GetNextToken(echoOn);
+                        identifier();
+                    }
+                    if (TokenizerClass.tokenCode == 36)
+                    {
+                        GetNextToken(echoOn);
+                        statement();
+                    }
+                    else
+                    {
+                        ErrorMessage(36, TokenizerClass.tokenCode);
+                    }
+                }
+                else
+                {
+                    ErrorMessage(16, TokenizerClass.tokenCode);
+                }
                 Debug(false, "statement");
+            }
+            return 0;
+        }
 
+        public static int variable_dec_sec()
+        {
+            if (!error)
+            {
+                Debug(true, "variable_dec_sec");
+                if (TokenizerClass.tokenCode == 13) // $VAR
+                {
+                    GetNextToken(echoOn);
+                    variable_declaration();
+                }
+                else
+                {
+                    ErrorMessage(13, TokenizerClass.tokenCode);
+                }
+                Debug(false, "variable_dec_sec");
+            }
+            return 0;
+        }
+
+        public static int variable_declaration()
+        {
+            if (!error)
+            {
+                Debug(true, "variable_declaration");
+                while ((TokenizerClass.tokenCode == 50) && !error) // $IDENT
+                {
+                    identifier();
+                    while ((TokenizerClass.tokenCode == 44) && !error) // $COMMA
+                    {
+                        GetNextToken(echoOn);
+                        identifier();
+                    }
+                    if (TokenizerClass.tokenCode == 47) // $COLON
+                    {
+                        GetNextToken(echoOn);
+                        type();
+                        if (TokenizerClass.tokenCode == 36) // $SEMI
+                        {
+                            GetNextToken(echoOn);
+                        }
+                        else
+                        {
+                            ErrorMessage(36, TokenizerClass.tokenCode);
+                        }
+                    }
+                    else
+                    {
+                        ErrorMessage(47, TokenizerClass.tokenCode);
+                    }
+
+                }
+                Debug(false, "variable_declaration");
             }
             return 0;
         }
