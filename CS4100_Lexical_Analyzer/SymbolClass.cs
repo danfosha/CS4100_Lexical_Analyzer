@@ -45,7 +45,7 @@ namespace CS4100_Lexical_Analyzer
         // Adds symbol with given kind and value to the symbol table, automatically setting the correct data_type,
         // and returns the index where the symbol was located. If the symbol is already in the table, no change is made, and this just returns
         // the index where the symbol was found.
-        // These three could be combind, but keeping all three per assignment instructions
+        // These three could be combined, but keeping all three per assignment instructions
 
         public static int AddSymbol(string symbol, Data_Kind Kind, int value)
         {

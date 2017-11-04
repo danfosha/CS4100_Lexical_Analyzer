@@ -233,16 +233,163 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "statement");
-                variable();
-                if (TokenizerClass.tokenCode == 37) // $:=
+                while (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.Equals(SymbolTable.Data_Kind.label) && !error)
                 {
-                    GetNextToken(echoOn);
-                    simple_expression();
+                    label();
+                    if (TokenizerClass.tokenCode == 47)
+                    {
+                        GetNextToken(echoOn);
+                    }
+                    else
+                    {
+                        ErrorMessage(47, TokenizerClass.tokenCode);
+                    }
                 }
-                else
-                {
 
-                    ErrorMessage(37, TokenizerClass.tokenCode);
+                // must be one and only one of the below
+                switch (TokenizerClass.tokenCode)
+                {
+                    case 50: // variable  - check for enum type here? will always be identifier
+
+                        variable();
+                        if (TokenizerClass.tokenCode == 37) // $assign
+                        {
+                            GetNextToken(echoOn);
+                            if (TokenizerClass.tokenCode == 53) // $string literal?
+                            {
+                                string_literal();
+                            }
+                            else
+                            {
+                                simple_expression();
+                            }
+
+                        }
+                        else
+                        {
+                            ErrorMessage(37, TokenizerClass.tokenCode);
+                        }
+
+                        break;
+                    case 10: // $begin
+                        block_body();
+                        break;
+                    case 4: // $if
+                        GetNextToken(echoOn);
+                        relexpression();
+                        if (TokenizerClass.tokenCode == 5) // $then
+                        {
+                            GetNextToken(echoOn);
+                            statement();
+                            if (TokenizerClass.tokenCode == 6) // $else
+                            {
+                                GetNextToken(echoOn);
+                                statement();
+                            }
+                        }
+                        else
+                        {
+                            ErrorMessage(5, TokenizerClass.tokenCode);
+                        }
+                        break;
+                    case 14: // $while
+                        GetNextToken(echoOn);
+                        relexpression();
+                        if (TokenizerClass.tokenCode == 3) // $do
+                        {
+                            GetNextToken(echoOn);
+                            statement();
+                        }
+                        else
+                        {
+                            ErrorMessage(3, TokenizerClass.tokenCode);
+                        }
+                        break;
+                    case 17: // $repeat
+                        GetNextToken(echoOn);
+                        statement();
+                        if (TokenizerClass.tokenCode == 18) // $until
+                        {
+                            GetNextToken(echoOn);
+                            relexpression();
+                        }
+                        else
+                        {
+                            ErrorMessage(18, TokenizerClass.tokenCode);
+                        }
+                        break;
+                    case 7: // $FOR
+                        GetNextToken(echoOn);
+                        variable();
+                        if (TokenizerClass.tokenCode == 37) // $ASSIGN
+                        {
+                            GetNextToken(echoOn);
+                            simple_expression();
+                            if (TokenizerClass.tokenCode == 2) // $TO
+                            {
+                                GetNextToken(echoOn);
+                                simple_expression();
+                                if (TokenizerClass.tokenCode == 3) // $DO
+                                {
+                                    GetNextToken(echoOn);
+                                    statement();
+                                }
+                                else
+                                {
+                                    ErrorMessage(3, TokenizerClass.tokenCode);
+
+                                }
+                            }
+                            else
+                            {
+                                ErrorMessage(2, TokenizerClass.tokenCode);
+
+                            }
+                        }
+                        else
+                        {
+                            ErrorMessage(37, TokenizerClass.tokenCode);
+
+                        }
+                        break;
+                    case 0: // $GOTO
+                        GetNextToken(echoOn);
+                        label();
+                        break;
+                    case 9: // $WRITELN
+                        GetNextToken(echoOn);
+                        if (TokenizerClass.tokenCode == 34) // $LPAR
+                        {
+                            GetNextToken(echoOn);
+                            if (TokenizerClass.tokenCode == 50) // $IDENT
+                            {
+                                identifier();
+                            }
+                            else if (TokenizerClass.tokenCode == 53) // $STRING
+                            {
+                                stringconst();
+                            }
+                            else
+                            {
+                                simple_expression();
+                            }
+                            if (TokenizerClass.tokenCode == 35) // $RPAR
+                            {
+                                GetNextToken(echoOn);
+                            }
+                            else
+                            {
+                                ErrorMessage(35, TokenizerClass.tokenCode);
+                            }
+                        }
+                        else
+                        {
+                            ErrorMessage(34, TokenizerClass.tokenCode);
+                        }
+                        break;
+                    default: // must hit one of the above
+                        ErrorMessage(99, TokenizerClass.tokenCode);
+                        break;
                 }
                 Debug(false, "statement");
             }
