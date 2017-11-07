@@ -257,7 +257,7 @@ namespace CS4100_Lexical_Analyzer
                             GetNextToken(echoOn);
                             if (TokenizerClass.tokenCode == 53) // $string literal?
                             {
-                                string_literal();
+                                stringconst();
                             }
                             else
                             {
@@ -402,10 +402,95 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "variable");
                 identifier();
+                if (TokenizerClass.tokenCode == 45)
+                {
+                    GetNextToken(echoOn);
+                    simple_expression();
+                    if(TokenizerClass.tokenCode == 46)
+                    {
+                        GetNextToken(echoOn);
+                    }
+                    else
+                    {
+                        ErrorMessage(46, TokenizerClass.tokenCode);
+                    }
+                }
+                else
+                {
+                    ErrorMessage(45, TokenizerClass.tokenCode);
+
+                }
                 Debug(false, "variable");
             }
             return 0;
         }
+
+        public static int label()
+        {
+            if (!error)
+            {
+                Debug(true, "label");
+                if (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.Equals(SymbolTable.Data_Kind.label))
+                {
+                    identifier();
+                }
+                else
+                {
+                    ErrorMessage("Label", (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Data_type.ToString()));
+                }
+                Debug(false, "label");
+            }
+            return 0;
+        }
+
+        public static int relexpression()
+        {
+            if (!error)
+            {
+                Debug(true, "relexpression");
+                simple_expression();
+                relop();
+                simple_expression();
+                Debug(false, "relexpression");
+            }
+            return 0;
+        }
+
+        public static int relop()
+        {
+            if (!error)
+            {
+                Debug(true, "relop");
+                switch (TokenizerClass.tokenCode)
+                {
+                    case 42:
+                        GetNextToken(echoOn);
+                        break;
+                    case 39:
+                        GetNextToken(echoOn);
+                        break;
+                    case 38:
+                        GetNextToken(echoOn);
+                        break;
+                    case 43:
+                        GetNextToken(echoOn);
+                        break;
+                    case 41:
+                        GetNextToken(echoOn);
+                        break;
+                    case 40:
+                        GetNextToken(echoOn);
+                        break;
+                    default:
+                        ErrorMessage("Relative Operator", TokenizerClass.tokenCode);
+                        break;
+                }
+                Debug(false, "relexpression");
+            }
+            return 0;
+        }
+
+
 
         public static int simple_expression()
         {
@@ -622,6 +707,24 @@ namespace CS4100_Lexical_Analyzer
                     Console.WriteLine(("Exiting " + name));
 
                 }
+            }
+        }
+
+        public static void ErrorMessage(string rightTokenType, string wrongTokenType)
+        {
+            if (!error)
+            {
+                Error();
+                Console.WriteLine(rightTokenType + " expected, but " + (wrongTokenType) + " found, in line number " + TokenizerClass.lineNumber);
+            }
+        }
+
+        public static void ErrorMessage(string rightTokenType, int wrongTokenCode)
+        {
+            if (!error)
+            {
+                Error();
+                Console.WriteLine(rightTokenType + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
             }
         }
 
