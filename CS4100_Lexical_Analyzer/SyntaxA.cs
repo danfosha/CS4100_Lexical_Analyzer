@@ -406,7 +406,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     GetNextToken(echoOn);
                     simple_expression();
-                    if(TokenizerClass.tokenCode == 46)
+                    if (TokenizerClass.tokenCode == 46)
                     {
                         GetNextToken(echoOn);
                     }
@@ -463,22 +463,22 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "relop");
                 switch (TokenizerClass.tokenCode)
                 {
-                    case 42:
+                    case 42: //$EQ
                         GetNextToken(echoOn);
                         break;
-                    case 39:
+                    case 39: //$LSS
                         GetNextToken(echoOn);
                         break;
-                    case 38:
+                    case 38: // $GTR
                         GetNextToken(echoOn);
                         break;
-                    case 43:
+                    case 43: //$NEQ
                         GetNextToken(echoOn);
                         break;
-                    case 41:
+                    case 41: // $LEQ
                         GetNextToken(echoOn);
                         break;
-                    case 40:
+                    case 40:  // $GEQ
                         GetNextToken(echoOn);
                         break;
                     default:
@@ -489,8 +489,6 @@ namespace CS4100_Lexical_Analyzer
             }
             return 0;
         }
-
-
 
         public static int simple_expression()
         {
@@ -606,20 +604,114 @@ namespace CS4100_Lexical_Analyzer
                     }
                     else
                     {
-
                         ErrorMessage(35, TokenizerClass.tokenCode);
                     }
-
                 }
                 else
                 {
-
                     ErrorMessage(50, 51, 52, 34, TokenizerClass.tokenCode);
                 }
                 Debug(false, "factor");
             }
             return 0;
         }
+
+        public static int type()
+        {
+            if (!error)
+            {
+                Debug(true, "type");
+                if ((TokenizerClass.tokenCode == 51) || (TokenizerClass.tokenCode == 52) || (TokenizerClass.tokenCode == 53))
+                {
+                    simple_type();
+                }
+                else if (TokenizerClass.tokenCode == 12) // $ARRAY
+                {
+                    GetNextToken(echoOn);
+                    if (TokenizerClass.tokenCode == 45) // $LBRACK
+                    {
+                        GetNextToken(echoOn);
+                        if (TokenizerClass.tokenCode == 51) // $INTTYPE?
+                        {
+                            GetNextToken(echoOn);
+                            if (TokenizerClass.tokenCode == 46) // $RBRACK
+                            {
+                                GetNextToken(echoOn);
+                                if (TokenizerClass.tokenCode == 8)
+                                {
+                                    GetNextToken(echoOn);
+                                    if (TokenizerClass.tokenCode == 51)
+                                    {
+                                        GetNextToken(echoOn);
+                                    }
+                                    else
+                                    {
+                                        ErrorMessage(51, TokenizerClass.tokenCode);
+                                    }
+                                }
+                                ErrorMessage(8, TokenizerClass.tokenCode);
+                            }
+                            else
+                            {
+                                ErrorMessage(46, TokenizerClass.tokenCode);
+                            }
+                        }
+                        else
+                        {
+                            ErrorMessage(51, TokenizerClass.tokenCode);
+                        }
+
+                    }
+                    else
+                    {
+                        ErrorMessage(45, TokenizerClass.tokenCode);
+                    }
+                }
+                else
+                {
+                    ErrorMessage(12, TokenizerClass.tokenCode);
+                }
+                Debug(false, "type");
+            }
+            return 0;
+        }
+
+        public static int simple_type()
+        {
+            if (!error)
+            {
+                Debug(true, "simple_type");
+                if ((TokenizerClass.tokenCode == 51) || (TokenizerClass.tokenCode == 52) || (TokenizerClass.tokenCode == 53))
+                {
+                    GetNextToken(echoOn);
+                }
+                else
+                {
+                    ErrorMessage(51, 52, 53, TokenizerClass.tokenCode);
+                }
+                Debug(false, "simple_type");
+            }
+            return 0;
+        }
+
+        public static int constant()
+        {
+            if (!error)
+            {
+                Debug(true, "constant");
+                if ((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33))
+                {
+                    sign();
+                }
+                else
+                {
+                    unsigned_constant();
+                }
+                Debug(false, "constant");
+            }
+            return 0;
+        }
+
 
         public static int unsigned_constant()
         {
@@ -639,7 +731,6 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "unsigned_number");
                 if ((TokenizerClass.tokenCode != 51) && (TokenizerClass.tokenCode != 52))
                 {
-
                     ErrorMessage(51, 52, TokenizerClass.tokenCode);
                     return 0;
                 }
@@ -656,7 +747,6 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "identifier");
                 if (TokenizerClass.tokenCode != 50)
                 {
-
                     ErrorMessage(50, TokenizerClass.tokenCode);
                     return 0;
                 }
@@ -680,6 +770,25 @@ namespace CS4100_Lexical_Analyzer
                 }
                 GetNextToken(echoOn);
                 Debug(false, "identifier");
+            }
+            return 0;
+        }
+
+        public static int stringconst()
+        {
+            if (!error)
+            {
+                Debug(true, "stringconst");
+                if (TokenizerClass.tokenCode == 53)
+                {
+                    GetNextToken(echoOn);
+                }
+                else
+                {
+                    ErrorMessage(53, TokenizerClass.tokenCode);
+                    return 0;
+                }
+                Debug(false, "stringconst");
             }
             return 0;
         }
