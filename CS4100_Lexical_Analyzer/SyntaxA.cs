@@ -143,7 +143,7 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Debug(true, "statement");
+                Debug(true, "label_declaration");
                 if (TokenizerClass.tokenCode == 16) // $LABEL
                 {
                     GetNextToken(echoOn);
@@ -156,7 +156,6 @@ namespace CS4100_Lexical_Analyzer
                     if (TokenizerClass.tokenCode == 36)
                     {
                         GetNextToken(echoOn);
-                        statement();
                     }
                     else
                     {
@@ -167,7 +166,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     ErrorMessage(16, TokenizerClass.tokenCode);
                 }
-                Debug(false, "statement");
+                Debug(false, "label_declaration");
             }
             return 0;
         }
@@ -621,7 +620,7 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "type");
-                if ((TokenizerClass.tokenCode == 51) || (TokenizerClass.tokenCode == 52) || (TokenizerClass.tokenCode == 53))
+                if ((TokenizerClass.tokenCode == 1) || (TokenizerClass.tokenCode == 2) || (TokenizerClass.tokenCode == 3))
                 {
                     simple_type();
                 }
@@ -637,16 +636,16 @@ namespace CS4100_Lexical_Analyzer
                             if (TokenizerClass.tokenCode == 46) // $RBRACK
                             {
                                 GetNextToken(echoOn);
-                                if (TokenizerClass.tokenCode == 8)
+                                if (TokenizerClass.tokenCode == 8) //$OF
                                 {
                                     GetNextToken(echoOn);
-                                    if (TokenizerClass.tokenCode == 51)
+                                    if (TokenizerClass.tokenCode == 1) // $INTEGER
                                     {
                                         GetNextToken(echoOn);
                                     }
                                     else
                                     {
-                                        ErrorMessage(51, TokenizerClass.tokenCode);
+                                        ErrorMessage(1, TokenizerClass.tokenCode);
                                     }
                                 }
                                 ErrorMessage(8, TokenizerClass.tokenCode);
@@ -681,13 +680,13 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "simple_type");
-                if ((TokenizerClass.tokenCode == 51) || (TokenizerClass.tokenCode == 52) || (TokenizerClass.tokenCode == 53))
+                if ((TokenizerClass.tokenCode == 1) || (TokenizerClass.tokenCode == 2) || (TokenizerClass.tokenCode == 3))
                 {
                     GetNextToken(echoOn);
                 }
                 else
                 {
-                    ErrorMessage(51, 52, 53, TokenizerClass.tokenCode);
+                    ErrorMessage(1, 2, 3, TokenizerClass.tokenCode);
                 }
                 Debug(false, "simple_type");
             }
