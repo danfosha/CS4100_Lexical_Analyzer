@@ -69,11 +69,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="3BTestfile1.txt" />
     <Content Include="BadProg1.txt" />
     <Content Include="BadProg2B.txt" />
     <Content Include="BadProg3B.txt" />
     <Content Include="GoodtreeA.txt" />
     <Content Include="lexical_test.txt" />
+    <Content Include="lexical_test2.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
