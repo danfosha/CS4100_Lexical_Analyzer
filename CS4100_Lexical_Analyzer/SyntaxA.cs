@@ -19,6 +19,8 @@ namespace CS4100_Lexical_Analyzer
         public static int paddingIndent = 0;
         public static bool uniqueProgIdent = false;
         public static string ProgIdent;
+        public static bool declare_label = false;
+        public static bool declare_var = false;
 
         // public static int tokenCode = TokenizerClass.tokenCode;
 
@@ -146,6 +148,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "label_declaration");
                 if (TokenizerClass.tokenCode == 16) // $LABEL
                 {
+                    declare_label = true;
                     GetNextToken(echoOn);
                     identifier();
                     while ((TokenizerClass.tokenCode == 44) && !error)
@@ -178,6 +181,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "variable_dec_sec");
                 if (TokenizerClass.tokenCode == 13) // $VAR
                 {
+                    declare_var = true;
                     GetNextToken(echoOn);
                     variable_declaration();
                 }
@@ -232,16 +236,20 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "statement");
-                while (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.Equals(SymbolTable.Data_Kind.label) && !error)
+                if (TokenizerClass.tokenCode == 50)
                 {
-                    label();
-                    if (TokenizerClass.tokenCode == 47)
+                    string test = SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString();
+                    while ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind == (SymbolTable.Data_Kind.label) && !error))
                     {
-                        GetNextToken(echoOn);
-                    }
-                    else
-                    {
-                        ErrorMessage(47, TokenizerClass.tokenCode);
+                        label();
+                        if (TokenizerClass.tokenCode == 47)
+                        {
+                            GetNextToken(echoOn);
+                        }
+                        else
+                        {
+                            ErrorMessage(47, TokenizerClass.tokenCode);
+                        }
                     }
                 }
 
@@ -413,11 +421,6 @@ namespace CS4100_Lexical_Analyzer
                     {
                         ErrorMessage(46, TokenizerClass.tokenCode);
                     }
-                }
-                else
-                {
-                    ErrorMessage(45, TokenizerClass.tokenCode);
-
                 }
                 Debug(false, "variable");
             }
@@ -620,7 +623,7 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "type");
-                if ((TokenizerClass.tokenCode == 1) || (TokenizerClass.tokenCode == 2) || (TokenizerClass.tokenCode == 3))
+                if ((TokenizerClass.tokenCode == 1) || (TokenizerClass.tokenCode == 23) || (TokenizerClass.tokenCode == 24))
                 {
                     simple_type();
                 }
@@ -680,13 +683,13 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "simple_type");
-                if ((TokenizerClass.tokenCode == 1) || (TokenizerClass.tokenCode == 2) || (TokenizerClass.tokenCode == 3))
+                if ((TokenizerClass.tokenCode == 1) || (TokenizerClass.tokenCode == 23) || (TokenizerClass.tokenCode == 24))
                 {
                     GetNextToken(echoOn);
                 }
                 else
                 {
-                    ErrorMessage(1, 2, 3, TokenizerClass.tokenCode);
+                    ErrorMessage(1, 23, 24, TokenizerClass.tokenCode);
                 }
                 Debug(false, "simple_type");
             }
@@ -766,6 +769,17 @@ namespace CS4100_Lexical_Analyzer
                             return 0;
                         }
                     }
+                }
+                if (declare_label == true)
+                {
+                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, TokenizerClass.nextToken);
+                    declare_label = false;
+                }
+                else if (declare_var == true)
+                {
+                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.variable, TokenizerClass.nextToken);
+                    declare_var = false;
+
                 }
                 GetNextToken(echoOn);
                 Debug(false, "identifier");

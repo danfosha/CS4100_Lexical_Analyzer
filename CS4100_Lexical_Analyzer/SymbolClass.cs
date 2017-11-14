@@ -108,7 +108,17 @@ namespace CS4100_Lexical_Analyzer
         }
 
         // Methods below set appropriate fields at slot indicated by index
-        void UpdateSymbol(int index, Data_Kind Kind, int value)
+        //public static void UpdateSymbol(int index, Data_Kind Kind, int value)
+        //{
+        //    Symbol updated = new Symbol("", Data_Kind.label, 0);
+        //    updated = SymbolTableArray[index];
+        //    updated.Kind = Kind;
+        //    updated.Value = value;
+        //    // updated.Data_type = value.GetType();
+        //    SymbolTableArray[index] = updated;
+        //}
+
+        public static void UpdateSymbol(int index, Data_Kind Kind, double value)
         {
             Symbol updated = new Symbol("", Data_Kind.label, 0);
             updated = SymbolTableArray[index];
@@ -116,22 +126,11 @@ namespace CS4100_Lexical_Analyzer
             updated.Value = value;
             // updated.Data_type = value.GetType();
             SymbolTableArray[index] = updated;
-
         }
 
-        void UpdateSymbol(int index, Data_Kind Kind, double value)
+        public static void UpdateSymbol(int index, Data_Kind Kind, String value)
         {
-            Symbol updated = new Symbol("", Data_Kind.label, 0);
-            updated = SymbolTableArray[index];
-            updated.Kind = Kind;
-            updated.Value = value;
-            // updated.Data_type = value.GetType();
-            SymbolTableArray[index] = updated;
-        }
-
-        void UpdateSymbol(int index, Data_Kind Kind, String value)
-        {
-            Symbol updated = new Symbol("", Data_Kind.label, 0);
+            Symbol updated = new Symbol("", Data_Kind.label, value);
             updated = SymbolTableArray[index];
             updated.Kind = Kind;
             updated.Value = value;
