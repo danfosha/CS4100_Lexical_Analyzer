@@ -153,6 +153,7 @@ namespace CS4100_Lexical_Analyzer
                     identifier();
                     while ((TokenizerClass.tokenCode == 44) && !error)
                     {
+                        declare_label = true;
                         GetNextToken(echoOn);
                         identifier();
                     }
@@ -181,7 +182,6 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "variable_dec_sec");
                 if (TokenizerClass.tokenCode == 13) // $VAR
                 {
-                    declare_var = true;
                     GetNextToken(echoOn);
                     variable_declaration();
                 }
@@ -201,9 +201,11 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "variable_declaration");
                 while ((TokenizerClass.tokenCode == 50) && !error) // $IDENT
                 {
+                    declare_var = true;
                     identifier();
                     while ((TokenizerClass.tokenCode == 44) && !error) // $COMMA
                     {
+                        declare_var = true;
                         GetNextToken(echoOn);
                         identifier();
                     }
@@ -238,8 +240,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "statement");
                 if (TokenizerClass.tokenCode == 50)
                 {
-                    string test = SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString();
-                    while ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind == (SymbolTable.Data_Kind.label) && !error))
+                    while (((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label" && !error))
                     {
                         label();
                         if (TokenizerClass.tokenCode == 47)
@@ -432,7 +433,7 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "label");
-                if (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.Equals(SymbolTable.Data_Kind.label))
+                if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                 {
                     identifier();
                 }
