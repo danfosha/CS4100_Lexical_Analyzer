@@ -84,9 +84,9 @@ namespace CS4100_Lexical_Analyzer
             workingLine.Clear();
             if (echoOn)
             {
-                Console.Write("Line "+lineNumber+": " + textLine);
+                Console.Write("Line " + lineNumber + ": " + textLine);
             }
-            
+
             return textLine;
         }
 
@@ -134,7 +134,7 @@ namespace CS4100_Lexical_Analyzer
                 else if (!tokenComplete)
                 {
 
-                    while (' '.Equals(nextChar)) 
+                    while (' '.Equals(nextChar))
                     {
                         nextChar = GetNextChar();
                     }
@@ -207,7 +207,7 @@ namespace CS4100_Lexical_Analyzer
                             tokenCode = SetTokenCode(workingToken.ToString(), caseGroup);
                             if (tokenCode == 50)
                             {
-                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.variable, workingToken.ToString());
+                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.variable, "undeclared");
                             }
 
                             break;
@@ -245,7 +245,7 @@ namespace CS4100_Lexical_Analyzer
                                     SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, x);
                                 }
                                 else
-                                { 
+                                {
 
                                     SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, Convert.ToDouble(workingToken.ToString()));
                                 }
@@ -437,7 +437,7 @@ namespace CS4100_Lexical_Analyzer
 
             }
             while (!tokenComplete);
-            
+
         }
 
 
@@ -537,8 +537,8 @@ namespace CS4100_Lexical_Analyzer
                 case 0:
                     // unidentified
 
-                    if (!("".Equals(token)))
-                    tokenCode = 99;
+                    if (!("".Equals(token)) || "\0".Equals(token))
+                        tokenCode = 99;
 
                     break;
                 case 1:

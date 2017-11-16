@@ -91,8 +91,10 @@ namespace CS4100_Lexical_Analyzer
             {
                 if (test_symbol != null)
                 {
-                    if (test_symbol.Name.Equals(symbol))
+                    if (String.Equals(test_symbol.Name, symbol, StringComparison.OrdinalIgnoreCase))
+                    {
                         return i;
+                    }
                     i++;
                 }
             }
@@ -148,7 +150,27 @@ namespace CS4100_Lexical_Analyzer
                     {
                         int symbol_value = Convert.ToInt32(test_symbol.Value);
                         if (symbol_value < 0)
-                        
+
+                        {
+                            Console.WriteLine("Warning: Label " + test_symbol.Name + " is not used.");
+                        }
+                    }
+                }
+            }
+        }
+
+
+        public static void ValidateDeclaration()
+        {
+            foreach (Symbol test_symbol in SymbolTableArray)
+            {
+                if (test_symbol != null)
+                {
+                    if ((test_symbol.Kind.ToString() == "label")) //&& (test_symbol.Value is int)
+                    {
+                        int symbol_value = Convert.ToInt32(test_symbol.Value);
+                        if (symbol_value < 0)
+
                         {
                             Console.WriteLine("Warning: Label " + test_symbol.Name + " is not used.");
                         }

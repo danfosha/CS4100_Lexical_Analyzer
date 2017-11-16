@@ -14,8 +14,8 @@ namespace CS4100_Lexical_Analyzer
         {
 
             bool echoOn = true;
-            string fileName = "3BGoodTestfile1.txt";
-            // string fileName = "3BBadTestfile1.txt";
+            // string fileName = "3BGoodTestfile1.txt";
+            string fileName = "3BBadTestfile1.txt";
             // string fileName = "GoodtreeA.txt";
             // string fileName = "BadProg1.txt";
             // string fileName = "BadProg2B.txt";
