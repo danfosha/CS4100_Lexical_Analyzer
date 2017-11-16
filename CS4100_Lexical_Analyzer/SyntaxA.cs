@@ -30,6 +30,8 @@ namespace CS4100_Lexical_Analyzer
             if ((TokenizerClass.tokenCode >= 0) && (TokenizerClass.tokenCode < 100)) // skip -1
             {
                 program();
+                Console.WriteLine("No syntax errors found.");
+                SymbolTable.ValidateLabelUsed();
             }
         }
 
@@ -51,7 +53,6 @@ namespace CS4100_Lexical_Analyzer
                         block();
                         if (TokenizerClass.tokenCode == 48) // $.
                         {
-                            Console.WriteLine("No syntax errors found.");
                             TokenizerClass.tokenizerFinished = true;
                             // will ignore rest of file
                         }
@@ -435,6 +436,8 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "label");
                 if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                 {
+                    // label has been referenced, update value
+                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, 0);
                     identifier();
                 }
                 else
@@ -773,14 +776,13 @@ namespace CS4100_Lexical_Analyzer
                 }
                 if (declare_label == true)
                 {
-                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, TokenizerClass.nextToken);
+                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, -1); // -1 means label is declared but not used
                     declare_label = false;
                 }
                 else if (declare_var == true)
                 {
                     SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.variable, TokenizerClass.nextToken);
                     declare_var = false;
-
                 }
                 GetNextToken(echoOn);
                 Debug(false, "identifier");
@@ -837,8 +839,8 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Error();
                 Console.WriteLine(rightTokenType + " expected, but " + (wrongTokenType) + " found, in line number " + TokenizerClass.lineNumber);
+                Error();
             }
         }
 
@@ -846,8 +848,8 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Error();
                 Console.WriteLine(rightTokenType + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Error();
             }
         }
 
@@ -856,8 +858,8 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Error();
                 Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Error();
             }
         }
 
@@ -865,8 +867,8 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Error();
                 Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + " or " + ReserveWordClass.LookupMnem(rightTokenCode2) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Error();
             }
         }
 
@@ -874,31 +876,80 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Error();
                 Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode3) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Error();
             }
         }
 
         public static void ErrorMessage(int rightTokenCode1, int rightTokenCode2, int rightTokenCode3, int rightTokenCode4, int wrongTokenCode)
         {
             if (!error)
-            {
-                Error();
+            {  
                 Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", " + ReserveWordClass.LookupMnem(rightTokenCode3) + ", or " + ReserveWordClass.LookupMnem(rightTokenCode4) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Error();
             }
         }
 
         public static void ProgIdentErrorMessage(string token)
         {
-            Error();
             Console.WriteLine("Error: " + token + " has already been declared.");
+            Error();
         }
 
         public static void Error()
         {
-            error = true;
-            TokenizerClass.tokenizerFinished = true;
+            // error = true;
+            while (!TokenizerClass.tokenizerFinished)
+            {
+                error = false;
+                Console.WriteLine("Error found. Moving to start of next statement");
+                FindStatementStart();
+                statement();
+            }
         }
+
+        public static void FindStatementStart()
+        {
+            while ((!TokenizerClass.tokenizerFinished) && (!isStatement(TokenizerClass.tokenCode)))
+            {
+                GetNextToken(echoOn);
+            }
+        }
+
+        public static bool isStatement(int tokencode)
+        {
+            bool isStatement = false;
+            switch (tokencode)
+            {
+
+                case 4:
+                    isStatement = true;
+                    break;
+                case 10:
+                    isStatement = true;
+                    break;
+                case 14:
+                    isStatement = true;
+                    break;
+                case 17:
+                    isStatement = true;
+                    break;
+                case 7:
+                    isStatement = true;
+                    break;
+                case 0:
+                    isStatement = true;
+                    break;
+                case 9:
+                    isStatement = true;
+                    break;
+                case 50:
+                    isStatement = true;
+                    break;
+            }
+            return isStatement;
+        }
+
 
         public static void GetNextToken(bool echoOn)
         {

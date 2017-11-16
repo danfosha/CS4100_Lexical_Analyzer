@@ -99,7 +99,7 @@ namespace CS4100_Lexical_Analyzer
             return -1;
 
         }
-        
+
         public static Symbol GetSymbol(int index)
         //// Return kind, data type, and value fields stored at index
         {
@@ -137,6 +137,26 @@ namespace CS4100_Lexical_Analyzer
             // updated.Data_type = value.GetType();
             SymbolTableArray[index] = updated;
         }
+
+        public static void ValidateLabelUsed()
+        {
+            foreach (Symbol test_symbol in SymbolTableArray)
+            {
+                if (test_symbol != null)
+                {
+                    if ((test_symbol.Kind.ToString() == "label")) //&& (test_symbol.Value is int)
+                    {
+                        int symbol_value = Convert.ToInt32(test_symbol.Value);
+                        if (symbol_value < 0)
+                        
+                        {
+                            Console.WriteLine("Warning: Label " + test_symbol.Name + " is not used.");
+                        }
+                    }
+                }
+            }
+        }
+
 
         public static void PrintSymbolTable()
         //// Prints the utilized rows of the symbol table in neat tabular format, showing only
