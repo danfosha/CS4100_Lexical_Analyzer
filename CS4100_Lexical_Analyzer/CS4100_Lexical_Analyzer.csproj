@@ -69,7 +69,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="3BTestfile1.txt" />
+    <Content Include="3BBadTestFile1.txt" />
+    <Content Include="3BGoodTestfile1.txt" />
     <Content Include="BadProg1.txt" />
     <Content Include="BadProg2B.txt" />
     <Content Include="BadProg3B.txt" />
