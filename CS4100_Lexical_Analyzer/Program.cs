@@ -8,6 +8,39 @@ using System.Threading.Tasks;
 // CS4100 Fall 2017 Lexical Analyzer Project - Fosha
 namespace CS4100_Lexical_Analyzer
 {
+
+    // CFG
+    // <program>            -> $UNIT <prog-identifier> $SEMICOLON <block> $PERIOD
+    // <block>              -> [<label-declaration>] {<variable-dec-sec>]* <block-body>
+    // <block-body>>        -> $BEGIN <statement> {$SEMICOLON <statement>} $END
+    // <variable-dec-sc>    -> $VAR <variable-declaration>
+    // <variable-declaration> -> {<identifier> {$COMMA <identifier>}* $COLON <type> $SEMICOLON}+
+    // <prog-identifier>    -> <identifier>
+    // <statement>          -> {<label> $COLON]}* [<variable> $ASSIGN (<simple expression> | <string literal>) } |
+    //                          <block-body> | $IF <relexpression> $THEN <statement> [$ELSE <statement>]  |
+    //                          $WHILE <relexpression> $DO <statement> |
+    //                          $REPEAT <statement> $UNTIL <relexpression> |
+    //                          $FOR <variable> $ASSIGN <simple expression> $TO <simple expression> $DO <statement> |
+    //                          $GOTO <label> |
+    //                          $WRITELN $LPAR (<simple expression> | <stringconst>) $RPAR ] +
+    // <variable>           -> <identifier> [$LBRACK <simple expression> $RBRACK]
+    // <label>              -> <identifier>
+    // <relexpression>      -> <simple expression> <relop> <simple expression>
+    // <relop>              -> $EQ | $LSS | $GTR | $NEQ | $LEQ | $GEQ
+    // <simple expression>  -> [<sign>] <term> {<addop> <term>}*
+    // <addop>              -> $PLUS | $MINUS
+    // <sign>               -> $PLUS | $MINUS
+    // <term>               -> <factor> {<mulop> <factor> }*
+    // <mulop>              -> $MULTIPLY | $DIVIDE
+    // <factor>             -> <unsigned constant> | <variable> | $LPAR <simple expression> $RPAR
+    // <type>               -> <simple type> | $ARRAY $LBRACK $INTTYPE $RBRACK $OF $INTEGER
+    // <simple type>        -> $INTEGER | $FLOAT | $STRING
+    // <constant>           -> [<sign>] <unsigned constant>
+    // <unsigned constant>  -> <unsigned number>
+    // <unsigned number>    -> $FLOAT | $INTTYPE // as defined for lexical
+    // <identifier>         -> $IDENTIFIER
+    // <stringconst>        -> $STRINGTYPE
+
     class Program
     {
         public static void Main(string[] args)
@@ -15,7 +48,7 @@ namespace CS4100_Lexical_Analyzer
 
             bool echoOn = true;
             // string fileName = "3BGoodTestfile1.txt";
-            string fileName = "3BBadTestfile1.txt";
+            string fileName = "3BadTestfile1.txt";
             // string fileName = "GoodtreeA.txt";
             // string fileName = "BadProg1.txt";
             // string fileName = "BadProg2B.txt";
@@ -107,20 +140,5 @@ namespace CS4100_Lexical_Analyzer
         }
     }
 
-    // CFG
-    // <program>            -> $UNIT <prog-identifier> $SEMICOLON <block> $PERIOD
-    // <block>              -> $BEGIN <statement> {$SEMICOLON <statement>} $END
-    // <prog-identifier>    -> <identifier>
-    // <statement>          -> <variable> $COLON-EQUALS <simple expression>
-    // <variable>           -> <identifier>
-    // <simple expression>  -> [<sign>] <term> {<addop> <term>}*
-    // <addop>              -> $PLUS | $MINUS
-    // <sign>               -> $PLUS | $MINUS
-    // <term>               -> <factor> {<mulop> <factor> }*
-    // <mulop>              -> $MULTIPLY | $DIVIDE
-    // <factor>             -> <unsigned constant> | <variable> | $LPAR <simple expression> $RPAR
-    // <unsigned constant>  -> <unsigned number>
-    // <unsigned number>    -> $FLOAT | $INTTYPE // as defined for lexical
-    // <identifier>         -> $IDENTIFIER
-
+    
 }
