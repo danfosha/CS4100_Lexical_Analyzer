@@ -10,7 +10,7 @@ namespace CS4100_Lexical_Analyzer
     class SymbolTable
     {
         // Properties    
-        public enum Data_Kind { label, variable, constant }
+        public enum Data_Kind {undeclared, label, variable, constant,  }
         public static int numUsed = 0;
         static int MaxSymbols = 100;
 

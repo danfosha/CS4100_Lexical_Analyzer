@@ -207,7 +207,7 @@ namespace CS4100_Lexical_Analyzer
                             tokenCode = SetTokenCode(workingToken.ToString(), caseGroup);
                             if (tokenCode == 50)
                             {
-                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.variable, "undeclared");
+                                SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.undeclared, -1);
                             }
 
                             break;

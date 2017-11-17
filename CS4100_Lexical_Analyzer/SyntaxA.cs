@@ -19,6 +19,7 @@ namespace CS4100_Lexical_Analyzer
         public static int paddingIndent = 0;
         public static bool uniqueProgIdent = false;
         public static string ProgIdent;
+        public static bool declaration_section = true;
         public static bool declare_label = false;
         public static bool declare_var = false;
 
@@ -117,6 +118,7 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "block_body");
+                declaration_section = false; // declarations are complete
                 if (TokenizerClass.tokenCode == 10) // $BEGIN
                 {
                     GetNextToken(echoOn);
@@ -244,7 +246,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "statement");
                 if (TokenizerClass.tokenCode == 50)
                 {
-                    while (!error && (SymbolTable.LookupSymbol(TokenizerClass.nextToken)) > 0  && (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
+                    while (!error && (SymbolTable.LookupSymbol(TokenizerClass.nextToken)) >= 0 && (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                     {
                         label();
                         if (TokenizerClass.tokenCode == 47)
@@ -408,7 +410,7 @@ namespace CS4100_Lexical_Analyzer
             return 0;
         }
 
-        public static int variable()
+        public static int variable() // non-declaration section
         {
             if (!error)
             {
@@ -439,14 +441,14 @@ namespace CS4100_Lexical_Analyzer
             return 0;
         }
 
-        public static int label()
+        public static int label() // non-declaration section
         {
             if (!error)
             {
                 Debug(true, "label");
                 if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                 {
-                    // label has been referenced, update value
+                    // if label has been referenced, update value, set index line reference to 0. Will change to index in part 4. 
                     SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, 0);
                     identifier();
                 }
@@ -771,6 +773,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     uniqueProgIdent = true;
                     ProgIdent = TokenizerClass.nextToken;
+                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, 0);
                 }
                 else
                 {
@@ -779,25 +782,54 @@ namespace CS4100_Lexical_Analyzer
                         // if -1 is returned, program identifier is already in symbol table
                         if (SymbolTable.LookupSymbol(ProgIdent) >= 0)
                         {
-                            ProgIdentErrorMessage(ProgIdent);
+                            AlreadyDeclaredError(TokenizerClass.nextToken);
                             return 0;
                         }
                     }
                 }
-                if (declare_label == true)
+                if (declaration_section == true)
                 {
-                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, -1); // -1 means label is declared but not used
-                    declare_label = false;
+                    if (declare_label == true)
+                    {
+                        if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "undeclared")
+                        {
+                            SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, -1); // -1 means label is declared but not used
+                            declare_label = false;
+                        }
+                        else
+                        {
+                            AlreadyDeclaredError(TokenizerClass.nextToken);
+                            return 0;
+                        }
+
+                    }
+                    if (declare_var == true)
+                    {
+                        if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "undeclared")
+                        {
+                            SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.variable, 0); // 0 means variable is declared
+                            declare_var = false;
+                        }
+                        else
+                        {
+                            AlreadyDeclaredError(TokenizerClass.nextToken);
+                            return 0;
+                        }
+                    }
                 }
-                else if (declare_var == true)
+                else
                 {
-                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.variable, "declared"); // 0 means variable is declared
-                    declare_var = false;
+                    if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "undeclared")
+                    {
+                        UnDeclaredError(TokenizerClass.nextToken);
+                        return 0;
+                    }
+
+                    GetNextToken(echoOn);
+                    Debug(false, "identifier");
                 }
-                GetNextToken(echoOn);
-                Debug(false, "identifier");
+                return 0;
             }
-            return 0;
         }
 
         public static int stringconst()
@@ -910,10 +942,16 @@ namespace CS4100_Lexical_Analyzer
             }
         }
 
-        public static void ProgIdentErrorMessage(string token)
+        public static void AlreadyDeclaredError(string token)
         {
             Console.WriteLine("Error: " + token + " has already been declared.");
-            Error();
+            //Error();
+        }
+
+        public static void UnDeclaredError(string token)
+        {
+            Console.WriteLine("Error: " + token + " has not been declared.");
+            //Error();
         }
 
         public static void Error()
@@ -927,7 +965,7 @@ namespace CS4100_Lexical_Analyzer
                 statement();
             }
         }
-        
+
         public static void FindStatementStart()
         {
             while ((!TokenizerClass.tokenizerFinished) && (!isStatement(TokenizerClass.tokenCode)))
