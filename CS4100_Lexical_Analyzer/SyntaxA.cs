@@ -825,11 +825,12 @@ namespace CS4100_Lexical_Analyzer
                         return 0;
                     }
 
-                    GetNextToken(echoOn);
-                    Debug(false, "identifier");
+                    
                 }
-                return 0;
+                GetNextToken(echoOn);
+                Debug(false, "identifier");
             }
+            return 0;
         }
 
         public static int stringconst()
