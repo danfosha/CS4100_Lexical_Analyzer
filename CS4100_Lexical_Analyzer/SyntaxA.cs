@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CS4100_Lexical_Analyzer
+// CS4100 Fall 2017 Lexical Analyzer Project - Fosha
 {
     class SyntaxA
     {
@@ -13,8 +14,8 @@ namespace CS4100_Lexical_Analyzer
         }
 
         public static bool echoOn = true;
-        public static bool trace = true;
-        public static bool verbose = true;
+        public static bool trace = false;
+        public static bool verbose = false;
         public static bool error = false;
         public static int paddingIndent = 0;
         public static bool uniqueProgIdent = false;
