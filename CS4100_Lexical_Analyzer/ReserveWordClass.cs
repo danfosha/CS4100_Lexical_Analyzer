@@ -141,7 +141,7 @@ namespace CS4100_Lexical_Analyzer
                     return Data.Mnemonic;
                 }
             }
-            return "";
+            return "wrong token";
         }
 
     }

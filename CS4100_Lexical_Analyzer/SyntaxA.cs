@@ -22,6 +22,8 @@ namespace CS4100_Lexical_Analyzer
         public static bool declaration_section = true;
         public static bool declare_label = false;
         public static bool declare_var = false;
+        public static bool syntax_error = false;
+        public static int errorLine;
 
         // public static int tokenCode = TokenizerClass.tokenCode;
 
@@ -31,7 +33,7 @@ namespace CS4100_Lexical_Analyzer
             if ((TokenizerClass.tokenCode >= 0) && (TokenizerClass.tokenCode < 100)) // skip -1
             {
                 program();
-                if (!error)
+                if (!syntax_error)
                 {
                     Console.WriteLine("No syntax errors found.");
                 }
@@ -246,6 +248,7 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "statement");
                 if (TokenizerClass.tokenCode == 50)
                 {
+                    // check if token is declared and is a label
                     while (!error && (SymbolTable.LookupSymbol(TokenizerClass.nextToken)) >= 0 && (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                     {
                         label();
@@ -400,6 +403,13 @@ namespace CS4100_Lexical_Analyzer
                         {
                             ErrorMessage(34, TokenizerClass.tokenCode);
                         }
+                        // some error handling here?
+                        if ((TokenizerClass.tokenCode != 36) && (TokenizerClass.tokenCode != 11))
+                        {
+                            ErrorMessage(36,11,TokenizerClass.tokenCode);
+                            
+                        }
+
                         break;
                     default: // must hit one of the above
                         ErrorMessage();
@@ -415,12 +425,10 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "variable");
-                // check if variable has been declared
-                if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Value.ToString()) == "undeclared")
+                if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "undeclared")
                 {
-                    // fix this
+                    UnDeclaredError(TokenizerClass.nextToken);
                     SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.variable, 0);
-                    Console.WriteLine("Warning: Variable " + TokenizerClass.nextToken + " has not been declared");
                 }
                 identifier();
                 if (TokenizerClass.tokenCode == 45)
@@ -446,9 +454,18 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "label");
-                if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
+                // if undeclared, update to label and give value of 0. meaning used
+                if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "undeclared")
                 {
-                    // if label has been referenced, update value, set index line reference to 0. Will change to index in part 4. 
+                    UnDeclaredError(TokenizerClass.nextToken);
+                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, 0);
+                }
+
+                else if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
+                {
+                    // if label has been referenced, update value - set index line reference to 0. Will change to index in part 4. 
+                    // A 0 value  will be read at the end of the analysis as declared and used
+                    // Should this error handling be done in identifier() ?
                     SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, 0);
                     identifier();
                 }
@@ -783,12 +800,13 @@ namespace CS4100_Lexical_Analyzer
                         if (SymbolTable.LookupSymbol(ProgIdent) >= 0)
                         {
                             AlreadyDeclaredError(TokenizerClass.nextToken);
-                            return 0;
+                            // return 0;
                         }
                     }
                 }
                 if (declaration_section == true)
                 {
+                    // if in the declaration section, these two blocks will log an error if the label or variable has already been declared
                     if (declare_label == true)
                     {
                         if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "undeclared")
@@ -799,7 +817,7 @@ namespace CS4100_Lexical_Analyzer
                         else
                         {
                             AlreadyDeclaredError(TokenizerClass.nextToken);
-                            return 0;
+                            //return 0;
                         }
 
                     }
@@ -813,19 +831,9 @@ namespace CS4100_Lexical_Analyzer
                         else
                         {
                             AlreadyDeclaredError(TokenizerClass.nextToken);
-                            return 0;
+                            //return 0;
                         }
                     }
-                }
-                else
-                {
-                    if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "undeclared")
-                    {
-                        UnDeclaredError(TokenizerClass.nextToken);
-                        return 0;
-                    }
-
-                    
                 }
                 GetNextToken(echoOn);
                 Debug(false, "identifier");
@@ -882,26 +890,27 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Console.WriteLine("Many possible tokens expected, but not " + (TokenizerClass.nextToken) + ", error in line number " + TokenizerClass.lineNumber);
+                Console.WriteLine("Many possible tokens expected, but not " + (ReserveWordClass.LookupMnem(TokenizerClass.tokenCode)) + ", error in or before line number " + TokenizerClass.lineNumber);
                 Error();
             }
         }
 
 
-        public static void ErrorMessage(string rightTokenType, string wrongTokenType)
+        public static void ErrorMessage(string rightTokenType, string wrongTokenType = "wrong token")
         {
             if (!error)
             {
-                Console.WriteLine(rightTokenType + " expected, but " + (wrongTokenType) + " found, in line number " + TokenizerClass.lineNumber);
+                Console.WriteLine(rightTokenType + " expected, but " + (wrongTokenType) + " found, in or before line number " + TokenizerClass.lineNumber);
                 Error();
             }
         }
 
         public static void ErrorMessage(string rightTokenType, int wrongTokenCode)
         {
+
             if (!error)
             {
-                Console.WriteLine(rightTokenType + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Console.WriteLine(rightTokenType + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in or before line number " + TokenizerClass.lineNumber);
                 Error();
             }
         }
@@ -911,7 +920,7 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in or before line number " + TokenizerClass.lineNumber);
                 Error();
             }
         }
@@ -920,7 +929,7 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + " or " + ReserveWordClass.LookupMnem(rightTokenCode2) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + " or " + ReserveWordClass.LookupMnem(rightTokenCode2) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in or before line number " + TokenizerClass.lineNumber);
                 Error();
             }
         }
@@ -929,7 +938,7 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode3) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", or" + ReserveWordClass.LookupMnem(rightTokenCode3) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in or before line number " + TokenizerClass.lineNumber);
                 Error();
             }
         }
@@ -938,44 +947,54 @@ namespace CS4100_Lexical_Analyzer
         {
             if (!error)
             {
-                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", " + ReserveWordClass.LookupMnem(rightTokenCode3) + ", or " + ReserveWordClass.LookupMnem(rightTokenCode4) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in line number " + TokenizerClass.lineNumber);
+                Console.WriteLine(ReserveWordClass.LookupMnem(rightTokenCode1) + ", " + ReserveWordClass.LookupMnem(rightTokenCode2) + ", " + ReserveWordClass.LookupMnem(rightTokenCode3) + ", or " + ReserveWordClass.LookupMnem(rightTokenCode4) + " expected, but " + ReserveWordClass.LookupMnem(wrongTokenCode) + " found, in or before line number " + TokenizerClass.lineNumber);
                 Error();
             }
         }
 
         public static void AlreadyDeclaredError(string token)
         {
-            Console.WriteLine("Error: " + token + " has already been declared.");
+            Console.WriteLine("Error in line " + TokenizerClass.lineNumber + ": " + token + " has already been declared.");
             //Error();
         }
 
         public static void UnDeclaredError(string token)
         {
-            Console.WriteLine("Error: " + token + " has not been declared.");
+            Console.WriteLine("Error in line " + TokenizerClass.lineNumber + ": " + token + " has not been declared.");
             //Error();
         }
 
         public static void Error()
         {
-            // error = true;
+            syntax_error = true; // set global flag for end message
+            error = true;
+            if (!TokenizerClass.tokenizerFinished)
+            {
+                Console.WriteLine("Error found. Moving to start of next statement");
+            }
+            else
+            {
+                Console.WriteLine("Error found. Unwinding stack to top of CFG.");
+            }
+
             while (!TokenizerClass.tokenizerFinished)
             {
-                error = false;
-                Console.WriteLine("Error found. Moving to start of next statement");
                 FindStatementStart();
+                error = false;
                 statement();
+               
             }
         }
-
+        
         public static void FindStatementStart()
         {
             while ((!TokenizerClass.tokenizerFinished) && (!isStatement(TokenizerClass.tokenCode)))
             {
-                GetNextToken(echoOn);
                 if (TokenizerClass.tokenCode == 48)
                 {
-                    break;
+                    TokenizerClass.tokenizerFinished = true;
                 }
+                GetNextToken(echoOn);
             }
         }
 
@@ -984,7 +1003,6 @@ namespace CS4100_Lexical_Analyzer
             bool isStatement = false;
             switch (tokencode)
             {
-
                 case 4:
                     isStatement = true;
                     break;

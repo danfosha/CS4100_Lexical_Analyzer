@@ -69,7 +69,7 @@ namespace CS4100_Lexical_Analyzer
 
             // Console.WriteLine("Tokenizer Finished");
             Console.ReadLine();
-            if (!SyntaxA.error)
+            if (!SyntaxA.syntax_error)
             {
                 SymbolTable.PrintSymbolTable();
             }
