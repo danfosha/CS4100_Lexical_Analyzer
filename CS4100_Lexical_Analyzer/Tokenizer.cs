@@ -33,7 +33,7 @@ namespace CS4100_Lexical_Analyzer
         public static string textLine;
         public static string nextLine;
 
-
+        
         // getNextChar
         public static int charIndex = 0;
         public static int lineIndex = 0;

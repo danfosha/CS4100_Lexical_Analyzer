@@ -23,8 +23,57 @@ namespace CS4100_Lexical_Analyzer
         public static bool declare_label = false;
         public static bool declare_var = false;
 
-        // public static int tokenCode = TokenizerClass.tokenCode;
+        public static int GOTO = 0;
+        public static int INTEGER = 1;
+        public static int TO = 2;
+        public static int DO = 3;
+        public static int IF = 4;
+        public static int THEN = 5;
+        public static int ELSE = 6;
+        public static int FOR = 7;
+        public static int OF = 8;
+        public static int WRITELN = 9;
+        public static int BEGIN = 10;
+        public static int END = 11;
+        public static int ARRAY = 12;
+        public static int VAR = 13;
+        public static int WHILE = 14;
+        public static int UNIT = 15;
+        public static int LABEL = 16;
+        public static int REPEAT = 17;
+        public static int UNTIL = 18;
+        public static int PROCEDURE = 19;
+        public static int DOWNTO = 20;
+        public static int READLN = 21;
+        public static int RETURN = 22;
+        public static int FLOAT = 23;
+        public static int STRING = 24;
+        public static int DIVI = 30;
+        public static int MULT=31;
+        public static int PLUS=32;
+        public static int MINUs=33;
+        public static int LPAREN = 34;
+        public static int RPAR = 35;
+        public static int SEMI = 36;
+        public static int ASSN = 37;
+        public static int GRTR = 38;
+        public static int LSSR = 39;
+        public static int GREQ = 40;
+        public static int LSEQ = 41;
+        public static int EQUA = 42;
+        public static int NTEQ = 43;
+        public static int COMM = 44;
+        public static int LBRA = 45;
+        public static int RBRA = 46;
+        public static int COLN = 47;
+        public static int PERD = 48;
+        public static int NULL = 99;
+        public static int IDENTIFIER =50;
+        public static int INTEGERTYPE =51;
+        public static int FLOATTYPE =52;
+        public static int STRINGTYPE = 53;
 
+        
         public static void Analyze(bool echoon)
         {
             echoOn = echoon;
@@ -825,7 +874,7 @@ namespace CS4100_Lexical_Analyzer
                         return 0;
                     }
 
-                    
+
                 }
                 GetNextToken(echoOn);
                 Debug(false, "identifier");
