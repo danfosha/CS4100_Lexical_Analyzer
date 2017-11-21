@@ -23,61 +23,62 @@ namespace CS4100_Lexical_Analyzer
         public static bool declare_label = false;
         public static bool declare_var = false;
 
-        public static int GOTO = 0;
-        public static int INTEGER = 1;
-        public static int TO = 2;
-        public static int DO = 3;
-        public static int IF = 4;
-        public static int THEN = 5;
-        public static int ELSE = 6;
-        public static int FOR = 7;
-        public static int OF = 8;
-        public static int WRITELN = 9;
-        public static int BEGIN = 10;
-        public static int END = 11;
-        public static int ARRAY = 12;
-        public static int VAR = 13;
-        public static int WHILE = 14;
-        public static int UNIT = 15;
-        public static int LABEL = 16;
-        public static int REPEAT = 17;
-        public static int UNTIL = 18;
-        public static int PROCEDURE = 19;
-        public static int DOWNTO = 20;
-        public static int READLN = 21;
-        public static int RETURN = 22;
-        public static int FLOAT = 23;
-        public static int STRING = 24;
-        public static int DIVI = 30;
-        public static int MULT=31;
-        public static int PLUS=32;
-        public static int MINUs=33;
-        public static int LPAREN = 34;
-        public static int RPAR = 35;
-        public static int SEMI = 36;
-        public static int ASSN = 37;
-        public static int GRTR = 38;
-        public static int LSSR = 39;
-        public static int GREQ = 40;
-        public static int LSEQ = 41;
-        public static int EQUA = 42;
-        public static int NTEQ = 43;
-        public static int COMM = 44;
-        public static int LBRA = 45;
-        public static int RBRA = 46;
-        public static int COLN = 47;
-        public static int PERD = 48;
-        public static int NULL = 99;
-        public static int IDENTIFIER =50;
-        public static int INTEGERTYPE =51;
-        public static int FLOATTYPE =52;
-        public static int STRINGTYPE = 53;
+        public const int GOTO = 0;
+        public const int INTEGER = 1;
+        public const int TO = 2;
+        public const int DO = 3;
+        public const int IF = 4;
+        public const int THEN = 5;
+        public const int ELSE = 6;
+        public const int FOR = 7;
+        public const int OF = 8;
+        public const int WRITELN = 9;
+        public const int BEGIN = 10;
+        public const int END = 11;
+        public const int ARRAY = 12;
+        public const int VAR = 13;
+        public const int WHILE = 14;
+        public const int UNIT = 15;
+        public const int LABEL = 16;
+        public const int REPEAT = 17;
+        public const int UNTIL = 18;
+        public const int PROCEDURE = 19;
+        public const int DOWNTO = 20;
+        public const int READLN = 21;
+        public const int RETURN = 22;
+        public const int FLOAT = 23;
+        public const int STRING = 24;
+        public const int DIVI = 30;
+        public const int MULT=31;
+        public const int PLUS=32;
+        public const int MINUS=33;
+        public const int LPAREN = 34;
+        public const int RPAREN = 35;
+        public const int SEMI = 36;
+        public const int ASSN = 37;
+        public const int GRTR = 38;
+        public const int LSSR = 39;
+        public const int GREQ = 40;
+        public const int LSEQ = 41;
+        public const int EQUA = 42;
+        public const int NTEQ = 43;
+        public const int COMM = 44;
+        public const int LBRA = 45;
+        public const int RBRA = 46;
+        public const int COLN = 47;
+        public const int PERD = 48;
+        public const int NULL = 99;
+        public const int IDENTIFIER =50;
+        public const int INTEGERTYPE =51;
+        public const int FLOATTYPE =52;
+        public const int STRINGTYPE = 53;
 
         
         public static void Analyze(bool echoon)
         {
             echoOn = echoon;
-            if ((TokenizerClass.tokenCode >= 0) && (TokenizerClass.tokenCode < 100)) // skip -1
+            // skip -1, only go forward with valid tokencodes
+            if ((TokenizerClass.tokenCode >= 0) && (TokenizerClass.tokenCode < 100))
             {
                 program();
                 if (!error)
@@ -95,16 +96,16 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "program");
 
-                if (TokenizerClass.tokenCode == 15)// $UNIT
+                if (TokenizerClass.tokenCode == UNIT)// $UNIT
                 {
                     GetNextToken(echoOn);
                     // need to advance tokencode
                     prog_identifier();
-                    if (TokenizerClass.tokenCode == 36) // $;
+                    if (TokenizerClass.tokenCode == SEMI) // $;
                     {
                         GetNextToken(echoOn);
                         block();
-                        if (TokenizerClass.tokenCode == 48) // $.
+                        if (TokenizerClass.tokenCode == PERD) // $.
                         {
                             TokenizerClass.tokenizerFinished = true;
                             // will ignore rest of file
@@ -112,19 +113,19 @@ namespace CS4100_Lexical_Analyzer
                         else
                         {
 
-                            ErrorMessage(48, TokenizerClass.tokenCode);
+                            ErrorMessage(PERD, TokenizerClass.tokenCode);
                         }
                     }
                     else
                     {
 
-                        ErrorMessage(36, TokenizerClass.tokenCode);
+                        ErrorMessage(SEMI, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
 
-                    ErrorMessage(18, TokenizerClass.tokenCode);
+                    ErrorMessage(UNTIL, TokenizerClass.tokenCode);
                 }
                 Debug(false, "program");
             }
@@ -147,11 +148,11 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "block");
-                if (TokenizerClass.tokenCode == 16) // $LABEL
+                if (TokenizerClass.tokenCode == LABEL) // $LABEL
                 {
                     label_declaration();
                 }
-                while ((TokenizerClass.tokenCode == 13) && !error) // $VAR
+                while ((TokenizerClass.tokenCode == VAR) && !error) // $VAR
                 {
                     variable_dec_sec();
                 }
@@ -168,28 +169,28 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "block_body");
                 declaration_section = false; // declarations are complete
-                if (TokenizerClass.tokenCode == 10) // $BEGIN
+                if (TokenizerClass.tokenCode == BEGIN) // $BEGIN
                 {
                     GetNextToken(echoOn);
                     statement();
-                    while ((TokenizerClass.tokenCode == 36) && !error) // $;
+                    while ((TokenizerClass.tokenCode == SEMI) && !error) // $;
                     {
                         GetNextToken(echoOn);
                         statement();
                     }
-                    if (TokenizerClass.tokenCode == 11) // $END
+                    if (TokenizerClass.tokenCode == END) // $END
                     {
                         GetNextToken(echoOn);
                     }
                     else
                     {
-                        ErrorMessage(11, TokenizerClass.tokenCode);
+                        ErrorMessage(END, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
 
-                    ErrorMessage(10, TokenizerClass.tokenCode);
+                    ErrorMessage(BEGIN, TokenizerClass.tokenCode);
                 }
                 Debug(false, "block_body");
             }
@@ -201,29 +202,29 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "label_declaration");
-                if (TokenizerClass.tokenCode == 16) // $LABEL
+                if (TokenizerClass.tokenCode == LABEL) // $LABEL
                 {
                     declare_label = true;
                     GetNextToken(echoOn);
                     identifier();
-                    while ((TokenizerClass.tokenCode == 44) && !error)
+                    while ((TokenizerClass.tokenCode == COMM) && !error)
                     {
                         declare_label = true;
                         GetNextToken(echoOn);
                         identifier();
                     }
-                    if (TokenizerClass.tokenCode == 36)
+                    if (TokenizerClass.tokenCode == SEMI)
                     {
                         GetNextToken(echoOn);
                     }
                     else
                     {
-                        ErrorMessage(36, TokenizerClass.tokenCode);
+                        ErrorMessage(ASSN, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
-                    ErrorMessage(16, TokenizerClass.tokenCode);
+                    ErrorMessage(LABEL, TokenizerClass.tokenCode);
                 }
                 Debug(false, "label_declaration");
             }
@@ -235,14 +236,14 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "variable_dec_sec");
-                if (TokenizerClass.tokenCode == 13) // $VAR
+                if (TokenizerClass.tokenCode == VAR) // $VAR
                 {
                     GetNextToken(echoOn);
                     variable_declaration();
                 }
                 else
                 {
-                    ErrorMessage(13, TokenizerClass.tokenCode);
+                    ErrorMessage(VAR, TokenizerClass.tokenCode);
                 }
                 Debug(false, "variable_dec_sec");
             }
@@ -254,32 +255,32 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "variable_declaration");
-                while ((TokenizerClass.tokenCode == 50) && !error) // $IDENT
+                while ((TokenizerClass.tokenCode == IDENTIFIER) && !error) // $IDENT
                 {
                     declare_var = true;
                     identifier();
-                    while ((TokenizerClass.tokenCode == 44) && !error) // $COMMA
+                    while ((TokenizerClass.tokenCode == COMM) && !error) // $COMMA
                     {
                         declare_var = true;
                         GetNextToken(echoOn);
                         identifier();
                     }
-                    if (TokenizerClass.tokenCode == 47) // $COLON
+                    if (TokenizerClass.tokenCode == COLN) // $COLON
                     {
                         GetNextToken(echoOn);
                         type();
-                        if (TokenizerClass.tokenCode == 36) // $SEMI
+                        if (TokenizerClass.tokenCode == SEMI) // $SEMI
                         {
                             GetNextToken(echoOn);
                         }
                         else
                         {
-                            ErrorMessage(36, TokenizerClass.tokenCode);
+                            ErrorMessage(SEMI, TokenizerClass.tokenCode);
                         }
                     }
                     else
                     {
-                        ErrorMessage(47, TokenizerClass.tokenCode);
+                        ErrorMessage(COLN, TokenizerClass.tokenCode);
                     }
 
                 }
@@ -293,12 +294,12 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "statement");
-                if (TokenizerClass.tokenCode == 50)
+                if (TokenizerClass.tokenCode == IDENTIFIER)
                 {
                     while (!error && (SymbolTable.LookupSymbol(TokenizerClass.nextToken)) >= 0 && (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                     {
                         label();
-                        if (TokenizerClass.tokenCode == 47)
+                        if (TokenizerClass.tokenCode == COLN) // $:
                         {
                             GetNextToken(echoOn);
                         }
@@ -312,13 +313,13 @@ namespace CS4100_Lexical_Analyzer
                 // must be one and only one of the below
                 switch (TokenizerClass.tokenCode)
                 {
-                    case 50: // variable  - check for enum type here? does it matter if variable or constant?
+                    case IDENTIFIER: // variable  - check for enum type here? does it matter if variable or constant?
 
                         variable();
-                        if (TokenizerClass.tokenCode == 37) // $assign
+                        if (TokenizerClass.tokenCode == ASSN) // $assign
                         {
                             GetNextToken(echoOn);
-                            if (TokenizerClass.tokenCode == 53) // $string literal?
+                            if (TokenizerClass.tokenCode == STRING) // $string literal?
                             {
                                 stringconst();
                             }
@@ -330,21 +331,21 @@ namespace CS4100_Lexical_Analyzer
                         }
                         else
                         {
-                            ErrorMessage(37, TokenizerClass.tokenCode);
+                            ErrorMessage(ASSN, TokenizerClass.tokenCode);
                         }
 
                         break;
-                    case 10: // $begin
+                    case BEGIN: // $begin
                         block_body();
                         break;
-                    case 4: // $if
+                    case IF: // $if
                         GetNextToken(echoOn);
                         relexpression();
-                        if (TokenizerClass.tokenCode == 5) // $then
+                        if (TokenizerClass.tokenCode == THEN) // $then
                         {
                             GetNextToken(echoOn);
                             statement();
-                            if (TokenizerClass.tokenCode == 6) // $else
+                            if (TokenizerClass.tokenCode == ELSE) // $else
                             {
                                 GetNextToken(echoOn);
                                 statement();
@@ -355,10 +356,10 @@ namespace CS4100_Lexical_Analyzer
                             ErrorMessage(5, TokenizerClass.tokenCode);
                         }
                         break;
-                    case 14: // $while
+                    case WHILE: // $while
                         GetNextToken(echoOn);
                         relexpression();
-                        if (TokenizerClass.tokenCode == 3) // $do
+                        if (TokenizerClass.tokenCode == DO) // $do
                         {
                             GetNextToken(echoOn);
                             statement();
@@ -368,10 +369,10 @@ namespace CS4100_Lexical_Analyzer
                             ErrorMessage(3, TokenizerClass.tokenCode);
                         }
                         break;
-                    case 17: // $repeat
+                    case REPEAT: // $repeat
                         GetNextToken(echoOn);
                         statement();
-                        if (TokenizerClass.tokenCode == 18) // $until
+                        if (TokenizerClass.tokenCode ==UNTIL) // $until
                         {
                             GetNextToken(echoOn);
                             relexpression();
@@ -381,18 +382,18 @@ namespace CS4100_Lexical_Analyzer
                             ErrorMessage(18, TokenizerClass.tokenCode);
                         }
                         break;
-                    case 7: // $FOR
+                    case FOR: // $FOR
                         GetNextToken(echoOn);
                         variable();
-                        if (TokenizerClass.tokenCode == 37) // $ASSIGN
+                        if (TokenizerClass.tokenCode == ASSN) // $ASSIGN
                         {
                             GetNextToken(echoOn);
                             simple_expression();
-                            if (TokenizerClass.tokenCode == 2) // $TO
+                            if (TokenizerClass.tokenCode == TO) // $TO
                             {
                                 GetNextToken(echoOn);
                                 simple_expression();
-                                if (TokenizerClass.tokenCode == 3) // $DO
+                                if (TokenizerClass.tokenCode == DO) // $DO
                                 {
                                     GetNextToken(echoOn);
                                     statement();
@@ -415,20 +416,20 @@ namespace CS4100_Lexical_Analyzer
 
                         }
                         break;
-                    case 0: // $GOTO
+                    case GOTO: // $GOTO
                         GetNextToken(echoOn);
                         label();
                         break;
-                    case 9: // $WRITELN
+                    case WRITELN: // $WRITELN
                         GetNextToken(echoOn);
-                        if (TokenizerClass.tokenCode == 34) // $LPAR
+                        if (TokenizerClass.tokenCode == LPAREN) // $LPAR
                         {
                             GetNextToken(echoOn);
-                            if (TokenizerClass.tokenCode == 50) // $IDENT
+                            if (TokenizerClass.tokenCode == IDENTIFIER) // $IDENT
                             {
                                 identifier();
                             }
-                            else if (TokenizerClass.tokenCode == 53) // $STRING
+                            else if (TokenizerClass.tokenCode == STRING) // $STRING
                             {
                                 stringconst();
                             }
@@ -436,18 +437,18 @@ namespace CS4100_Lexical_Analyzer
                             {
                                 simple_expression();
                             }
-                            if (TokenizerClass.tokenCode == 35) // $RPAR
+                            if (TokenizerClass.tokenCode == RPAREN) // $RPAR
                             {
                                 GetNextToken(echoOn);
                             }
                             else
                             {
-                                ErrorMessage(35, TokenizerClass.tokenCode);
+                                ErrorMessage(RPAREN, TokenizerClass.tokenCode);
                             }
                         }
                         else
                         {
-                            ErrorMessage(34, TokenizerClass.tokenCode);
+                            ErrorMessage(LPAREN, TokenizerClass.tokenCode);
                         }
                         break;
                     default: // must hit one of the above
@@ -472,17 +473,17 @@ namespace CS4100_Lexical_Analyzer
                     Console.WriteLine("Warning: Variable " + TokenizerClass.nextToken + " has not been declared");
                 }
                 identifier();
-                if (TokenizerClass.tokenCode == 45)
+                if (TokenizerClass.tokenCode == LBRA) // $[
                 {
                     GetNextToken(echoOn);
                     simple_expression();
-                    if (TokenizerClass.tokenCode == 46)
+                    if (TokenizerClass.tokenCode == RBRA) // $]
                     {
                         GetNextToken(echoOn);
                     }
                     else
                     {
-                        ErrorMessage(46, TokenizerClass.tokenCode);
+                        ErrorMessage(RBRA, TokenizerClass.tokenCode);
                     }
                 }
                 Debug(false, "variable");
@@ -530,22 +531,22 @@ namespace CS4100_Lexical_Analyzer
                 Debug(true, "relop");
                 switch (TokenizerClass.tokenCode)
                 {
-                    case 42: //$EQ
+                    case EQUA: //$EQ
                         GetNextToken(echoOn);
                         break;
-                    case 39: //$LSS
+                    case LSSR: //$LSS
                         GetNextToken(echoOn);
                         break;
-                    case 38: // $GTR
+                    case GRTR: // $GTR
                         GetNextToken(echoOn);
                         break;
-                    case 43: //$NEQ
+                    case NTEQ: //$NEQ
                         GetNextToken(echoOn);
                         break;
-                    case 41: // $LEQ
+                    case LSEQ: // $LEQ
                         GetNextToken(echoOn);
                         break;
-                    case 40:  // $GEQ
+                    case GREQ:  // $GEQ
                         GetNextToken(echoOn);
                         break;
                     default:
@@ -562,12 +563,12 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "simple_expression");
-                if ((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33))
+                if ((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS))
                 {
                     sign();
                 }
                 term();
-                while (((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33)) && !error)
+                while (((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS)) && !error)
                 {
                     GetNextToken(echoOn);
                     term();
@@ -583,10 +584,10 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "addop");
-                if ((TokenizerClass.tokenCode != 32) && (TokenizerClass.tokenCode != 33))
+                if ((TokenizerClass.tokenCode != PLUS) && (TokenizerClass.tokenCode != MINUS))
                 {
 
-                    ErrorMessage(31, 32, TokenizerClass.tokenCode);
+                    ErrorMessage(PLUS, MINUS, TokenizerClass.tokenCode);
                     Debug(false, "addop"); // check this!
                     return 0;
                 }
@@ -601,10 +602,10 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "sign");
-                if ((TokenizerClass.tokenCode != 32) && (TokenizerClass.tokenCode != 33))
+                if ((TokenizerClass.tokenCode != PLUS) && (TokenizerClass.tokenCode != MINUS))
                 {
 
-                    ErrorMessage(32, 33, TokenizerClass.tokenCode);
+                    ErrorMessage(PLUS, MINUS, TokenizerClass.tokenCode);
                     return 0;
                 }
                 GetNextToken(echoOn);
@@ -619,7 +620,7 @@ namespace CS4100_Lexical_Analyzer
             {
                 Debug(true, "term");
                 factor();
-                while (((TokenizerClass.tokenCode == 31) || (TokenizerClass.tokenCode == 30)) && !error)
+                while (((TokenizerClass.tokenCode == MULT) || (TokenizerClass.tokenCode == DIVI)) && !error)
                 {
                     mulop();
                     factor();
@@ -635,10 +636,10 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "mulop");
-                if ((TokenizerClass.tokenCode != 30) && (TokenizerClass.tokenCode != 31))
+                if ((TokenizerClass.tokenCode != DIVI) && (TokenizerClass.tokenCode != MULT))
                 {
                     // error = true;
-                    ErrorMessage(30, 31, TokenizerClass.tokenCode);
+                    ErrorMessage(DIVI, MULT, TokenizerClass.tokenCode);
 
                     return 0;
                 }
@@ -653,30 +654,30 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "factor");
-                if ((TokenizerClass.tokenCode == 51) || (TokenizerClass.tokenCode == 52)) // int or float
+                if ((TokenizerClass.tokenCode == INTEGERTYPE) || (TokenizerClass.tokenCode == FLOATTYPE)) // int or float
                 {
                     unsigned_constant();
                 }
-                else if (TokenizerClass.tokenCode == 50) // identifier
+                else if (TokenizerClass.tokenCode == IDENTIFIER) // identifier
                 {
                     variable();
                 }
-                else if (TokenizerClass.tokenCode == 34) // $(
+                else if (TokenizerClass.tokenCode == LPAREN) // $(
                 {
                     GetNextToken(echoOn);
                     simple_expression();
-                    if (TokenizerClass.tokenCode == 35) //$)
+                    if (TokenizerClass.tokenCode == RPAREN) //$)
                     {
                         GetNextToken(echoOn);
                     }
                     else
                     {
-                        ErrorMessage(35, TokenizerClass.tokenCode);
+                        ErrorMessage(RPAREN, TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
-                    ErrorMessage(50, 51, 52, 34, TokenizerClass.tokenCode);
+                    ErrorMessage(IDENTIFIER, INTEGERTYPE, FLOATTYPE, LPAREN, TokenizerClass.tokenCode);
                 }
                 Debug(false, "factor");
             }
@@ -688,55 +689,55 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "type");
-                if ((TokenizerClass.tokenCode == 1) || (TokenizerClass.tokenCode == 23) || (TokenizerClass.tokenCode == 24))
+                if ((TokenizerClass.tokenCode == INTEGER) || (TokenizerClass.tokenCode == FLOAT) || (TokenizerClass.tokenCode == STRING))
                 {
                     simple_type();
                 }
-                else if (TokenizerClass.tokenCode == 12) // $ARRAY
+                else if (TokenizerClass.tokenCode == ARRAY) // $ARRAY
                 {
                     GetNextToken(echoOn);
-                    if (TokenizerClass.tokenCode == 45) // $LBRACK
+                    if (TokenizerClass.tokenCode == LPAREN) // $LBRACK
                     {
                         GetNextToken(echoOn);
-                        if (TokenizerClass.tokenCode == 51) // $INTTYPE?
+                        if (TokenizerClass.tokenCode == INTEGERTYPE) // $INTTYPE?
                         {
                             GetNextToken(echoOn);
-                            if (TokenizerClass.tokenCode == 46) // $RBRACK
+                            if (TokenizerClass.tokenCode == RBRA) // $RBRACK
                             {
                                 GetNextToken(echoOn);
-                                if (TokenizerClass.tokenCode == 8) //$OF
+                                if (TokenizerClass.tokenCode == OF) //$OF
                                 {
                                     GetNextToken(echoOn);
-                                    if (TokenizerClass.tokenCode == 1) // $INTEGER
+                                    if (TokenizerClass.tokenCode == INTEGER) // $INTEGER
                                     {
                                         GetNextToken(echoOn);
                                     }
                                     else
                                     {
-                                        ErrorMessage(1, TokenizerClass.tokenCode);
+                                        ErrorMessage(IDENTIFIER, TokenizerClass.tokenCode);
                                     }
                                 }
-                                ErrorMessage(8, TokenizerClass.tokenCode);
+                                ErrorMessage(OF, TokenizerClass.tokenCode);
                             }
                             else
                             {
-                                ErrorMessage(46, TokenizerClass.tokenCode);
+                                ErrorMessage(RPAREN, TokenizerClass.tokenCode);
                             }
                         }
                         else
                         {
-                            ErrorMessage(51, TokenizerClass.tokenCode);
+                            ErrorMessage(INTEGERTYPE, TokenizerClass.tokenCode);
                         }
 
                     }
                     else
                     {
-                        ErrorMessage(45, TokenizerClass.tokenCode);
+                        ErrorMessage(LBRA,TokenizerClass.tokenCode);
                     }
                 }
                 else
                 {
-                    ErrorMessage(12, TokenizerClass.tokenCode);
+                    ErrorMessage(ARRAY, TokenizerClass.tokenCode);
                 }
                 Debug(false, "type");
             }
@@ -748,13 +749,13 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "simple_type");
-                if ((TokenizerClass.tokenCode == 1) || (TokenizerClass.tokenCode == 23) || (TokenizerClass.tokenCode == 24))
+                if ((TokenizerClass.tokenCode == INTEGER) || (TokenizerClass.tokenCode == FLOAT) || (TokenizerClass.tokenCode == STRING))
                 {
                     GetNextToken(echoOn);
                 }
                 else
                 {
-                    ErrorMessage(1, 23, 24, TokenizerClass.tokenCode);
+                    ErrorMessage(IDENTIFIER, FLOAT, STRING, TokenizerClass.tokenCode);
                 }
                 Debug(false, "simple_type");
             }
@@ -766,7 +767,7 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "constant");
-                if ((TokenizerClass.tokenCode == 32) || (TokenizerClass.tokenCode == 33))
+                if ((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS))
                 {
                     sign();
                 }
@@ -796,9 +797,9 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "unsigned_number");
-                if ((TokenizerClass.tokenCode != 51) && (TokenizerClass.tokenCode != 52))
+                if ((TokenizerClass.tokenCode != INTEGERTYPE) && (TokenizerClass.tokenCode != FLOATTYPE))
                 {
-                    ErrorMessage(51, 52, TokenizerClass.tokenCode);
+                    ErrorMessage(INTEGERTYPE, FLOATTYPE, TokenizerClass.tokenCode);
                     return 0;
                 }
                 GetNextToken(echoOn);
@@ -812,9 +813,9 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "identifier");
-                if (TokenizerClass.tokenCode != 50)
+                if (TokenizerClass.tokenCode != IDENTIFIER)
                 {
-                    ErrorMessage(50, TokenizerClass.tokenCode);
+                    ErrorMessage(IDENTIFIER, TokenizerClass.tokenCode);
                     return 0;
                 }
                 // first pass sets the program identifier
@@ -887,13 +888,13 @@ namespace CS4100_Lexical_Analyzer
             if (!error)
             {
                 Debug(true, "stringconst");
-                if (TokenizerClass.tokenCode == 53)
+                if (TokenizerClass.tokenCode == STRING)
                 {
                     GetNextToken(echoOn);
                 }
                 else
                 {
-                    ErrorMessage(53, TokenizerClass.tokenCode);
+                    ErrorMessage(STRING, TokenizerClass.tokenCode);
                     return 0;
                 }
                 Debug(false, "stringconst");
