@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 
 // CS4100 Fall 2017 Lexical Analyzer Project - Fosha
-namespace CS4100_Lexical_Analyzer
+namespace CS4100_Code_Generator
 {
     public class TokenizerClass
     {

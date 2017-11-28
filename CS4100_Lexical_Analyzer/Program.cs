@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// CS4100 Fall 2017 Lexical Analyzer Project - Fosha
-namespace CS4100_Lexical_Analyzer
+// CS4100 Fall 2017 Complier Project - Fosha
+namespace CS4100_Code_Generator
 {
 
     // CFG
@@ -86,6 +86,11 @@ namespace CS4100_Lexical_Analyzer
             TokenizerClass Tokenizer = new TokenizerClass();
             SyntaxA SyntaxAnalyzer = new SyntaxA();
 
+
+            //BuildQuads();
+            //BuildSymbolTable();
+            //InterpretQuads(QuadTable, SymbolTable, True);
+            //InterpretQuads(QuadTable, SymbolTable, true);
         }
 
         public static void GetNextToken(bool echoOn)

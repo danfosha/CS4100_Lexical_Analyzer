@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CS4100_Lexical_Analyzer
+namespace CS4100_Code_Generator
 {
     class SyntaxA
     {
@@ -841,7 +841,6 @@ namespace CS4100_Lexical_Analyzer
                         if (SymbolTable.LookupSymbol(ProgIdent) >= 0)
                         {
                             AlreadyDeclaredError(TokenizerClass.nextToken);
-                            return 0;
                         }
                     }
                 }
@@ -857,7 +856,6 @@ namespace CS4100_Lexical_Analyzer
                         else
                         {
                             AlreadyDeclaredError(TokenizerClass.nextToken);
-                            return 0;
                         }
 
                     }
@@ -871,7 +869,6 @@ namespace CS4100_Lexical_Analyzer
                         else
                         {
                             AlreadyDeclaredError(TokenizerClass.nextToken);
-                            return 0;
                         }
                     }
                 }
@@ -880,10 +877,8 @@ namespace CS4100_Lexical_Analyzer
                     if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "undeclared")
                     {
                         UnDeclaredError(TokenizerClass.nextToken);
-                        return 0;
                     }
-
-
+                    
                 }
                 GetNextToken(echoOn);
                 Debug(false, "identifier");
