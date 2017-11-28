@@ -28,24 +28,24 @@ namespace CS4100_Code_Generator
 
         }
 
-        QuadStruct[] QuadTableArray = new QuadStruct[100];
+        public static QuadStruct[] QuadTableArray = new QuadStruct[100];
         // The QuadTable is different from the SymbolTable in its access and contents.Each indexed entry row
         //  consists of four int values representing an opcode and three operands.  The methods needed are:
 
-        public void Initialize()  // size and other parameters as needed
+        public static void Initialize()  // size and other parameters as needed
         // Create a new, empty QuadTable ready for data to be added, with the specified number of rows(size).
         {
             QuadStruct[] QuadTableArray = new QuadStruct[100];
         }
 
-        int NextQuad()
+        public static int NextQuad()
         // Returns the int index of the next open slot in the QuadTable. Very important during code generation, this must be implemented exactly as described.
         {
             return SymbolTable.numUsed + 1;
         }
 
 
-        void AddQuad(int opcode, int op1, int op2, int op3)
+        public static void AddQuad(int opcode, int op1, int op2, int op3)
         // Expands the active length of the quad table by adding a new row at the NextQuad slot, with the parameters sent as the new contents, 
         // and increments the NextQuad counter to the next available(empty) index.}
         {
@@ -54,13 +54,13 @@ namespace CS4100_Code_Generator
 
         }
 
-        QuadStruct GetQuad(int index)
+        public static QuadStruct GetQuad(int index)
         // Returns the data for the opcode and three operands located at index
         {
             return QuadTableArray[index];
         }
 
-        void SetQuad(int index, int opcode, int op1, int op2, int op3)
+        public static void SetQuad(int index, int opcode, int op1, int op2, int op3)
         // Changes the contents of the existing quad at index. Used only when backfilling
         // jump addresses later, during code generation, and very important
         {
@@ -70,7 +70,7 @@ namespace CS4100_Code_Generator
             QuadTableArray[index].Op3 = op3;
         }
 
-        string GetMnemonic(int opcode)
+        public static string GetMnemonic(int opcode)
         // Returns the mnemonic string (‘ADD’, ‘PRINT’, etc.) associated with the opcode parameter. Used during interpreter
         // ‘TRACE’ mode to print out the stored opcodes in readable format. Use the ReserveTable ADT to implement this.
         {
@@ -78,7 +78,7 @@ namespace CS4100_Code_Generator
             return code;
         }
 
-        void PrintQuadTable()
+        public static void PrintQuadTable()
         //Prints the currently used contents of the Quad table in neat tabular format
         {
             Console.WriteLine("OpCode" + "\t" + "Op1" + "\t" + "Op2" + "\t" + "Op3");

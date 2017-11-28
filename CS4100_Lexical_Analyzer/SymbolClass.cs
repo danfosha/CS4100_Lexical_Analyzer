@@ -13,6 +13,8 @@ namespace CS4100_Code_Generator
         public enum Data_Kind {undeclared, label, variable, constant,  }
         public static int numUsed = 0;
         static int MaxSymbols = 100;
+        public static int Minus1Index = -1;
+        public static int Plus1Index = 1;
 
         public SymbolTable(int maxSymbols)
         {

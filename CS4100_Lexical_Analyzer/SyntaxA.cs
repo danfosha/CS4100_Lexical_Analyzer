@@ -574,12 +574,22 @@ namespace CS4100_Code_Generator
                 left = term();
                 if (signval == -1)
                 {
-                    // put something here
+                    QuadTable.AddQuad(MULT, left, SymbolTable.Minus1Index, left);
                 }
                 while (((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS)) && !error)
                 {
+                    if (TokenizerClass.tokenCode == PLUS)
+                    {
+                        opcode = addop;
+                    }
+                    else
+                    {
+                        opcode = subop;
+                    }
                     GetNextToken(echoOn);
-                    term();
+                    right = term();
+                    temp = SymbolTable.GenSymbol;
+
                 }
 
                 Debug(false, "simple_expression");
@@ -607,19 +617,28 @@ namespace CS4100_Code_Generator
 
         public static int sign()
         {
+            int result = 1;
             if (!error)
             {
                 Debug(true, "sign");
-                if ((TokenizerClass.tokenCode != PLUS) && (TokenizerClass.tokenCode != MINUS))
+                if (TokenizerClass.tokenCode == MINUS)
                 {
+                    result = -1;
+                    GetNextToken(echoOn);
 
+                }
+                else if(TokenizerClass.tokenCode == PLUS)
+                {
+                    GetNextToken(echoOn);
+                }
+                else
+                {
                     ErrorMessage(PLUS, MINUS, TokenizerClass.tokenCode);
                     return 0;
                 }
-                GetNextToken(echoOn);
                 Debug(false, "sign");
             }
-            return 0;
+            return result;
         }
 
         public static int term()
