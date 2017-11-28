@@ -291,6 +291,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static int statement()
         {
+            int left, right;
             if (!error)
             {
                 Debug(true, "statement");
@@ -315,7 +316,7 @@ namespace CS4100_Lexical_Analyzer
                 {
                     case IDENTIFIER: // variable  - check for enum type here? does it matter if variable or constant?
 
-                        variable();
+                        left = variable();
                         if (TokenizerClass.tokenCode == ASSN) // $assign
                         {
                             GetNextToken(echoOn);
@@ -325,7 +326,7 @@ namespace CS4100_Lexical_Analyzer
                             }
                             else
                             {
-                                simple_expression();
+                                right = simple_expression();
                             }
 
                         }
@@ -462,6 +463,7 @@ namespace CS4100_Lexical_Analyzer
 
         public static int variable() // non-declaration section
         {
+            int result;
             if (!error)
             {
                 Debug(true, "variable");
@@ -472,7 +474,7 @@ namespace CS4100_Lexical_Analyzer
                     SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.variable, 0);
                     Console.WriteLine("Warning: Variable " + TokenizerClass.nextToken + " has not been declared");
                 }
-                identifier();
+                result = identifier();
                 if (TokenizerClass.tokenCode == LBRA) // $[
                 {
                     GetNextToken(echoOn);
@@ -560,14 +562,20 @@ namespace CS4100_Lexical_Analyzer
 
         public static int simple_expression()
         {
+            int left, right, signval, temp, opcode;
+            signval = 0;
             if (!error)
             {
                 Debug(true, "simple_expression");
                 if ((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS))
                 {
-                    sign();
+                    signval = sign();
                 }
-                term();
+                left = term();
+                if (signval == -1)
+                {
+                    // put something here
+                }
                 while (((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS)) && !error)
                 {
                     GetNextToken(echoOn);
