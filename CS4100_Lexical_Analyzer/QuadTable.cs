@@ -36,6 +36,7 @@ namespace CS4100_Code_Generator
         // Create a new, empty QuadTable ready for data to be added, with the specified number of rows(size).
         {
             QuadStruct[] QuadTableArray = new QuadStruct[100];
+
         }
 
         public static int NextQuad()

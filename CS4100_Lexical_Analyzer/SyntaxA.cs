@@ -327,6 +327,7 @@ namespace CS4100_Code_Generator
                             else
                             {
                                 right = simple_expression();
+                                QuadTable.AddQuad(MovCode, right, 0, left);
                             }
 
                         }
@@ -580,11 +581,11 @@ namespace CS4100_Code_Generator
                 {
                     if (TokenizerClass.tokenCode == PLUS)
                     {
-                        opcode = addop;
+                        opcode = addop();
                     }
                     else
                     {
-                        opcode = subop;
+                        opcode = subop();
                     }
                     GetNextToken(echoOn);
                     right = term();
