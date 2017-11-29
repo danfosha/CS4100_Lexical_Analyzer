@@ -28,8 +28,8 @@ namespace CS4100_Code_Generator
         }
 
         public static ReserveWords[] ReserveWordTable = new ReserveWords[49];
-
-        public void Initialize()
+      
+        public void InitializeReserveWords()
         // Constructor
         {
 
@@ -86,10 +86,8 @@ namespace CS4100_Code_Generator
             Add("FLOAT", "FLOA");
             Add("STRING", "STRN");
 
-
-
         }
-
+        
         public void Add(string word, string menm)
         // Returns the index of the row where the data was placed; just adds to end of list.
         {

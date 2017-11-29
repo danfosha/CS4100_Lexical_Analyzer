@@ -81,7 +81,8 @@ namespace CS4100_Code_Generator
             int MaxQuad = 100;
             FileHandler FileGetter = new FileHandler();
             ReserveWordClass ReserveTable = new ReserveWordClass();
-            ReserveTable.Initialize();
+            ReserveTable.InitializeReserveWords();
+            ReserveTable.InitializeOpCodes();
             SymbolTable SymbolTable = new SymbolTable(MaxQuad);
             TokenizerClass Tokenizer = new TokenizerClass();
             SyntaxA SyntaxAnalyzer = new SyntaxA();
