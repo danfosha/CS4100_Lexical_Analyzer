@@ -327,7 +327,7 @@ namespace CS4100_Code_Generator
                             else
                             {
                                 right = simple_expression();
-                                QuadTable.AddQuad(MovCode, right, 0, left);
+                                QuadTable.AddQuad(OpCodeTableClass.LookupName("MOV"), right, 0, left);
                             }
 
                         }

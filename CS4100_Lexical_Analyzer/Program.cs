@@ -48,12 +48,12 @@ namespace CS4100_Code_Generator
 
             bool echoOn = true;
             // string fileName = "3BGoodTestfile1.txt";
-            string fileName = "3BBadTestfile1.txt";
+            // string fileName = "3BBadTestfile1.txt";
             // string fileName = "GoodtreeA.txt";
             // string fileName = "BadProg1.txt";
             // string fileName = "BadProg2B.txt";
             // string fileName = "BadProg3B.txt";
-            // string fileName = "working.txt";
+            string fileName = "working.txt";
             InitializeStructures();
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
