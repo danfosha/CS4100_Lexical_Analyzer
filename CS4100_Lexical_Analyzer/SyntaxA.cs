@@ -49,9 +49,9 @@ namespace CS4100_Code_Generator
         public const int FLOAT = 23;
         public const int STRING = 24;
         public const int DIVI = 30;
-        public const int MULT=31;
-        public const int PLUS=32;
-        public const int MINUS=33;
+        public const int MULT = 31;
+        public const int PLUS = 32;
+        public const int MINUS = 33;
         public const int LPAREN = 34;
         public const int RPAREN = 35;
         public const int SEMI = 36;
@@ -68,12 +68,30 @@ namespace CS4100_Code_Generator
         public const int COLN = 47;
         public const int PERD = 48;
         public const int NULL = 99;
-        public const int IDENTIFIER =50;
-        public const int INTEGERTYPE =51;
-        public const int FLOATTYPE =52;
+        public const int IDENTIFIER = 50;
+        public const int INTEGERTYPE = 51;
+        public const int FLOATTYPE = 52;
         public const int STRINGTYPE = 53;
 
-        
+        public const int STOP_OP = 0;
+        public const int DIV_OP = 1;
+        public const int MUL_OP = 2;
+        public const int SUB_OP = 3;
+        public const int ADD_OP = 4;
+        public const int MOV_OP = 5;
+        public const int STI_OP = 6;
+        public const int LDI_OP = 7;
+        public const int BNZ_OP = 8;
+        public const int BNP_OP = 9;
+        public const int BNN_OP = 10;
+        public const int BZ_OP = 11;
+        public const int BP_OP = 12;
+        public const int BN_OP = 13;
+        public const int BR_OP = 14;
+        public const int BINDR_OP = 15;
+        public const int PRINT_OP = 16;
+
+
         public static void Analyze(bool echoon)
         {
             echoOn = echoon;
@@ -107,6 +125,7 @@ namespace CS4100_Code_Generator
                         block();
                         if (TokenizerClass.tokenCode == PERD) // $.
                         {
+                            QuadTable.AddQuad(STOP_OP, 0, 0, 0);
                             TokenizerClass.tokenizerFinished = true;
                             // will ignore rest of file
                         }
@@ -374,7 +393,7 @@ namespace CS4100_Code_Generator
                     case REPEAT: // $repeat
                         GetNextToken(echoOn);
                         statement();
-                        if (TokenizerClass.tokenCode ==UNTIL) // $until
+                        if (TokenizerClass.tokenCode == UNTIL) // $until
                         {
                             GetNextToken(echoOn);
                             relexpression();
@@ -563,43 +582,40 @@ namespace CS4100_Code_Generator
 
         public static int simple_expression()
         {
-            int left, right, signval, temp, opcode;
-            signval = 0;
+            int right, temp, opcode = 0;
+            int left = 0;
+            int signval = 1;
             if (!error)
             {
                 Debug(true, "simple_expression");
                 if ((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS))
                 {
-                    signval = sign();
+                    signval = sign(); // value is 1 or -1
                 }
                 left = term();
                 if (signval == -1)
                 {
-                    QuadTable.AddQuad(MULT, left, SymbolTable.Minus1Index, left);
+                    QuadTable.AddQuad(MUL_OP, left, SymbolTable.Minus1Index, left); // multiply value in op1 by op2 and store in op3- changes sign 
                 }
                 while (((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS)) && !error)
                 {
-                    if (TokenizerClass.tokenCode == PLUS)
-                    {
-                        opcode = addop();
-                    }
-                    else
-                    {
-                        opcode = subop();
-                    }
-                    GetNextToken(echoOn);
+                    opcode = addop();
+                    // GetNextToken(echoOn);
                     right = term();
-                    temp = SymbolTable.GenSymbol;
+                    temp = SymbolTable.GenSymbol();
+                    QuadTable.AddQuad(opcode, left, right, temp); // this should be an add or sub, result stored in temp
+                    left = temp;
 
                 }
 
                 Debug(false, "simple_expression");
             }
-            return 0;
+            return (left);
         }
 
         public static int addop()
         {
+            int return_op = 0;
             if (!error)
             {
                 Debug(true, "addop");
@@ -610,10 +626,18 @@ namespace CS4100_Code_Generator
                     Debug(false, "addop"); // check this!
                     return 0;
                 }
+                if (TokenizerClass.tokenCode == PLUS)
+                {
+                    return_op = ADD_OP;
+                }
+                else if (TokenizerClass.tokenCode == MINUS)
+                {
+                    return_op = SUB_OP;
+                }
                 GetNextToken(echoOn);
                 Debug(false, "addop");
             }
-            return 1;
+            return return_op;
         }
 
         public static int sign()
@@ -628,7 +652,7 @@ namespace CS4100_Code_Generator
                     GetNextToken(echoOn);
 
                 }
-                else if(TokenizerClass.tokenCode == PLUS)
+                else if (TokenizerClass.tokenCode == PLUS)
                 {
                     GetNextToken(echoOn);
                 }
@@ -760,7 +784,7 @@ namespace CS4100_Code_Generator
                     }
                     else
                     {
-                        ErrorMessage(LBRA,TokenizerClass.tokenCode);
+                        ErrorMessage(LBRA, TokenizerClass.tokenCode);
                     }
                 }
                 else
@@ -898,7 +922,7 @@ namespace CS4100_Code_Generator
                     {
                         UnDeclaredError(TokenizerClass.nextToken);
                     }
-                    
+
                 }
                 GetNextToken(echoOn);
                 Debug(false, "identifier");

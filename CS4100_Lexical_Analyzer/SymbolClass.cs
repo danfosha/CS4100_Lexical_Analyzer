@@ -203,5 +203,12 @@ namespace CS4100_Code_Generator
             // thanks to StackOverFlow!
             return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
         }
+
+        public static int GenSymbol()
+        {
+
+            return AddSymbol("Temp", Data_Kind.variable, 0);
+            
+        }
     }
 }
