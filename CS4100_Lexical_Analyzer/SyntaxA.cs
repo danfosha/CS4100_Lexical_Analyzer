@@ -341,7 +341,7 @@ namespace CS4100_Code_Generator
                             GetNextToken(echoOn);
                             if (TokenizerClass.tokenCode == STRING) // $string literal?
                             {
-                                stringconst();
+                                right = stringconst();
                             }
                             else
                             {
@@ -483,7 +483,7 @@ namespace CS4100_Code_Generator
 
         public static int variable() // non-declaration section
         {
-            int result;
+            int result = -1;
             if (!error)
             {
                 Debug(true, "variable");
@@ -494,7 +494,15 @@ namespace CS4100_Code_Generator
                     SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.variable, 0);
                     Console.WriteLine("Warning: Variable " + TokenizerClass.nextToken + " has not been declared");
                 }
-                result = identifier();
+                if ( ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "variable") && (!TokenizerClass.nextToken.Equals(ProgIdent)))
+                {
+                    result = identifier();   // GNT happens in identifier
+                }
+                else
+                {
+                    ErrorMessage("variable", SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString());
+                }
+                
                 if (TokenizerClass.tokenCode == LBRA) // $[
                 {
                     GetNextToken(echoOn);
@@ -510,7 +518,7 @@ namespace CS4100_Code_Generator
                 }
                 Debug(false, "variable");
             }
-            return 0;
+            return result;
         }
 
         public static int label() // non-declaration section
@@ -668,10 +676,11 @@ namespace CS4100_Code_Generator
 
         public static int term()
         {
+            int result = 0;
             if (!error)
             {
                 Debug(true, "term");
-                factor();
+                result = factor();
                 while (((TokenizerClass.tokenCode == MULT) || (TokenizerClass.tokenCode == DIVI)) && !error)
                 {
                     mulop();
@@ -680,7 +689,7 @@ namespace CS4100_Code_Generator
                 }
                 Debug(false, "term");
             }
-            return 0;
+            return result;
         }
 
         public static int mulop()
@@ -703,16 +712,17 @@ namespace CS4100_Code_Generator
 
         public static int factor()
         {
+            int result = 0;
             if (!error)
             {
                 Debug(true, "factor");
                 if ((TokenizerClass.tokenCode == INTEGERTYPE) || (TokenizerClass.tokenCode == FLOATTYPE)) // int or float
                 {
-                    unsigned_constant();
+                    result = unsigned_constant();
                 }
                 else if (TokenizerClass.tokenCode == IDENTIFIER) // identifier
                 {
-                    variable();
+                    result = variable();
                 }
                 else if (TokenizerClass.tokenCode == LPAREN) // $(
                 {
@@ -733,7 +743,7 @@ namespace CS4100_Code_Generator
                 }
                 Debug(false, "factor");
             }
-            return 0;
+            return result;
         }
 
         public static int type()
@@ -835,10 +845,11 @@ namespace CS4100_Code_Generator
 
         public static int unsigned_constant()
         {
+            int result = 0;
             if (!error)
             {
                 Debug(true, "unsigned_constant");
-                unsigned_number();
+                result = unsigned_number();
                 Debug(false, "unsigned_constant");
             }
             return 0;
@@ -857,11 +868,12 @@ namespace CS4100_Code_Generator
                 GetNextToken(echoOn);
                 Debug(false, "unsigned_number");
             }
-            return 1;
+            return 0;
         }
 
         public static int identifier()
         {
+            int result = 0;
             if (!error)
             {
                 Debug(true, "identifier");
@@ -924,10 +936,11 @@ namespace CS4100_Code_Generator
                     }
 
                 }
+                result = SymbolTable.LookupSymbol(TokenizerClass.nextToken);
                 GetNextToken(echoOn);
                 Debug(false, "identifier");
             }
-            return 0;
+            return result;
         }
 
         public static int stringconst()

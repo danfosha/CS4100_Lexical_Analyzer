@@ -46,6 +46,13 @@ namespace CS4100_Code_Generator
         public static void Main(string[] args)
         {
 
+            
+            InitializeStructures();
+            
+        }
+
+        public static void InitializeStructures()
+        {
             bool echoOn = true;
             // string fileName = "3BGoodTestfile1.txt";
             // string fileName = "3BBadTestfile1.txt";
@@ -54,7 +61,17 @@ namespace CS4100_Code_Generator
             // string fileName = "BadProg2B.txt";
             // string fileName = "BadProg3B.txt";
             string fileName = "working.txt";
-            InitializeStructures();
+            int MaxQuad = 100;
+            FileHandler FileGetter = new FileHandler();
+            ReserveWordClass ReserveTable = new ReserveWordClass();
+            OpCodeTableClass OpCodeTable = new OpCodeTableClass();
+            ReserveTable.InitializeReserveWords();
+            OpCodeTable.InitializeOpCodes();
+            SymbolTable SymbolTable = new SymbolTable(MaxQuad);
+            QuadTable Quads = new QuadTable();
+            QuadTable.Initialize();
+            TokenizerClass Tokenizer = new TokenizerClass();
+            SyntaxA SyntaxAnalyzer = new SyntaxA();
             FileHandler.InitializeInputFile(fileName);
             PrintHeader();
 
@@ -74,20 +91,8 @@ namespace CS4100_Code_Generator
                 SymbolTable.PrintSymbolTable();
             }
             Console.ReadLine();
-        }
 
-        public static void InitializeStructures()
-        {
-            int MaxQuad = 100;
-            FileHandler FileGetter = new FileHandler();
-            ReserveWordClass ReserveTable = new ReserveWordClass();
-            OpCodeTableClass OpCodeTable = new OpCodeTableClass();
-            ReserveTable.InitializeReserveWords();
-            OpCodeTable.InitializeOpCodes();
-            SymbolTable SymbolTable = new SymbolTable(MaxQuad);
-            TokenizerClass Tokenizer = new TokenizerClass();
-            SyntaxA SyntaxAnalyzer = new SyntaxA();
-
+            Interpreter.IntrepretQuads(Quads, SymbolTable, true);
 
             //BuildQuads();
             //BuildSymbolTable();
@@ -147,5 +152,5 @@ namespace CS4100_Code_Generator
         }
     }
 
-    
+
 }

@@ -10,14 +10,14 @@ namespace CS4100_Code_Generator
     class Interpreter
     {
 
-        public int PC;
-        public int OpCode, Op1, Op2, Op3 = 0;
-        public int MaxQuad = 100;
-        public bool TraceOn;
+        public static int PC;
+        public static int OpCode, Op1, Op2, Op3 = 0;
+        public static int MaxQuad = 100;
+        public static bool TraceOn;
 
         public Interpreter() { }
 
-        public void IntrepretQuads(QuadTable QuadTable, SymbolTable SymbolTable, bool traceOn)
+        public static void IntrepretQuads(QuadTable QuadTable, SymbolTable SymbolTable, bool traceOn)
         {
             while (PC < MaxQuad)
             {
