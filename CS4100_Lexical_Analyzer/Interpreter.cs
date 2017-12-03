@@ -22,6 +22,7 @@ namespace CS4100_Code_Generator
             while (PC < MaxQuad)
             {
                 // this could be compressed/refactored somehow?
+
                 OpCode = QuadTable.GetQuad(PC).OpCode;
                 Op1 = QuadTable.GetQuad(PC).Op1;
                 Op2 = QuadTable.GetQuad(PC).Op2;

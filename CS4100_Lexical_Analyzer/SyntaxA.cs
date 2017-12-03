@@ -936,7 +936,7 @@ namespace CS4100_Code_Generator
                     }
 
                 }
-                result = SymbolTable.LookupSymbol(TokenizerClass.nextToken);
+                result = SymbolTable.LookupSymbol(TokenizerClass.nextToken); // should return index of variable
                 GetNextToken(echoOn);
                 Debug(false, "identifier");
             }

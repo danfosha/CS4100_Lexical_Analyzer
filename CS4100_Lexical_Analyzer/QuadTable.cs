@@ -8,6 +8,7 @@ namespace CS4100_Code_Generator
 {
     class QuadTable
     {
+        public static int numUsed = 0;
 
         public class QuadStruct
         {
@@ -42,7 +43,7 @@ namespace CS4100_Code_Generator
         public static int NextQuad()
         // Returns the int index of the next open slot in the QuadTable. Very important during code generation, this must be implemented exactly as described.
         {
-            return SymbolTable.numUsed + 1;
+            return numUsed + 1;
         }
 
 
@@ -52,6 +53,7 @@ namespace CS4100_Code_Generator
         {
 
             QuadTableArray[NextQuad()] = new QuadStruct(opcode, op1, op2, op3);
+            numUsed++;
 
         }
 
