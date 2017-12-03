@@ -8,7 +8,7 @@ namespace CS4100_Code_Generator
 {
     class QuadTable
     {
-        public static int numUsed = 0;
+        public static int numUsed = -1;
 
         public class QuadStruct
         {
@@ -77,7 +77,7 @@ namespace CS4100_Code_Generator
         // Returns the mnemonic string (‘ADD’, ‘PRINT’, etc.) associated with the opcode parameter. Used during interpreter
         // ‘TRACE’ mode to print out the stored opcodes in readable format. Use the ReserveTable ADT to implement this.
         {
-            string code = ReserveWordClass.LookupWord(opcode);
+            string code = OpCodeTableClass.LookupCode(opcode);
             return code;
         }
 
