@@ -751,7 +751,7 @@ namespace CS4100_Code_Generator
                 else if (TokenizerClass.tokenCode == LPAREN) // $(
                 {
                     GetNextToken(echoOn);
-                    simple_expression();
+                    result = simple_expression();
                     if (TokenizerClass.tokenCode == RPAREN) //$)
                     {
                         GetNextToken(echoOn);
