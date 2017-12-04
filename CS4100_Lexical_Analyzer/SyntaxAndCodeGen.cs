@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CS4100_Code_Generator
 {
-    class SyntaxA
+    class SyntaxAndCodeGen
     {
-        public SyntaxA()
+        public SyntaxAndCodeGen()
         {
         }
 
@@ -700,7 +700,7 @@ namespace CS4100_Code_Generator
                     temp = SymbolTable.GenSymbol();
                     QuadTable.AddQuad(opcode, left, right, temp); // 
                     left = temp;
-                    
+
                 }
                 Debug(false, "term");
             }
@@ -986,6 +986,35 @@ namespace CS4100_Code_Generator
                 Debug(false, "stringconst");
             }
             return 0;
+        }
+
+        public static int relopToOpcode(int relop)
+        {
+            int result = 0;
+            switch (relop)
+            {
+                case EQUA:
+                    result = BNZ_OP;
+                    break;
+                case NTEQ:
+                    result = BZ_OP;
+                    break;
+                case LSSR:
+                    result = BNN_OP;
+                    break;
+                case GRTR:
+                    result = BNP_OP;
+                    break;
+                case GREQ:
+                    result = BP_OP;
+                    break;
+                case LSEQ:
+                    result = BN_OP;
+                    break;
+                default:
+                    break;
+            }
+            return result;
         }
 
         public static void Debug(bool entering, string name)

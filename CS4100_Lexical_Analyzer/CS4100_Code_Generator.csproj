@@ -65,7 +65,7 @@
     <Compile Include="QuadTable.cs" />
     <Compile Include="ReserveWordClass.cs" />
     <Compile Include="SymbolClass.cs" />
-    <Compile Include="SyntaxA.cs" />
+    <Compile Include="SyntaxAndCodeGen.cs" />
     <Compile Include="Tokenizer.cs" />
   </ItemGroup>
   <ItemGroup>

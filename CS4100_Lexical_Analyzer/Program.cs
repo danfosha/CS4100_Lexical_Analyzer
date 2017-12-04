@@ -70,7 +70,7 @@ namespace CS4100_Code_Generator
             QuadTable Quads = new QuadTable();
             QuadTable.Initialize();
             TokenizerClass Tokenizer = new TokenizerClass();
-            SyntaxA SyntaxAnalyzer = new SyntaxA();
+            SyntaxAndCodeGen SyntaxAndCodeGen = new SyntaxAndCodeGen();
             FileHandler.InitializeInputFile(fileName);
             SymbolTable.Initialize();
             PrintHeader();
@@ -78,7 +78,7 @@ namespace CS4100_Code_Generator
             while (!TokenizerClass.tokenizerFinished)
             {
                 GetNextToken(echoOn);
-                SyntaxA.Analyze(echoOn);
+                SyntaxAndCodeGen.Analyze(echoOn);
                 //globalToken = TokenizerClass.nextToken;
                 //globalTokenCode = TokenizerClass.tokenCode;
 
@@ -86,7 +86,7 @@ namespace CS4100_Code_Generator
 
             // Console.WriteLine("Tokenizer Finished");
             Console.ReadLine();
-            if (!SyntaxA.error)
+            if (!SyntaxAndCodeGen.error)
             {
                 SymbolTable.PrintSymbolTable();
             }
@@ -104,7 +104,7 @@ namespace CS4100_Code_Generator
         {
             TokenizerClass.GetNextToken(echoOn);
             TokentoSymTable(TokenizerClass.nextToken, TokenizerClass.tokenCode);
-            if (SyntaxA.verbose)
+            if (SyntaxAndCodeGen.verbose)
             {
                 PrintToken(TokenizerClass.nextToken, TokenizerClass.tokenCode);
             }
