@@ -339,7 +339,7 @@ namespace CS4100_Code_Generator
                         if (TokenizerClass.tokenCode == ASSN) // $assign
                         {
                             GetNextToken(echoOn);
-                            if (TokenizerClass.tokenCode == STRING) // $string literal?
+                            if (TokenizerClass.tokenCode == STRINGTYPE) // $string literal?
                             {
                                 right = stringconst();
                             }
@@ -421,19 +421,19 @@ namespace CS4100_Code_Generator
                                 }
                                 else
                                 {
-                                    ErrorMessage(3, TokenizerClass.tokenCode);
+                                    ErrorMessage(DO, TokenizerClass.tokenCode);
 
                                 }
                             }
                             else
                             {
-                                ErrorMessage(2, TokenizerClass.tokenCode);
+                                ErrorMessage(TO, TokenizerClass.tokenCode);
 
                             }
                         }
                         else
                         {
-                            ErrorMessage(37, TokenizerClass.tokenCode);
+                            ErrorMessage(ASSN, TokenizerClass.tokenCode);
 
                         }
                         break;
@@ -450,7 +450,7 @@ namespace CS4100_Code_Generator
                             {
                                 identifier();
                             }
-                            else if (TokenizerClass.tokenCode == STRING) // $STRING
+                            else if (TokenizerClass.tokenCode == STRINGTYPE) // $STRING
                             {
                                 stringconst();
                             }
@@ -494,7 +494,7 @@ namespace CS4100_Code_Generator
                     SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.variable, 0);
                     Console.WriteLine("Warning: Variable " + TokenizerClass.nextToken + " has not been declared");
                 }
-                if ( ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "variable") && (!TokenizerClass.nextToken.Equals(ProgIdent)))
+                if (((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "variable")) // && (!TokenizerClass.nextToken.Equals(ProgIdent)))
                 {
                     result = identifier();   // GNT happens in identifier
                 }
@@ -502,7 +502,7 @@ namespace CS4100_Code_Generator
                 {
                     ErrorMessage("variable", SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString());
                 }
-                
+
                 if (TokenizerClass.tokenCode == LBRA) // $[
                 {
                     GetNextToken(echoOn);
@@ -590,21 +590,30 @@ namespace CS4100_Code_Generator
 
         public static int simple_expression()
         {
-            int right, temp, opcode = 0;
-            int left = 0;
-            int signval = 1;
+            bool changeSign;
+            int left, right, signval, temp, mulTemp, opcode;
+            mulTemp = 0;
+            left = 0;
+            signval = 1;
+            changeSign = false;
+
             if (!error)
             {
                 Debug(true, "simple_expression");
+                // change sign of symbol
                 if ((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS))
                 {
-                    signval = sign(); // value is 1 or -1
+                    signval = sign();
+                    changeSign = true;
+                    mulTemp = SymbolTable.GenSymbol();
                 }
                 left = term();
-                if (signval == -1)
+                if (changeSign == true)
                 {
-                    QuadTable.AddQuad(MUL_OP, left, SymbolTable.Minus1Index, left); // multiply value in op1 by op2 and store in op3- changes sign 
+                    QuadTable.AddQuad(MUL_OP, left, signval, mulTemp); // multiply value in op1 by op2 and store in op3- changes sign 
+                    left = mulTemp;
                 }
+
                 while (((TokenizerClass.tokenCode == PLUS) || (TokenizerClass.tokenCode == MINUS)) && !error)
                 {
                     opcode = addop();
@@ -613,7 +622,6 @@ namespace CS4100_Code_Generator
                     temp = SymbolTable.GenSymbol();
                     QuadTable.AddQuad(opcode, left, right, temp); // this should be an add or sub, result stored in temp
                     left = temp;
-
                 }
 
                 Debug(false, "simple_expression");
@@ -656,12 +664,14 @@ namespace CS4100_Code_Generator
                 Debug(true, "sign");
                 if (TokenizerClass.tokenCode == MINUS)
                 {
-                    result = -1;
+                    // add -1 to symbol table?
+                    result = SymbolTable.LookupSymbol("-1");
                     GetNextToken(echoOn);
 
                 }
                 else if (TokenizerClass.tokenCode == PLUS)
                 {
+                    result = SymbolTable.LookupSymbol("1");
                     GetNextToken(echoOn);
                 }
                 else
@@ -676,24 +686,30 @@ namespace CS4100_Code_Generator
 
         public static int term()
         {
-            int result = 0;
+            int right, left, temp;
+            left = 0;
+            int opcode = 0;
             if (!error)
             {
                 Debug(true, "term");
-                result = factor();
+                left = factor();
                 while (((TokenizerClass.tokenCode == MULT) || (TokenizerClass.tokenCode == DIVI)) && !error)
                 {
-                    mulop();
-                    factor();
-                    // GetNextToken(echoOn);
+                    opcode = mulop();
+                    right = factor();
+                    temp = SymbolTable.GenSymbol();
+                    QuadTable.AddQuad(opcode, left, right, temp); // 
+                    left = temp;
+                    
                 }
                 Debug(false, "term");
             }
-            return result;
+            return left;
         }
 
         public static int mulop()
         {
+            int return_op = 0;
             if (!error)
             {
                 Debug(true, "mulop");
@@ -704,10 +720,18 @@ namespace CS4100_Code_Generator
 
                     return 0;
                 }
+                if (TokenizerClass.tokenCode == MULT)
+                {
+                    return_op = MUL_OP;
+                }
+                else if (TokenizerClass.tokenCode == DIVI)
+                {
+                    return_op = DIV_OP;
+                }
                 GetNextToken(echoOn);
                 Debug(false, "mulop");
             }
-            return 1;
+            return return_op;
         }
 
         public static int factor()
@@ -852,11 +876,12 @@ namespace CS4100_Code_Generator
                 result = unsigned_number();
                 Debug(false, "unsigned_constant");
             }
-            return 0;
+            return result;
         }
 
         public static int unsigned_number()
         {
+            int result = 0;
             if (!error)
             {
                 Debug(true, "unsigned_number");
@@ -865,10 +890,11 @@ namespace CS4100_Code_Generator
                     ErrorMessage(INTEGERTYPE, FLOATTYPE, TokenizerClass.tokenCode);
                     return 0;
                 }
+                result = SymbolTable.LookupSymbol(TokenizerClass.nextToken);
                 GetNextToken(echoOn);
                 Debug(false, "unsigned_number");
             }
-            return 0;
+            return result;
         }
 
         public static int identifier()
@@ -948,7 +974,7 @@ namespace CS4100_Code_Generator
             if (!error)
             {
                 Debug(true, "stringconst");
-                if (TokenizerClass.tokenCode == STRING)
+                if (TokenizerClass.tokenCode == STRINGTYPE)
                 {
                     GetNextToken(echoOn);
                 }

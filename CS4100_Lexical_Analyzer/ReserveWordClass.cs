@@ -82,9 +82,9 @@ namespace CS4100_Code_Generator
             Add(".","PERD");
             Add("", "NULL");
             Add("IDENTIFIER", "IDEN");
-            Add("INTEGER", "INT");
-            Add("FLOAT", "FLOA");
-            Add("STRING", "STRN");
+            Add("INTTYPE", "INTT");
+            Add("FLOATTYPE", "FLTT");
+            Add("STRINGTYPE", "STRT");
 
         }
         

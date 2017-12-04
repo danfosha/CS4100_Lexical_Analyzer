@@ -10,11 +10,12 @@ namespace CS4100_Code_Generator
     class SymbolTable
     {
         // Properties    
-        public enum Data_Kind {undeclared, label, variable, constant,  }
+        public enum Data_Kind {undeclared, label, variable, constant }
         public static int numUsed = 0;
         static int MaxSymbols = 100;
         public static int Minus1Index = -1;
         public static int Plus1Index = 1;
+        public static int tempValue = 0;
 
         public SymbolTable(int maxSymbols)
         {
@@ -48,6 +49,14 @@ namespace CS4100_Code_Generator
         // and returns the index where the symbol was located. If the symbol is already in the table, no change is made, and this just returns
         // the index where the symbol was found.
         // These three could be combined, but keeping all three per assignment instructions
+
+        public static void Initialize()
+        {   
+            SymbolTable.AddSymbol("1", Data_Kind.constant , 1);
+            SymbolTable.AddSymbol("-1", Data_Kind.constant, -1);
+        }
+
+
 
         public static int AddSymbol(string symbol, Data_Kind Kind, int value)
         {
@@ -206,9 +215,7 @@ namespace CS4100_Code_Generator
 
         public static int GenSymbol()
         {
-
-            return AddSymbol("Temp", Data_Kind.variable, 0);
-            
-        }
+            return AddSymbol("Temp"+ ++tempValue, Data_Kind.variable, 0);
+         }
     }
 }

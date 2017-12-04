@@ -45,13 +45,11 @@ namespace CS4100_Code_Generator
     {
         public static void Main(string[] args)
         {
-
-            
-            InitializeStructures();
+            Run_Program();
             
         }
 
-        public static void InitializeStructures()
+        public static void Run_Program()
         {
             bool echoOn = true;
             // string fileName = "3BGoodTestfile1.txt";
@@ -68,13 +66,15 @@ namespace CS4100_Code_Generator
             ReserveTable.InitializeReserveWords();
             OpCodeTable.InitializeOpCodes();
             SymbolTable SymbolTable = new SymbolTable(MaxQuad);
+            
             QuadTable Quads = new QuadTable();
             QuadTable.Initialize();
             TokenizerClass Tokenizer = new TokenizerClass();
             SyntaxA SyntaxAnalyzer = new SyntaxA();
             FileHandler.InitializeInputFile(fileName);
+            SymbolTable.Initialize();
             PrintHeader();
-
+            
             while (!TokenizerClass.tokenizerFinished)
             {
                 GetNextToken(echoOn);
@@ -90,10 +90,10 @@ namespace CS4100_Code_Generator
             {
                 SymbolTable.PrintSymbolTable();
             }
-            Console.ReadLine();
+            
 
             Interpreter.IntrepretQuads(Quads, SymbolTable, true);
-
+            Console.ReadLine();
             //BuildQuads();
             //BuildSymbolTable();
             //InterpretQuads(QuadTable, SymbolTable, True);
