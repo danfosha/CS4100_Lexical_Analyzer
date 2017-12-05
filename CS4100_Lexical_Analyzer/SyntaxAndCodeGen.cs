@@ -330,7 +330,8 @@ namespace CS4100_Code_Generator
                     }
                 }
 
-                int branchTarget, branchQuad;
+                int branchTarget, branchQuad, saveTop, patchElse, location;
+                location = 0;
                 // must be one and only one of the below
                 switch (TokenizerClass.tokenCode)
                 {
@@ -363,7 +364,7 @@ namespace CS4100_Code_Generator
                         break;
                     case IF: // $if
                         GetNextToken(echoOn);
-                        relexpression();
+                        branchQuad = relexpression();
                         if (TokenizerClass.tokenCode == THEN) // $then
                         {
                             GetNextToken(echoOn);
@@ -371,7 +372,15 @@ namespace CS4100_Code_Generator
                             if (TokenizerClass.tokenCode == ELSE) // $else
                             {
                                 GetNextToken(echoOn);
+                                patchElse = QuadTable.NextQuad();
+                                QuadTable.AddQuad(BR_OP, 0, 0, 0);
+                                QuadTable.SetQuadOp3(branchQuad, QuadTable.NextQuad());
                                 statement();
+                                QuadTable.SetQuadOp3(branchQuad, QuadTable.NextQuad());
+                            }
+                            else
+                            {
+                                QuadTable.SetQuadOp3(branchQuad, QuadTable.NextQuad());
                             }
                         }
                         else
@@ -381,11 +390,14 @@ namespace CS4100_Code_Generator
                         break;
                     case WHILE: // $while
                         GetNextToken(echoOn);
-                        relexpression();
+                        saveTop = QuadTable.NextQuad();
+                        branchQuad =  relexpression();
                         if (TokenizerClass.tokenCode == DO) // $do
                         {
                             GetNextToken(echoOn);
                             statement();
+                            QuadTable.AddQuad(BR_OP, 0, 0, saveTop);
+                            QuadTable.SetQuadOp3(branchQuad, QuadTable.NextQuad());
                         }
                         else
                         {
@@ -456,12 +468,13 @@ namespace CS4100_Code_Generator
                             }
                             else if (TokenizerClass.tokenCode == STRINGTYPE) // $STRING
                             {
-                                stringconst();
+                                location = stringconst();
                             }
                             else
                             {
-                                simple_expression();
+                                location = simple_expression();
                             }
+                            QuadTable.AddQuad(PRINT_OP, 0, 0, location);
                             if (TokenizerClass.tokenCode == RPAREN) // $RPAR
                             {
                                 GetNextToken(echoOn);
