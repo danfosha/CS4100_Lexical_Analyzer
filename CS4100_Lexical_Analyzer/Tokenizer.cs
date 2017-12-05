@@ -273,6 +273,7 @@ namespace CS4100_Code_Generator
                                 workingToken.Append(nextChar);
                                 nextChar = GetNextChar();
                             }
+                            SymbolTable.AddSymbol(workingToken.ToString(), SymbolTable.Data_Kind.constant, workingToken.ToString());
                             tokenComplete = true;
                             tokenCode = 53;
                             break;

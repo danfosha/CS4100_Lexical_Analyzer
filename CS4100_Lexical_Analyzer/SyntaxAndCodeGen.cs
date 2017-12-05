@@ -311,14 +311,17 @@ namespace CS4100_Code_Generator
         public static int statement()
         {
             int left, right;
+
             if (!error)
             {
+                int location = 0;
                 Debug(true, "statement");
                 if (TokenizerClass.tokenCode == IDENTIFIER)
                 {
+
                     while (!error && (SymbolTable.LookupSymbol(TokenizerClass.nextToken)) >= 0 && (SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                     {
-                        label();
+                        location = label(); // should return nextQuad
                         if (TokenizerClass.tokenCode == COLN) // $:
                         {
                             GetNextToken(echoOn);
@@ -330,12 +333,12 @@ namespace CS4100_Code_Generator
                     }
                 }
 
-                int branchTarget, branchQuad, saveTop, patchElse, location;
-                location = 0;
+                int branchTarget, branchQuad, saveTop, patchElse;
+
                 // must be one and only one of the below
                 switch (TokenizerClass.tokenCode)
                 {
-                    
+
                     case IDENTIFIER: // variable  - check for enum type here? does it matter if variable or constant?
 
                         left = variable();
@@ -391,7 +394,7 @@ namespace CS4100_Code_Generator
                     case WHILE: // $while
                         GetNextToken(echoOn);
                         saveTop = QuadTable.NextQuad();
-                        branchQuad =  relexpression();
+                        branchQuad = relexpression();
                         if (TokenizerClass.tokenCode == DO) // $do
                         {
                             GetNextToken(echoOn);
@@ -455,7 +458,8 @@ namespace CS4100_Code_Generator
                         break;
                     case GOTO: // $GOTO
                         GetNextToken(echoOn);
-                        label();
+                        location = label(); ; // returns nextQuad from label()
+                        QuadTable.AddQuad(BINDR_OP, 0, 0, location);
                         break;
                     case WRITELN: // $WRITELN
                         GetNextToken(echoOn);
@@ -474,7 +478,7 @@ namespace CS4100_Code_Generator
                             {
                                 location = simple_expression();
                             }
-                            QuadTable.AddQuad(PRINT_OP, 0, 0, location);
+                            QuadTable.AddQuad(PRINT_OP, location, 0, 0);
                             if (TokenizerClass.tokenCode == RPAREN) // $RPAR
                             {
                                 GetNextToken(echoOn);
@@ -540,13 +544,15 @@ namespace CS4100_Code_Generator
 
         public static int label() // non-declaration section
         {
+            int location = 0;
             if (!error)
             {
                 Debug(true, "label");
                 if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                 {
-                    // if label has been referenced, update value, set index line reference to 0. Will change to index in part 4. 
-                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, 0);
+                    // if label has been referenced, update value, set index line reference to 0.
+                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, QuadTable.NextQuad()-1);
+                    location = SymbolTable.LookupSymbol(TokenizerClass.nextToken);
                     identifier();
                 }
                 else
@@ -555,7 +561,7 @@ namespace CS4100_Code_Generator
                 }
                 Debug(false, "label");
             }
-            return 0;
+            return location;
         }
 
         public static int relexpression()
@@ -994,11 +1000,13 @@ namespace CS4100_Code_Generator
 
         public static int stringconst()
         {
+            int result = 0;
             if (!error)
             {
                 Debug(true, "stringconst");
                 if (TokenizerClass.tokenCode == STRINGTYPE)
                 {
+                    result = SymbolTable.LookupSymbol(TokenizerClass.nextToken);
                     GetNextToken(echoOn);
                 }
                 else
@@ -1008,7 +1016,7 @@ namespace CS4100_Code_Generator
                 }
                 Debug(false, "stringconst");
             }
-            return 0;
+            return result;
         }
 
         public static int relopToOpcode(int relop)

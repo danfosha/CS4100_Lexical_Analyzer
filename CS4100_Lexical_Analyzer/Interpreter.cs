@@ -19,6 +19,7 @@ namespace CS4100_Code_Generator
 
         public static void IntrepretQuads(QuadTable QuadTable, SymbolTable SymbolTable, bool traceOn)
         {
+
             while (PC < MaxQuad)
             {
                 // this could be compressed/refactored somehow?
@@ -154,11 +155,11 @@ namespace CS4100_Code_Generator
                         break;
 
                     case 15: // bindr
-                        PC = (int)SymbolTable.SymbolTableArray[Op3].Value;
+                        PC = Convert.ToInt32(SymbolTable.SymbolTableArray[Op3].Value);
                         break;
 
                     case 16: // print
-                        Console.WriteLine((string)SymbolTable.SymbolTableArray[Op1].Name + "\t" + (int)SymbolTable.SymbolTableArray[Op1].Value);
+                        Console.WriteLine((string)SymbolTable.SymbolTableArray[Op1].Name + "\t" + SymbolTable.SymbolTableArray[Op1].Value);
                         PC++;
                         break;
                 }

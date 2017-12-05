@@ -95,7 +95,10 @@ namespace CS4100_Code_Generator
             Console.WriteLine("***************************************************");
             foreach (QuadStruct Quad in QuadTableArray)
             {
-                Console.WriteLine(Quad.OpCode + "\t" + Quad.Op1 + "\t" + Quad.Op2 + "\t" + Quad.Op3);
+                if (Quad != null)
+                {
+                    Console.WriteLine(GetMnemonic(Quad.OpCode) + "\t" + Quad.Op1 + "\t" + Quad.Op2 + "\t" + Quad.Op3);
+                }
             }
 
         }

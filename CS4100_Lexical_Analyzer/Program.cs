@@ -58,8 +58,8 @@ namespace CS4100_Code_Generator
             // string fileName = "BadProg1.txt";
             // string fileName = "BadProg2B.txt";
             // string fileName = "BadProg3B.txt";
-            // string fileName = "working.txt";
-            string fileName = "GoodProg4.txt";
+            string fileName = "working.txt";
+            // string fileName = "GoodProg4.txt";
             int MaxQuad = 100;
             FileHandler FileGetter = new FileHandler();
             ReserveWordClass ReserveTable = new ReserveWordClass();
@@ -90,6 +90,7 @@ namespace CS4100_Code_Generator
             if (!SyntaxAndCodeGen.error)
             {
                 SymbolTable.PrintSymbolTable();
+                QuadTable.PrintQuadTable();
             }
             
 
