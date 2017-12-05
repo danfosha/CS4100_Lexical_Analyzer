@@ -13,7 +13,7 @@ namespace CS4100_Code_Generator
         public static int PC;
         public static int OpCode, Op1, Op2, Op3 = 0;
         public static int MaxQuad = 100;
-        public static bool TraceOn;
+        public static bool TraceOn = true;
 
         public Interpreter() { }
 
@@ -59,8 +59,9 @@ namespace CS4100_Code_Generator
                         PC++;
                         break;
 
-                    case 4: // sub
-                        SymbolTable.SymbolTableArray[Op3].Value = (int)(SymbolTable.SymbolTableArray[Op1].Value) + (int)(SymbolTable.SymbolTableArray[Op2].Value);
+                    case 4: // add
+                        SymbolTable.SymbolTableArray[Op3].Value = Convert.ToInt32(SymbolTable.SymbolTableArray[Op1].Value) + Convert.ToInt32(SymbolTable.SymbolTableArray[Op2].Value);
+                        // SymbolTable.SymbolTableArray[Op3].Value = (int)(SymbolTable.SymbolTableArray[Op1].Value) + (int)(SymbolTable.SymbolTableArray[Op2].Value);
                         PC++;
                         break;
 
