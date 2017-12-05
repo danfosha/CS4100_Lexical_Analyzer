@@ -73,6 +73,13 @@ namespace CS4100_Code_Generator
             QuadTableArray[index].Op3 = op3;
         }
 
+        public static void SetQuadOp3(int index, int op3)
+        // Changes the contents of the existing quad at index. Used only when backfilling
+        // jump addresses later, during code generation, and very important
+        {
+            QuadTableArray[index].Op3 = op3;
+        }
+
         public static string GetMnemonic(int opcode)
         // Returns the mnemonic string (‘ADD’, ‘PRINT’, etc.) associated with the opcode parameter. Used during interpreter
         // ‘TRACE’ mode to print out the stored opcodes in readable format. Use the ReserveTable ADT to implement this.

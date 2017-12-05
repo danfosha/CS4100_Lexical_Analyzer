@@ -330,9 +330,11 @@ namespace CS4100_Code_Generator
                     }
                 }
 
+                int branchTarget, branchQuad;
                 // must be one and only one of the below
                 switch (TokenizerClass.tokenCode)
                 {
+                    
                     case IDENTIFIER: // variable  - check for enum type here? does it matter if variable or constant?
 
                         left = variable();
@@ -392,11 +394,13 @@ namespace CS4100_Code_Generator
                         break;
                     case REPEAT: // $repeat
                         GetNextToken(echoOn);
+                        branchTarget = QuadTable.NextQuad();
                         statement();
                         if (TokenizerClass.tokenCode == UNTIL) // $until
                         {
                             GetNextToken(echoOn);
-                            relexpression();
+                            branchQuad = relexpression();
+                            QuadTable.SetQuadOp3(branchQuad, branchTarget);
                         }
                         else
                         {
@@ -543,15 +547,21 @@ namespace CS4100_Code_Generator
 
         public static int relexpression()
         {
+            int left, right, saveRelop, result, temp;
+            result = 0;
             if (!error)
             {
                 Debug(true, "relexpression");
-                simple_expression();
-                relop();
-                simple_expression();
+                left = simple_expression();
+                saveRelop = relop();
+                right = simple_expression();
+                temp = SymbolTable.GenSymbol();
+                QuadTable.AddQuad(SUB_OP, left, right, temp);
+                result = QuadTable.NextQuad();
+                QuadTable.AddQuad(relopToOpcode(saveRelop), 0, 0, 0);
                 Debug(false, "relexpression");
             }
-            return 0;
+            return result;
         }
 
         public static int relop()
