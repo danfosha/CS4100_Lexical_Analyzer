@@ -379,7 +379,7 @@ namespace CS4100_Code_Generator
                                 QuadTable.AddQuad(BR_OP, 0, 0, 0);
                                 QuadTable.SetQuadOp3(branchQuad, QuadTable.NextQuad());
                                 statement();
-                                QuadTable.SetQuadOp3(branchQuad, QuadTable.NextQuad());
+                                QuadTable.SetQuadOp3(patchElse, QuadTable.NextQuad());
                             }
                             else
                             {
@@ -474,7 +474,7 @@ namespace CS4100_Code_Generator
                             GetNextToken(echoOn);
                             if (TokenizerClass.tokenCode == IDENTIFIER) // $IDENT
                             {
-                                identifier();
+                                location = identifier();
                             }
                             else if (TokenizerClass.tokenCode == STRINGTYPE) // $STRING
                             {
@@ -557,7 +557,7 @@ namespace CS4100_Code_Generator
                 if ((SymbolTable.GetSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken)).Kind.ToString()) == "label")
                 {
                     // if label has been referenced, update value, set index line reference to 0.
-                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, QuadTable.NextQuad()-1);
+                    SymbolTable.UpdateSymbol(SymbolTable.LookupSymbol(TokenizerClass.nextToken), SymbolTable.Data_Kind.label, QuadTable.NextQuad());
                     location = SymbolTable.LookupSymbol(TokenizerClass.nextToken);
                     identifier();
                 }
@@ -583,7 +583,7 @@ namespace CS4100_Code_Generator
                 temp = SymbolTable.GenSymbol();
                 QuadTable.AddQuad(SUB_OP, left, right, temp);
                 result = QuadTable.NextQuad();
-                QuadTable.AddQuad(relopToOpcode(saveRelop), 0, 0, 0);
+                QuadTable.AddQuad(relopToOpcode(saveRelop), temp, 0, 0);
                 Debug(false, "relexpression");
             }
             return result;
@@ -1050,10 +1050,10 @@ namespace CS4100_Code_Generator
                     result = BNP_OP;
                     break;
                 case GREQ:
-                    result = BP_OP;
+                    result = BN_OP;
                     break;
                 case LSEQ:
-                    result = BN_OP;
+                    result = BP_OP;
                     break;
                 default:
                     break;
