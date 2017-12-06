@@ -423,8 +423,11 @@ namespace CS4100_Code_Generator
                         }
                         break;
                     case FOR: // $FOR
+
+                        int branchTarg = 0, branchQd = 0;
                         GetNextToken(echoOn);
-                        variable();
+                        saveTop = QuadTable.NextQuad();
+                        left = variable();
                         if (TokenizerClass.tokenCode == ASSN) // $ASSIGN
                         {
                             GetNextToken(echoOn);
@@ -432,11 +435,12 @@ namespace CS4100_Code_Generator
                             if (TokenizerClass.tokenCode == TO) // $TO
                             {
                                 GetNextToken(echoOn);
-                                simple_expression();
+                                branchQd = simple_expression();
+                                //QuadTable.AddQuad(BR_OP,)
                                 if (TokenizerClass.tokenCode == DO) // $DO
                                 {
                                     GetNextToken(echoOn);
-                                    statement();
+                                    branchTarg = statement();
                                 }
                                 else
                                 {
@@ -455,6 +459,8 @@ namespace CS4100_Code_Generator
                             ErrorMessage(ASSN, TokenizerClass.tokenCode);
 
                         }
+                        QuadTable.SetQuadOp3(branchQd, branchTarg);
+
                         break;
                     case GOTO: // $GOTO
                         GetNextToken(echoOn);
@@ -585,27 +591,34 @@ namespace CS4100_Code_Generator
 
         public static int relop()
         {
+            int result = 0;
             if (!error)
             {
                 Debug(true, "relop");
                 switch (TokenizerClass.tokenCode)
                 {
                     case EQUA: //$EQ
+                        result = EQUA;
                         GetNextToken(echoOn);
                         break;
                     case LSSR: //$LSS
+                        result = LSSR;
                         GetNextToken(echoOn);
                         break;
                     case GRTR: // $GTR
+                        result = GRTR;
                         GetNextToken(echoOn);
                         break;
                     case NTEQ: //$NEQ
+                        result = NTEQ;
                         GetNextToken(echoOn);
                         break;
                     case LSEQ: // $LEQ
+                        result = LSEQ;
                         GetNextToken(echoOn);
                         break;
                     case GREQ:  // $GEQ
+                        result = GREQ;
                         GetNextToken(echoOn);
                         break;
                     default:
@@ -614,7 +627,7 @@ namespace CS4100_Code_Generator
                 }
                 Debug(false, "relexpression");
             }
-            return 0;
+            return result;
         }
 
         public static int simple_expression()
