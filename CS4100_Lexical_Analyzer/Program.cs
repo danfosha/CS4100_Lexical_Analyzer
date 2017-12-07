@@ -94,6 +94,8 @@ namespace CS4100_Code_Generator
             }
             
             Interpreter.IntrepretQuads(Quads, SymbolTable, true);
+            SymbolTable.PrintSymbolTable();
+            Console.WriteLine("End of Program - Press any key to exit.");
             Console.ReadLine();
         }
 
