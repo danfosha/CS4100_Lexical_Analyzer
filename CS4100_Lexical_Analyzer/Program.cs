@@ -46,7 +46,7 @@ namespace CS4100_Code_Generator
         public static void Main(string[] args)
         {
             Run_Program();
-            
+
         }
 
         public static void Run_Program()
@@ -61,39 +61,40 @@ namespace CS4100_Code_Generator
             // string fileName = "working.txt";
             string fileName = "GoodProg4.txt";
             int MaxQuad = 1000;
-            
+
             FileHandler FileGetter = new FileHandler();
             ReserveWordClass ReserveTable = new ReserveWordClass();
             OpCodeTableClass OpCodeTable = new OpCodeTableClass();
             ReserveTable.InitializeReserveWords();
             OpCodeTable.InitializeOpCodes();
             SymbolTable SymbolTable = new SymbolTable(MaxQuad);
-            
+
             QuadTable Quads = new QuadTable();
             QuadTable.Initialize();
             TokenizerClass Tokenizer = new TokenizerClass();
             SyntaxAndCodeGen SyntaxAndCodeGen = new SyntaxAndCodeGen();
             FileHandler.InitializeInputFile(fileName);
             SymbolTable.Initialize();
-            PrintHeader();
-            
+            PrintHeader(echoOn);
+
             while (!TokenizerClass.tokenizerFinished)
             {
                 echoOn = false;
                 GetNextToken(echoOn);
                 echoOn = true;
                 SyntaxAndCodeGen.Analyze(echoOn);
-            
+
             }
 
             // Console.WriteLine("Tokenizer Finished");
             Console.ReadLine();
+            Console.WriteLine("There are " + SyntaxAndCodeGen.errorCount + " errors.");
             if (!SyntaxAndCodeGen.error)
             {
                 SymbolTable.PrintSymbolTable();
                 QuadTable.PrintQuadTable();
             }
-            
+
             Interpreter.IntrepretQuads(Quads, SymbolTable, true);
             SymbolTable.PrintSymbolTable();
             Console.WriteLine("End of Program - Press any key to exit.");
@@ -145,9 +146,13 @@ namespace CS4100_Code_Generator
             }
         }
 
-        public static void PrintHeader()
+        public static void PrintHeader(bool echoOn)
         {
-            Console.WriteLine("Lexeme".PadRight(16) + "Token Code".PadRight(12) + "Mnemonic".PadRight(10) + "SymbolTable Index".PadRight(17));
+            Console.WriteLine("CS4100/5100 COMPILER DESIGN PROJECT CODE GENERATION FINAL TURN IN - DANIEL FOSHA\n");
+            if (echoOn)
+            {
+                //Console.WriteLine("Lexeme".PadRight(16) + "Token Code".PadRight(12) + "Mnemonic".PadRight(10) + "SymbolTable Index".PadRight(17));
+            }
             Console.WriteLine("*".PadRight(55, '*'));
         }
     }
