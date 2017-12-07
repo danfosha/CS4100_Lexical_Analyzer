@@ -22,6 +22,7 @@ namespace CS4100_Code_Generator
         public static bool declaration_section = true;
         public static bool declare_label = false;
         public static bool declare_var = false;
+        public static int errorCount = 0;
 
         public const int GOTO = 0;
         public const int INTEGER = 1;
@@ -99,7 +100,7 @@ namespace CS4100_Code_Generator
             if ((TokenizerClass.tokenCode >= 0) && (TokenizerClass.tokenCode < 100))
             {
                 program();
-                if (!error)
+                if ((!error) && (errorCount == 0))
                 {
                     Console.WriteLine("No syntax errors found.");
                 }
@@ -1163,18 +1164,18 @@ namespace CS4100_Code_Generator
         public static void AlreadyDeclaredError(string token)
         {
             Console.WriteLine("Error: " + token + " has already been declared.");
-            //Error();
+            errorCount++;
         }
 
         public static void UnDeclaredError(string token)
         {
             Console.WriteLine("Error: " + token + " has not been declared.");
-            //Error();
+            //errorCount++;
         }
 
         public static void Error()
         {
-            // error = true;
+            errorCount ++;
             while (!TokenizerClass.tokenizerFinished)
             {
                 error = false;

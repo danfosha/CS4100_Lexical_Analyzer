@@ -61,6 +61,7 @@ namespace CS4100_Code_Generator
             // string fileName = "working.txt";
             string fileName = "GoodProg4.txt";
             int MaxQuad = 1000;
+            
             FileHandler FileGetter = new FileHandler();
             ReserveWordClass ReserveTable = new ReserveWordClass();
             OpCodeTableClass OpCodeTable = new OpCodeTableClass();

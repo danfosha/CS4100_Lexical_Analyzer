@@ -91,18 +91,72 @@ namespace CS4100_Code_Generator
         public static void PrintQuadTable()
         //Prints the currently used contents of the Quad table in neat tabular format
         {
-            Console.WriteLine("OpCode" + "\t" + "Op1" + "\t" + "Op2" + "\t" + "Op3");
-            Console.WriteLine("***************************************************");
+            Console.WriteLine("******************     QUADTABLE     ******************\n");
+            Console.WriteLine("OpCode".PadRight(10)  + "Op1".PadRight(30)  + "Op2".PadRight(10) + "Op3".PadRight(10));
+            Console.WriteLine("*************************************************************");
             foreach (QuadStruct Quad in QuadTableArray)
             {
                 if (Quad != null)
                 {
-                    Console.WriteLine(GetMnemonic(Quad.OpCode) + "\t" + Quad.Op1 + "\t" + Quad.Op2 + "\t" + Quad.Op3);
+                    switch (Quad.OpCode)
+                    {
+
+                        case SyntaxAndCodeGen.STOP_OP: //0
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + "-----".PadRight(30) + "-----".PadRight(10) + "-----");
+                            break;
+                        case SyntaxAndCodeGen.DIV_OP: //1
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30) +  (SymbolTable.GetSymbol(Quad.Op2).Name + " <" + Quad.Op2 + ">").PadRight(10) + SymbolTable.GetSymbol(Quad.Op3).Name + " <" + Quad.Op3 + ">");
+                            break;
+                        case SyntaxAndCodeGen.MUL_OP: //2
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30)  + (SymbolTable.GetSymbol(Quad.Op2).Name + " <" + Quad.Op2 + ">").PadRight(10) + SymbolTable.GetSymbol(Quad.Op3).Name + " <" + Quad.Op3 + ">");
+                            break;
+                        case SyntaxAndCodeGen.SUB_OP: //3
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30)  + (SymbolTable.GetSymbol(Quad.Op2).Name + " <" + Quad.Op2 + ">").PadRight(10) + SymbolTable.GetSymbol(Quad.Op3).Name + " <" + Quad.Op3 + ">");
+                            break;
+                        case SyntaxAndCodeGen.ADD_OP: //4
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30)  + (SymbolTable.GetSymbol(Quad.Op2).Name + " <" + Quad.Op2 + ">").PadRight(10) + SymbolTable.GetSymbol(Quad.Op3).Name + " <" + Quad.Op3 + ">");
+                            break;
+                        case SyntaxAndCodeGen.MOV_OP: //5
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30)  + "-----".PadRight(10) + SymbolTable.GetSymbol(Quad.Op3).Name + " <" + Quad.Op3 + ">");
+                            break;
+                        case SyntaxAndCodeGen.STI_OP: //6
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + SymbolTable.GetSymbol(Quad.Op1).Name.PadRight(30)+ SymbolTable.GetSymbol(Quad.Op2).Name.PadRight(10) + "-----");
+                            break;
+                        case SyntaxAndCodeGen.LDI_OP: //7
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + SymbolTable.GetSymbol(Quad.Op1).Name.PadRight(30) + "-----".PadRight(10) + SymbolTable.GetSymbol(Quad.Op3).Name);
+                            break;
+                        case SyntaxAndCodeGen.BNZ_OP: //8
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30) + "-----".PadRight(10) + "PC: " + Quad.Op3);
+                            break;
+                        case SyntaxAndCodeGen.BNP_OP: //9
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30) + "-----".PadRight(10) + "PC: " + Quad.Op3);
+                            break;
+                        case SyntaxAndCodeGen.BNN_OP: //10
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30) + "-----".PadRight(10) + "PC: " + Quad.Op3);
+                            break;
+                        case SyntaxAndCodeGen.BZ_OP: //11
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30) + "-----".PadRight(10) + "PC: " + Quad.Op3);
+                            break;
+                        case SyntaxAndCodeGen.BP_OP: //12
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30) + "-----".PadRight(10) + "PC: " + Quad.Op3);
+                            break;
+                        case SyntaxAndCodeGen.BN_OP: // 13
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30) + "-----".PadRight(10) + "PC: " + Quad.Op3);
+                            break;
+                        case SyntaxAndCodeGen.BR_OP: //14
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + "-----".PadRight(30) + "-----".PadRight(10) + "PC: " + Quad.Op3);
+                            break;
+                        case SyntaxAndCodeGen.BINDR_OP: //15
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + "-----".PadRight(30) + "-----".PadRight(10) + "PC: " + Quad.Op3);
+                            break;
+                        case SyntaxAndCodeGen.PRINT_OP: //16
+                            Console.WriteLine(GetMnemonic(Quad.OpCode).PadRight(10)  + (SymbolTable.GetSymbol(Quad.Op1).Name + " <" + Quad.Op1 + ">").PadRight(30)  + "-----".PadRight(10)  + "-----".PadRight(10));
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
-
         }
-
-
     }
 }

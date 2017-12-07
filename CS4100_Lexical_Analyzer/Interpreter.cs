@@ -20,7 +20,7 @@ namespace CS4100_Code_Generator
         public static void IntrepretQuads(QuadTable QuadTable, SymbolTable SymbolTable, bool traceOn)
         {
 
-            Console.WriteLine("\n*****  Execution *****");
+            Console.WriteLine("\n*********** EXECUTION ***********\n");
             while (PC < MaxQuad)
             {
                 // this could be compressed/refactored somehow?
@@ -63,7 +63,7 @@ namespace CS4100_Code_Generator
 
                     case 4: // add
                         SymbolTable.SymbolTableArray[Op3].Value = Convert.ToInt32(SymbolTable.SymbolTableArray[Op1].Value) + Convert.ToInt32(SymbolTable.SymbolTableArray[Op2].Value);
-                        // SymbolTable.SymbolTableArray[Op3].Value = (int)(SymbolTable.SymbolTableArray[Op1].Value) + (int)(SymbolTable.SymbolTableArray[Op2].Value);
+                        
                         PC++;
                         break;
 
