@@ -13,8 +13,8 @@ namespace CS4100_Code_Generator
         }
 
         public static bool echoOn = true;
-        public static bool trace = true;
-        public static bool verbose = true;
+        public static bool trace = false;
+        public static bool verbose = false;
         public static bool error = false;
         public static int paddingIndent = 0;
         public static bool uniqueProgIdent = false;
@@ -92,9 +92,9 @@ namespace CS4100_Code_Generator
         public const int PRINT_OP = 16;
 
 
-        public static void Analyze(bool echoon)
+        public static void Analyze(bool echo)
         {
-            echoOn = echoon;
+            echoOn = echo;
             // skip -1, only go forward with valid tokencodes
             if ((TokenizerClass.tokenCode >= 0) && (TokenizerClass.tokenCode < 100))
             {

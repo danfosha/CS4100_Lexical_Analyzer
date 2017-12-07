@@ -20,6 +20,7 @@ namespace CS4100_Code_Generator
         public static void IntrepretQuads(QuadTable QuadTable, SymbolTable SymbolTable, bool traceOn)
         {
 
+            Console.WriteLine("\n*****  Execution *****");
             while (PC < MaxQuad)
             {
                 // this could be compressed/refactored somehow?
@@ -34,7 +35,7 @@ namespace CS4100_Code_Generator
                     //
                     if ((traceOn) & (PC != MaxQuad))
                     {
-                        Console.WriteLine("PC = " + PC + ": " + QuadTable.GetMnemonic(OpCode) + ", " + Op1 + ", " + Op2 + ", " + Op3);
+                        Console.WriteLine("PC = " + PC + ". Executing: " + QuadTable.GetMnemonic(OpCode) + ", " + Op1 + ", " + Op2 + ", " + Op3);
                     }
 
                 switch (OpCode)
@@ -159,7 +160,7 @@ namespace CS4100_Code_Generator
                         break;
 
                     case 16: // print
-                        Console.WriteLine((string)SymbolTable.SymbolTableArray[Op1].Name + "\t" + SymbolTable.SymbolTableArray[Op1].Value);
+                        Console.WriteLine("\t"+(string)SymbolTable.SymbolTableArray[Op1].Name + " = " + SymbolTable.SymbolTableArray[Op1].Value);
                         PC++;
                         break;
                 }
