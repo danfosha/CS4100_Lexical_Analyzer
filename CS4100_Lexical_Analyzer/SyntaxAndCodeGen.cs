@@ -424,23 +424,32 @@ namespace CS4100_Code_Generator
                         break;
                     case FOR: // $FOR
 
-                        int branchTarg = 0, branchQd = 0;
+                        int branchTarg = 0, branchQd = 0, temp = 0, topBound = 0, temp2 = 0;
                         GetNextToken(echoOn);
-                        saveTop = QuadTable.NextQuad();
                         left = variable();
                         if (TokenizerClass.tokenCode == ASSN) // $ASSIGN
                         {
                             GetNextToken(echoOn);
-                            simple_expression();
+                            right = simple_expression();
+                            QuadTable.AddQuad(OpCodeTableClass.LookupName("MOV"), right, 0, left);
+                            saveTop = QuadTable.NextQuad();
                             if (TokenizerClass.tokenCode == TO) // $TO
                             {
                                 GetNextToken(echoOn);
-                                branchQd = simple_expression();
-                                //QuadTable.AddQuad(BR_OP,)
+                                topBound = simple_expression();
+                                temp = SymbolTable.GenSymbol();
+                                QuadTable.AddQuad(SUB_OP, left, topBound, temp);
                                 if (TokenizerClass.tokenCode == DO) // $DO
                                 {
                                     GetNextToken(echoOn);
-                                    branchTarg = statement();
+                                    branchTarg = QuadTable.NextQuad();
+                                    QuadTable.AddQuad(BP_OP, temp, 0, topBound);
+                                    statement();
+                                    temp2 = SymbolTable.GenSymbol();
+                                    QuadTable.AddQuad(ADD_OP, left, right, temp2);
+                                    QuadTable.AddQuad(MOV_OP, temp2, right, left);
+                                    QuadTable.AddQuad(BR_OP, 0, 0, saveTop);
+                                    QuadTable.SetQuadOp3(branchTarg, QuadTable.NextQuad());
                                 }
                                 else
                                 {
@@ -459,7 +468,6 @@ namespace CS4100_Code_Generator
                             ErrorMessage(ASSN, TokenizerClass.tokenCode);
 
                         }
-                        QuadTable.SetQuadOp3(branchQd, branchTarg);
 
                         break;
                     case GOTO: // $GOTO

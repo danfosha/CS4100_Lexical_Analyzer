@@ -56,7 +56,7 @@ namespace CS4100_Code_Generator
                         break;
 
                     case 3: // sub
-                        SymbolTable.SymbolTableArray[Op3].Value = (int)(SymbolTable.SymbolTableArray[Op1].Value) - (int)(SymbolTable.SymbolTableArray[Op2].Value);
+                        SymbolTable.SymbolTableArray[Op3].Value = Convert.ToInt32(SymbolTable.SymbolTableArray[Op1].Value) - Convert.ToInt32(SymbolTable.SymbolTableArray[Op2].Value);
                         PC++;
                         break;
 
@@ -129,7 +129,7 @@ namespace CS4100_Code_Generator
                         break;
 
                     case 12: // bp
-                        if ((int)SymbolTable.SymbolTableArray[Op1].Value > 0)
+                        if (Convert.ToInt32(SymbolTable.SymbolTableArray[Op1].Value) > 0)
                         {
                             PC = QuadTable.GetQuad(PC).Op3;
                         }
